@@ -22,38 +22,24 @@ definePage({
 const contentMap = computed<Array<ContentItem>>(() => {
   // type 1弹窗 2直接跳转路由
   return [
-    { title: '重要实物', titleDetail: '出入库', bgString: 'btn-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-1.png', type: 1, routerUrl: '', childrens: [{
-      title: '重要实物',
-      titleDetail: '出库',
-      bgString: 'bound-bg-2',
-      logoUrl: 'src/assets/images/shouye/btn-logo-1.png',
-      type: 2,
-      routerUrl: '',
-    }, {
-      title: '重要实物',
-      titleDetail: '入库',
-      bgString: 'bound-bg-2',
-      logoUrl: 'src/assets/images/shouye/btn-logo-1.png',
-      type: 2,
-      routerUrl: '',
-    }] },
-    { title: '重要实物', titleDetail: '取出放回', bgString: 'btn-bg-1', logoUrl: 'src/assets/images/shouye/btn-logo-2.png', type: 1, routerUrl: '', childrens: [{
-      title: '重要实物',
-      titleDetail: '取出',
-      bgString: 'bound-bg-1',
-      logoUrl: 'src/assets/images/shouye/btn-logo-2.png',
-      type: 2,
-      routerUrl: '',
-    }, {
-      title: '重要实物',
-      titleDetail: '放回',
-      bgString: 'bound-bg-1',
-      logoUrl: 'src/assets/images/shouye/btn-logo-2.png',
-      type: 2,
-      routerUrl: '',
-    }] },
-    { title: '重要实物', titleDetail: '交接', bgString: 'btn-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-3.png', type: 1, routerUrl: '' },
-    { title: '保管格', titleDetail: '交接', bgString: 'btn-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-4.png', type: 1, routerUrl: '' },
+    { title: '重要实物', titleDetail: '出入库', bgString: 'btn-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-1.png', type: 1, routerUrl: '', childrens: [
+      { title: '重要实物', titleDetail: '出库', bgString: 'bound-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-1.png', type: 2, routerUrl: '' },
+      { title: '重要实物', titleDetail: '入库', bgString: 'bound-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-1.png', type: 2, routerUrl: '' },
+    ] },
+    { title: '重要实物', titleDetail: '取出放回', bgString: 'btn-bg-1', logoUrl: 'src/assets/images/shouye/btn-logo-2.png', type: 1, routerUrl: '', childrens: [
+      { title: '重要实物', titleDetail: '取出', bgString: 'bound-bg-1', logoUrl: 'src/assets/images/shouye/btn-logo-2.png', type: 2, routerUrl: '' },
+      { title: '重要实物', titleDetail: '放回', bgString: 'bound-bg-1', logoUrl: 'src/assets/images/shouye/btn-logo-2.png', type: 2, routerUrl: '' },
+    ] },
+    { title: '重要实物', titleDetail: '交接', bgString: 'btn-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-3.png', type: 1, routerUrl: '', childrens: [
+      { title: '重要实物交接', titleDetail: '现场交接', bgString: 'bound-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-3.png', type: 2, routerUrl: '' },
+      { title: '重要实物交接', titleDetail: '预约交接（模式一）', bgString: 'bound-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-3.png', type: 2, routerUrl: '' },
+      { title: '重要实物交接', titleDetail: '预约交接（模式二）', bgString: 'bound-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-3.png', type: 2, routerUrl: '' },
+    ] },
+    { title: '保管格', titleDetail: '交接', bgString: 'btn-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-4.png', type: 1, routerUrl: '', childrens: [
+      { title: '保管格交接', titleDetail: '现场交接', bgString: 'bound-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-4.png', type: 2, routerUrl: '' },
+      { title: '保管格交接', titleDetail: '预约交接（模式一）', bgString: 'bound-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-4.png', type: 2, routerUrl: '' },
+      { title: '保管格交接', titleDetail: '预约交接（模式二）', bgString: 'bound-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-4.png', type: 2, routerUrl: '' },
+    ] },
     { title: '实物凭证尾箱', titleDetail: '交接', bgString: 'btn-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-5.png', type: 1, routerUrl: '' },
     { title: '实物凭证尾箱', titleDetail: '强制上缴', bgString: 'btn-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-6.png', type: 1, routerUrl: '' },
     { title: '实物凭证尾箱', titleDetail: '领用', bgString: 'btn-bg-1', logoUrl: 'src/assets/images/shouye/btn-logo-7.png', type: 1, routerUrl: '' },
@@ -173,14 +159,14 @@ function contentItemClick(item: ContentItem) {
     <n-modal v-model:show="showModal">
       <div class="flex">
         <template v-for="(item, index) in currentItem?.childrens" :key="index">
-          <div :class="`${item.bgString} pos-relative wh-full content-item`" style="width: 296px; height:329px" @click="contentItemClick(item)">
+          <div :class="`${item.bgString} pos-relative wh-full content-item`" style="width: 298px; height:329px" @click="contentItemClick(item)">
             <div class="pos-absolute left-18 top-18">
               <div class="w-110 text-0">
                 <img :src="item.logoUrl" alt="">
               </div>
             </div>
             <div class="pos-absolute bottom-32 right-20">
-              <div class="flex-col gap-4 text-right text-31px text-#fff font-bold line-height-none">
+              <div class="flex-col gap-4 text-right text-28px text-#fff font-bold line-height-none">
                 <div>{{ item.title }}</div>
                 <div>{{ item.titleDetail }}</div>
               </div>
