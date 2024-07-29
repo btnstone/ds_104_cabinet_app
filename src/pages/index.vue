@@ -5,11 +5,10 @@ interface ContentItem {
   title: string;
   titleDetail: string;
   bgString: string;
-  subTitles?: Array<string>;
   logoUrl: string;
   routerUrl: string;
   type: number;
-  childrens: Array<ContentItem>;
+  childrens?: Array<ContentItem>;
 }
 
 definePage({
@@ -23,8 +22,8 @@ const contentMap = computed<Array<ContentItem>>(() => {
   // type 1弹窗 2直接跳转路由
   return [
     { title: '重要实物', titleDetail: '出入库', bgString: 'btn-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-1.png', type: 1, routerUrl: '', childrens: [
-      { title: '重要实物', titleDetail: '出库', bgString: 'bound-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-1.png', type: 2, routerUrl: '' },
-      { title: '重要实物', titleDetail: '入库', bgString: 'bound-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-1.png', type: 2, routerUrl: '' },
+      { title: '重要实物', titleDetail: '出库', bgString: 'bound-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-1.png', type: 2, routerUrl: '\warehousing' },
+      { title: '重要实物', titleDetail: '入库', bgString: 'bound-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-1.png', type: 2, routerUrl: '\warehousing' },
     ] },
     { title: '重要实物', titleDetail: '取出放回', bgString: 'btn-bg-1', logoUrl: 'src/assets/images/shouye/btn-logo-2.png', type: 1, routerUrl: '', childrens: [
       { title: '重要实物', titleDetail: '取出', bgString: 'bound-bg-1', logoUrl: 'src/assets/images/shouye/btn-logo-2.png', type: 2, routerUrl: '' },
@@ -71,6 +70,7 @@ const menuMap = computed(() => {
 });
 
 const formatted = useDateFormat(useNow(), 'HH:mm');
+const router = useRouter();
 
 const showModal = ref(false);
 const currentItem = ref<ContentItem>();
@@ -84,6 +84,7 @@ function contentItemClick(item: ContentItem) {
   }
   else {
     // 跳转页面
+    router.push(item.routerUrl);
   }
 }
 </script>
