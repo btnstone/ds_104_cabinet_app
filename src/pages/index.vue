@@ -1,6 +1,17 @@
 <script setup lang="ts">
 defineOptions({ name: 'IndexPage' });
 
+interface ContentItem {
+  title: string;
+  titleDetail: string;
+  bgString: string;
+  subTitles?: Array<string>;
+  logoUrl: string;
+  routerUrl: string;
+  type: number;
+  childrens: Array<ContentItem>;
+}
+
 definePage({
   name: 'page-index',
   meta: {
@@ -8,20 +19,49 @@ definePage({
   },
 });
 
-const contentMap = computed(() => {
+const contentMap = computed<Array<ContentItem>>(() => {
+  // type 1弹窗 2直接跳转路由
   return [
-    { title: '重要实物', titleDetail: '出入库', bgString: 'btn-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-1.png' },
-    { title: '重要实物', titleDetail: '取出放回', bgString: 'btn-bg-1', logoUrl: 'src/assets/images/shouye/btn-logo-2.png' },
-    { title: '重要实物', titleDetail: '交接', bgString: 'btn-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-3.png' },
-    { title: '保管格', titleDetail: '交接', bgString: 'btn-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-4.png' },
-    { title: '实物凭证尾箱', titleDetail: '交接', bgString: 'btn-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-5.png' },
-    { title: '实物凭证尾箱', titleDetail: '强制上缴', bgString: 'btn-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-6.png' },
-    { title: '实物凭证尾箱', titleDetail: '领用', bgString: 'btn-bg-1', logoUrl: 'src/assets/images/shouye/btn-logo-7.png' },
-    { title: '重要物品', titleDetail: '强制上缴', bgString: 'btn-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-8.png' },
-    { title: '重要实物', titleDetail: '调拨', bgString: 'btn-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-9.png' },
-    { title: '凭证调拨', titleDetail: '撤销', bgString: 'btn-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-10.png' },
-    { title: '代办事项', titleDetail: '', bgString: 'btn-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-11.png' },
-    { title: '查询', titleDetail: '', bgString: 'btn-bg-1', logoUrl: 'src/assets/images/shouye/btn-logo-12.png' },
+    { title: '重要实物', titleDetail: '出入库', bgString: 'btn-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-1.png', type: 1, routerUrl: '', childrens: [{
+      title: '重要实物',
+      titleDetail: '出库',
+      bgString: 'bound-bg-2',
+      logoUrl: 'src/assets/images/shouye/btn-logo-1.png',
+      type: 2,
+      routerUrl: '',
+    }, {
+      title: '重要实物',
+      titleDetail: '入库',
+      bgString: 'bound-bg-2',
+      logoUrl: 'src/assets/images/shouye/btn-logo-1.png',
+      type: 2,
+      routerUrl: '',
+    }] },
+    { title: '重要实物', titleDetail: '取出放回', bgString: 'btn-bg-1', logoUrl: 'src/assets/images/shouye/btn-logo-2.png', type: 1, routerUrl: '', childrens: [{
+      title: '重要实物',
+      titleDetail: '取出',
+      bgString: 'bound-bg-1',
+      logoUrl: 'src/assets/images/shouye/btn-logo-2.png',
+      type: 2,
+      routerUrl: '',
+    }, {
+      title: '重要实物',
+      titleDetail: '放回',
+      bgString: 'bound-bg-1',
+      logoUrl: 'src/assets/images/shouye/btn-logo-2.png',
+      type: 2,
+      routerUrl: '',
+    }] },
+    { title: '重要实物', titleDetail: '交接', bgString: 'btn-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-3.png', type: 1, routerUrl: '' },
+    { title: '保管格', titleDetail: '交接', bgString: 'btn-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-4.png', type: 1, routerUrl: '' },
+    { title: '实物凭证尾箱', titleDetail: '交接', bgString: 'btn-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-5.png', type: 1, routerUrl: '' },
+    { title: '实物凭证尾箱', titleDetail: '强制上缴', bgString: 'btn-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-6.png', type: 1, routerUrl: '' },
+    { title: '实物凭证尾箱', titleDetail: '领用', bgString: 'btn-bg-1', logoUrl: 'src/assets/images/shouye/btn-logo-7.png', type: 1, routerUrl: '' },
+    { title: '重要物品', titleDetail: '强制上缴', bgString: 'btn-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-8.png', type: 1, routerUrl: '' },
+    { title: '重要实物', titleDetail: '调拨', bgString: 'btn-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-9.png', type: 1, routerUrl: '' },
+    { title: '凭证调拨', titleDetail: '撤销', bgString: 'btn-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-10.png', type: 1, routerUrl: '' },
+    { title: '代办事项', titleDetail: '', bgString: 'btn-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-11.png', type: 2, routerUrl: '' },
+    { title: '查询', titleDetail: '', bgString: 'btn-bg-1', logoUrl: 'src/assets/images/shouye/btn-logo-12.png', type: 2, routerUrl: '' },
   ];
 });
 
@@ -45,6 +85,21 @@ const menuMap = computed(() => {
 });
 
 const formatted = useDateFormat(useNow(), 'HH:mm');
+
+const showModal = ref(false);
+const currentItem = ref<ContentItem>();
+
+function contentItemClick(item: ContentItem) {
+  showModal.value = false;
+  if (item.type === 1) {
+    // 弹窗
+    showModal.value = true;
+    currentItem.value = item;
+  }
+  else {
+    // 跳转页面
+  }
+}
 </script>
 
 <template>
@@ -96,7 +151,7 @@ const formatted = useDateFormat(useNow(), 'HH:mm');
     <div class="flex-1 px-47">
       <div class="grid grid-cols-4 grid-rows-3 wh-full">
         <template v-for="(item, index) in contentMap" :key="index">
-          <div :class="`${item.bgString} pos-relative wh-full`">
+          <div :class="`${item.bgString} pos-relative wh-full content-item`" @click="contentItemClick(item)">
             <div class="pos-absolute left-18 top-18">
               <div class="w-110 text-0">
                 <img :src="item.logoUrl" alt="">
@@ -114,5 +169,31 @@ const formatted = useDateFormat(useNow(), 'HH:mm');
     </div>
     <!-- footer -->
     <div class="h-48" />
+
+    <n-modal v-model:show="showModal">
+      <div class="flex">
+        <template v-for="(item, index) in currentItem?.childrens" :key="index">
+          <div :class="`${item.bgString} pos-relative wh-full content-item`" style="width: 296px; height:329px" @click="contentItemClick(item)">
+            <div class="pos-absolute left-18 top-18">
+              <div class="w-110 text-0">
+                <img :src="item.logoUrl" alt="">
+              </div>
+            </div>
+            <div class="pos-absolute bottom-32 right-20">
+              <div class="flex-col gap-4 text-right text-31px text-#fff font-bold line-height-none">
+                <div>{{ item.title }}</div>
+                <div>{{ item.titleDetail }}</div>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+    </n-modal>
   </div>
 </template>
+
+<style lang="scss">
+.content-item:active {
+  transform: scale(0.98);
+}
+</style>
