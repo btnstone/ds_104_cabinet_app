@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import Header from '@/components/Header/index.vue';
+import ContentContainer from '@/components/ContentContainer/index.vue';
+import type { StepItem } from '@/components/StepPage';
+import { StepPage } from '@/components/StepPage';
 
 defineOptions({ name: 'WarehousingPage' });
 
@@ -9,11 +11,33 @@ definePage({
     title: '出入库',
   },
 });
+
+const current = ref(1);
+const data = ref<{ foo: string }>({ foo: 'bar' });
+const stepItems: StepItem[] = [
+  { title: '身份验证', component: defineAsyncComponent(() => import('@/components/HelloWord.vue')) },
+  { title: '开柜门', component: defineAsyncComponent(() => import('@/components/HelloWord.vue')) },
+  { title: '关柜盘点', component: defineAsyncComponent(() => import('@/components/HelloWord.vue')) },
+  { title: '主管身份验证', component: defineAsyncComponent(() => import('@/components/HelloWord.vue')) },
+  { title: '主管授权', component: defineAsyncComponent(() => import('@/components/HelloWord.vue')) },
+  { title: '完成', component: defineAsyncComponent(() => import('@/components/HelloWord.vue')) },
+];
+
+// 完成事件
+function onOk() {
+  console.log('--onOk--');
+}
+
+// 错误事件
+function onError(step: number, data: any) {
+  console.log(step, data);
+}
 </script>
 
 <template>
-  <div class="bw-bg wh-full flex-col">
-    <Header title="重要实物出库" user-name="龙傲天" user-id="12315556456" />
-    WarehousingPage111
-  </div>
+  <ContentContainer title="重要实物出库" user-name="龙傲天" user-id="12315556456">
+    <div class="w-full">
+      <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
+    </div>
+  </ContentContainer>
 </template>
