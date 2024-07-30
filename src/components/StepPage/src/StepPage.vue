@@ -83,7 +83,7 @@ function handleError(...args: any) {
     </div>
     <!--  -->
     <div class="w-full flex-1">
-      <component :is="componentMaps.get(current)" v-model="vData" @next="handleNext" @prev="handlePrev" @error="handleError" />
+      <component :is="componentMaps.get(current)" v-model="vData" :current="vCurrent" @next="handleNext" @prev="handlePrev" @error="handleError" />
     </div>
   </div>
 </template>
