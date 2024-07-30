@@ -15,7 +15,7 @@ definePage({
 const current = ref(1);
 const data = ref<{ foo: string }>({ foo: 'bar' });
 const stepItems: StepItem[] = [
-  { title: '身份验证', component: defineAsyncComponent(() => import('@/components/HelloWord.vue')) },
+  { title: '身份验证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
   { title: '开柜门', component: defineAsyncComponent(() => import('@/components/HelloWord.vue')) },
   { title: '关柜盘点', component: defineAsyncComponent(() => import('@/components/HelloWord.vue')) },
   { title: '主管身份验证', component: defineAsyncComponent(() => import('@/components/HelloWord.vue')) },

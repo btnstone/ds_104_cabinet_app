@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineOptions({ name: 'ContentHeader' });
+defineOptions({ name: 'SuccessPage' });
 const props = defineProps({
   title: {
     type: String,
