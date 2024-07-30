@@ -20,7 +20,7 @@ const stepItems: StepItem[] = [
   { title: '关柜盘点', component: defineAsyncComponent(() => import('@/components/HelloWord.vue')) },
   { title: '主管身份验证', component: defineAsyncComponent(() => import('@/components/HelloWord.vue')) },
   { title: '主管授权', component: defineAsyncComponent(() => import('@/components/HelloWord.vue')) },
-  { title: '完成', component: defineAsyncComponent(() => import('@/components/HelloWord.vue')) },
+  { title: '完成', component: defineAsyncComponent(() => import('@/components/SuccessPage/index.vue')) },
 ];
 
 // 完成事件
@@ -36,8 +36,24 @@ function onError(step: number, data: any) {
 
 <template>
   <ContentContainer title="重要实物出库" user-name="龙傲天" user-id="12315556456">
-    <div class="w-full">
-      <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
+    <div class="container">
+      <div class="step-container">
+        <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
+      </div>
     </div>
   </ContentContainer>
 </template>
+
+<style setup lang="scss">
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+  width: 100%;
+  height: 100%;
+  .step-container {
+    width: 90%;
+  }
+}
+</style>
