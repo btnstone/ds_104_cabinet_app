@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useRoute } from 'vue-router';
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
@@ -12,9 +13,12 @@ definePage({
   },
 });
 
+const route = useRoute();
 const current = ref(1);
+const type = ref(1);
 const data = ref<{ foo: string }>({ foo: 'bar' });
 const stepItems: StepItem[] = [
+  { title: '关柜盘点', component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')) },
   { title: '身份验证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
   { title: '开柜门', component: defineAsyncComponent(() => import('@/components/HelloWord.vue')) },
   { title: '关柜盘点', component: defineAsyncComponent(() => import('@/components/HelloWord.vue')) },
@@ -32,10 +36,14 @@ function onOk() {
 function onError(step: number, data: any) {
   console.log(step, data);
 }
+
+onMounted(() => {
+  type.value = Number(route.query.type) || 1;
+});
 </script>
 
 <template>
-  <ContentContainer title="重要实物出库" user-name="龙傲天" user-id="12315556456">
+  <ContentContainer :title="type === 1 ? '重要实物出库' : '重要实物入库'" user-name="龙傲天" user-id="12315556456">
     <div class="container">
       <div class="step-container">
         <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />

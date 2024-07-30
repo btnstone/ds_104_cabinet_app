@@ -58,24 +58,24 @@ function handleError(...args: any) {
         <template v-if="index > 0">
           <div class="flex">
             <div class="flex flex-1 items-center justify-center">
-              <div class="mx-[-15px] h-1 flex-1" :class="[index + 1 <= vCurrent ? 'bg-blue' : ' bg-gray:20']" />
+              <div class="mx-[-15px] h-1 flex-1" :class="[index + 1 <= vCurrent ? 'bg-blue' : ' bg-line']" />
             </div>
             <div class="w-100 flex items-center justify-center">
-              <div class="h-30 w-30 border-rd-full" :class="[index + 1 <= vCurrent ? 'bg-blue' : ' bg-gray:20']" />
+              <div class="h-30 w-30 border-rd-full" :class="[index + 1 <= vCurrent ? 'bg-blue' : ' radius-color']" />
             </div>
           </div>
           <div class="flex">
             <div class="flex-1" />
-            <div class="mt-4 w-100 flex-shrink-0 text-center text-16" :class="[index + 1 <= vCurrent ? 'text-blue' : ' text-gray:20']">
+            <div class="mt-4 w-100 flex-shrink-0 text-center text-16" :class="[index + 1 <= vCurrent ? 'text-blue' : ' text-color']">
               {{ step.title }}
             </div>
           </div>
         </template>
         <template v-else>
           <div class="w-100 flex items-center justify-center">
-            <div class="h-30 w-30 border-rd-full bg-blue" :class="[index + 1 <= vCurrent ? 'bg-blue' : ' bg-gray:20']" />
+            <div class="h-30 w-30 border-rd-full bg-blue" :class="[index + 1 <= vCurrent ? 'bg-blue' : ' radius-color']" />
           </div>
-          <div class="mt-4 text-center text-16" :class="[index + 1 <= vCurrent ? 'text-blue' : ' text-gray:20']">
+          <div class="mt-4 text-center text-16" :class="[index + 1 <= vCurrent ? 'text-blue' : ' text-color']">
             {{ step.title }}
           </div>
         </template>
@@ -87,3 +87,21 @@ function handleError(...args: any) {
     </div>
   </div>
 </template>
+
+<style setup lang="scss">
+.bg-blue {
+  background-color: #429fff;
+}
+
+.bg-line {
+  background-color: #b7babc;
+}
+
+.text-color {
+  color: #aaacb3;
+}
+
+.radius-color {
+  background-color: #edeced;
+}
+</style>

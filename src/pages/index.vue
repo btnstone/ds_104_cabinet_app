@@ -9,6 +9,7 @@ interface ContentItem {
   routerUrl: string;
   type: number;
   childrens?: Array<ContentItem>;
+  query?: any;
 }
 
 definePage({
@@ -22,8 +23,8 @@ const contentMap = computed<Array<ContentItem>>(() => {
   // type 1弹窗 2直接跳转路由
   return [
     { title: '重要实物', titleDetail: '出入库', bgString: 'btn-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-1.png', type: 1, routerUrl: '', childrens: [
-      { title: '重要实物', titleDetail: '出库', bgString: 'bound-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-1.png', type: 2, routerUrl: '\warehousing' },
-      { title: '重要实物', titleDetail: '入库', bgString: 'bound-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-1.png', type: 2, routerUrl: '\warehousing' },
+      { title: '重要实物', titleDetail: '出库', bgString: 'bound-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-1.png', type: 2, routerUrl: '\warehousing', query: { type: 1 } },
+      { title: '重要实物', titleDetail: '入库', bgString: 'bound-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-1.png', type: 2, routerUrl: '\warehousing', query: { type: 2 } },
     ] },
     { title: '重要实物', titleDetail: '取出放回', bgString: 'btn-bg-1', logoUrl: 'src/assets/images/shouye/btn-logo-2.png', type: 1, routerUrl: '', childrens: [
       { title: '重要实物', titleDetail: '取出', bgString: 'bound-bg-1', logoUrl: 'src/assets/images/shouye/btn-logo-2.png', type: 2, routerUrl: '' },
@@ -84,7 +85,10 @@ function contentItemClick(item: ContentItem) {
   }
   else {
     // 跳转页面
-    router.push(item.routerUrl);
+    router.push({
+      path: item.routerUrl,
+      query: item.query,
+    });
   }
 }
 </script>

@@ -76,6 +76,7 @@ function checkDate() {
   border: 3px solid #d0e0f0;
   border-radius: 30px;
 }
+
 .item-container:active {
   transform: scale(0.98);
 }
