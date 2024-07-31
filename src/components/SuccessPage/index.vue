@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { StepItemParams } from '@/components/StepPage';
+// import type { StepItemParams } from '@/components/StepPage';
 
 defineOptions({ name: 'SuccessPage' });
 
-defineProps<{
-  param: StepItemParams;
-}>();
+// defineProps<{
+//   param: StepItemParams;
+// }>();
 
 const router = useRouter();
 
@@ -35,21 +35,12 @@ function start() {
 
 onMounted(() => {
   start();
-  console.log('onMounted');
-  // console.log(props);
+  console.log('SuccessPage onMounted');
 });
 
 onUnmounted(() => {
-  console.log('onUnmounted');
-  close(); // 组件卸载时清除定时器
-});
-
-/**
- * 对外暴露子组件方法
- */
-defineExpose({
-  close,
-  start,
+  close();
+  console.log('SuccessPage onUnmounted');
 });
 </script>
 

@@ -9,7 +9,7 @@ defineOptions({ name: 'WarehousingPage' });
 definePage({
   name: 'page-warehousing',
   meta: {
-    title: '重要实物出库入库',
+    title: '重要实物取出放回',
   },
 });
 
@@ -25,15 +25,7 @@ const stepItems: StepItem[] = [
   {
     title: '关柜盘点',
     component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
-    params: { title: '请核对物品是否一致', btn1Text: '核对不一致', btn2Text: '核对一致',
-    },
-  },
-  { title: '主管身份验证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
-  {
-    title: '主管授权',
-    component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
-    params: { title: '', btn1Text: '授权不通过', btn2Text: '授权通过',
-    },
+    params: { title: '请核对物品是否一致', btn1Text: '核对不一致', btn2Text: '核对一致' },
   },
   { title: '完成', component: defineAsyncComponent(() => import('@/components/SuccessPage/index.vue')) },
 ];
@@ -57,7 +49,10 @@ onMounted(() => {
   <ContentContainer :title="type === 1 ? '重要实物出库' : '重要实物入库'" user-name="龙傲天" user-id="12315556456">
     <div class="container">
       <div class="step-container">
-        <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
+        <StepPage
+          v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk"
+          @error="onError"
+        />
       </div>
     </div>
   </ContentContainer>

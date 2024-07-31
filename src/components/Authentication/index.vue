@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { StepItemParams } from '@/components/StepPage';
+// import type { StepItemParams } from '@/components/StepPage';
 
 defineOptions({ name: 'Authentication' });
 
-const props = defineProps<{
-  param: StepItemParams;
-}>();
+// defineProps<{
+//   param?: StepItemParams;
+// }>();
 
 const emits = defineEmits(['next', 'prev', 'error']);
 const model = defineModel({ default: { foo2: 0 } });
@@ -38,7 +38,6 @@ function checkDate() {
 }
 
 onMounted(() => {
-  console.log(props);
 });
 </script>
 

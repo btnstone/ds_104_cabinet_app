@@ -1,6 +1,6 @@
 <script setup lang="ts">
 defineOptions({ name: 'ContentHeader' });
-const props = defineProps({
+defineProps({
   title: {
     type: String,
   },
@@ -14,17 +14,30 @@ const props = defineProps({
 
 const router = useRouter();
 
-const formatted = useDateFormat(useNow(), 'HH:mm');
+let formatted = useDateFormat(useNow(), 'HH:mm');
+
+let timer: NodeJS.Timeout;
 
 function gotoHome() {
   router.back();
 }
 
+function start() {
+  timer = setInterval(() => {
+    formatted = useDateFormat(useNow(), 'HH:mm');
+  }, 60 * 1000);
+}
+
+function close() {
+  clearInterval(timer);
+}
+
 onMounted(() => {
-  console.log(props);
+  start();
 });
 
 onUnmounted(() => {
+  close();
 });
 </script>
 

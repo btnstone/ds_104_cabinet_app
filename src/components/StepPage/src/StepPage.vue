@@ -1,6 +1,5 @@
 <script setup lang="ts" generic="T">
-import type { PropType } from 'vue';
-import type { StepItem, StepItemParams } from './types';
+import type { StepItem } from './types';
 import { buildShortUUID } from '@/utils/uuid';
 
 defineOptions({ name: 'StepPage', inheritAttrs: false });
@@ -10,10 +9,7 @@ const props = defineProps({
     type: Number,
     default: 1,
   },
-  data: {
-    type: Object as PropType<{ params: StepItemParams[] }>,
-    default: () => ({ params: [] }),
-  },
+  data: Object,
   stepItems: {
     type: Array<StepItem>,
     default: [],
@@ -32,7 +28,12 @@ const componentMaps = computed(() => {
 });
 
 const componentParams = computed(() => {
-  return new Map(props?.data?.params.map((v, i) => ([i + 1, v])));
+  return new Map(props.stepItems.map((v, i) => ([i + 1, v.params])));
+});
+
+const paramAttributes = computed(() => {
+  const params = componentParams.value.get(vCurrent.value);
+  return params ? { param: params } : {};
 });
 
 // 上一步
@@ -101,7 +102,7 @@ function handleError(...args: any) {
     <!--  -->
     <div class="w-full flex-1">
       <component
-        :is="componentMaps.get(current)" v-model="vData" :param="componentParams.get(current)" @next="handleNext" @prev="handlePrev"
+        :is="componentMaps.get(current)" v-model="vData" v-bind="paramAttributes" @next="handleNext" @prev="handlePrev"
         @error="handleError"
       />
     </div>

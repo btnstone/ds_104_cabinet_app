@@ -70,11 +70,12 @@ const menuMap = computed(() => {
   ];
 });
 
-const formatted = useDateFormat(useNow(), 'HH:mm');
 const router = useRouter();
-
 const showModal = ref(false);
 const currentItem = ref<ContentItem>();
+
+let formatted = useDateFormat(useNow(), 'HH:mm');
+let timer: NodeJS.Timeout;
 
 function contentItemClick(item: ContentItem) {
   showModal.value = false;
@@ -91,6 +92,26 @@ function contentItemClick(item: ContentItem) {
     });
   }
 }
+
+function start() {
+  timer = setInterval(() => {
+    formatted = useDateFormat(useNow(), 'HH:mm');
+  }, 60 * 1000);
+}
+
+function close() {
+  clearInterval(timer);
+}
+
+onMounted(() => {
+  start();
+  console.log('index onMounted');
+});
+
+onUnmounted(() => {
+  close();
+  console.log('index onUnmounted');
+});
 </script>
 
 <template>
@@ -113,7 +134,6 @@ function contentItemClick(item: ContentItem) {
         </div>
         <div class="text-40 font-bold line-height-none">
           {{ formatted }}
-          <!-- <span>{{ formatted }}</span> -->
         </div>
         <!-- color="#ffffff40" -->
 

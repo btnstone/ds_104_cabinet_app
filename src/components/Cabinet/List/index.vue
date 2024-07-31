@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import type { DeviceCabinetVo } from './types';
+import type { DeviceCabinetVo } from '@/api/cabinet/types';
 import { getCabinetList } from '@/api/cabinet';
-import type { StepItemParams } from '@/components/StepPage';
+// import type { StepItemParams } from '@/components/StepPage';
 
 defineOptions({ name: 'Inventory' });
 
-const props = defineProps<{
-  param: StepItemParams;
-}>();
+// const props = defineProps<{
+//   param: StepItemParams;
+// }>();
 
 const emits = defineEmits(['next', 'prev', 'error']);
 const model = defineModel({ default: { foo2: 0 } });
@@ -20,7 +20,7 @@ function openDoor() {
 
 onMounted(async () => {
   cabinetList.value = await getCabinetList();
-  console.log(props);
+  // console.log(props);
   console.log(model);
 });
 </script>
