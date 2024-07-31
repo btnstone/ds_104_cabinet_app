@@ -164,7 +164,7 @@ function contentItemClick(item: ContentItem) {
     <n-modal v-model:show="showModal">
       <div class="flex">
         <template v-for="(item, index) in currentItem?.childrens" :key="index">
-          <div :class="`${item.bgString} pos-relative wh-full content-item`" style="width: 298px; height:329px" @click="contentItemClick(item)">
+          <div class="clickable-div pos-relative wh-full" :class="item.bgString" style="width: 298px; height:329px" @click="contentItemClick(item)">
             <div class="pos-absolute left-18 top-18">
               <div class="w-110 text-0">
                 <img :src="item.logoUrl" alt="">

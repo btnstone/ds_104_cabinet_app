@@ -3,7 +3,7 @@ export interface StepItem {
   component: Component;
 }
 
-export interface ComponentParams {
+export interface StepItemParams {
   title?: string;
   btn1Text?: string;
   btn2Text?: string;

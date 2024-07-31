@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import type { GoodVO } from '@/api/goods/types';
+import type { StepItemParams } from '@/components/StepPage';
 
 defineOptions({ name: 'Inventory' });
 
-const props = defineProps({
-  current: {
-    type: Number,
-    default: 1,
-  },
-});
+defineProps<{
+  param: StepItemParams;
+}>();
 
 const emits = defineEmits(['next', 'prev', 'error']);
 const model = defineModel({ default: { foo2: 0 } });
@@ -18,11 +16,6 @@ function handleNext() {
   model.value.foo2 = Math.random();
   emits('next', 'haha');
 }
-
-const params = computed(() => {
-  const result = unref(model)?.componentsParams[props.current - 1];
-  return result;
-});
 
 onMounted(() => {
   goodsList.value = [{
@@ -52,7 +45,7 @@ function failCheck() {
 <template>
   <div class="mt-20 h-full w-full flex flex-col items-center justify-center">
     <div class="text-26 font-bold line-height-none">
-      {{ params.title }}
+      {{ param.title }}
     </div>
     <div class="list-container mt-20">
       <n-list
@@ -91,13 +84,13 @@ function failCheck() {
         style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:300px;margin-right:50px;" color="#ededf1"
         text-color="#000" @click="failCheck"
       >
-        {{ params.btn1Text }}
+        {{ param.btn1Text }}
       </n-button>
       <n-button
         size="large" type="info" round
         style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:300px;" @click="successCheck"
       >
-        {{ params.btn2Text }}
+        {{ param.btn2Text }}
       </n-button>
     </div>
   </div>

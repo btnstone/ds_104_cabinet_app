@@ -34,6 +34,9 @@
     "build:linux": "electron-vite build && electron-builder --linux",
     "up": "taze major -I"
   },
+  "dependencies": {
+    "axios": "^1.7.2"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "^2.23.2",
     "@arco-design/color": "^0.4.0",

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
 import ContentContainer from '@/components/ContentContainer/index.vue';
-import type { ComponentParams, StepItem } from '@/components/StepPage';
+import type { StepItem, StepItemParams } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
 
 defineOptions({ name: 'WarehousingPage' });
@@ -16,9 +16,9 @@ definePage({
 const route = useRoute();
 const current = ref(1);
 const type = ref(1);
-const data = ref<{ foo: string; componentsParams: Array<ComponentParams> }>({
+const data = ref<{ foo: string; params: Array<StepItemParams> }>({
   foo: 'bar',
-  componentsParams: [{}, {}, {
+  params: [{}, {}, {
     title: '请核对物品是否一致',
     btn1Text: '核对不一致',
     btn2Text: '核对一致',
@@ -30,7 +30,7 @@ const data = ref<{ foo: string; componentsParams: Array<ComponentParams> }>({
 });
 const stepItems: StepItem[] = [
   { title: '身份验证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
-  { title: '开柜门', component: defineAsyncComponent(() => import('@/components/HelloWord.vue')) },
+  { title: '开柜门', component: defineAsyncComponent(() => import('@/components/Cabinet/List/index.vue')) },
   { title: '关柜盘点', component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')) },
   { title: '主管身份验证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
   { title: '主管授权', component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')) },

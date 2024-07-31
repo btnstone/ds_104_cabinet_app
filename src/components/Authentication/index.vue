@@ -1,5 +1,11 @@
 <script setup lang="ts">
+import type { StepItemParams } from '@/components/StepPage';
+
 defineOptions({ name: 'Authentication' });
+
+const props = defineProps<{
+  param: StepItemParams;
+}>();
 
 const emits = defineEmits(['next', 'prev', 'error']);
 const model = defineModel({ default: { foo2: 0 } });
@@ -30,17 +36,21 @@ function checkDate() {
 
   // }
 }
+
+onMounted(() => {
+  console.log(props);
+});
 </script>
 
 <template>
   <div class="mt-100px h-full w-full flex items-center justify-center">
-    <div class="item-container mr-100 flex flex-col items-center justify-center" style="background-color: #ededf1;" @click="showModalView(1)">
+    <div class="clickable-div item-container mr-100 flex flex-col items-center justify-center" style="background-color: #ededf1;" @click="showModalView(1)">
       <img src="@/assets/images/components/fingerprint.png" alt="" class="border-none">
       <div class="text-26 font-bold line-height-none">
         指纹认证
       </div>
     </div>
-    <div class="item-container flex flex-col items-center justify-center" style="background-color: #ededf1;" @click="showModalView(2)">
+    <div class="item-container clickable-div flex flex-col items-center justify-center" style="background-color: #ededf1;" @click="showModalView(2)">
       <img src="@/assets/images/components/passwod.png" alt="" class="border-none">
       <div class="text-26 font-bold line-height-none">
         密码认证
@@ -75,10 +85,6 @@ function checkDate() {
   height: 300px;
   border: 3px solid #d0e0f0;
   border-radius: 30px;
-}
-
-.item-container:active {
-  transform: scale(0.98);
 }
 
 .modal-container {
