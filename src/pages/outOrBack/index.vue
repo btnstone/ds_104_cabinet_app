@@ -7,7 +7,7 @@ import { StepPage } from '@/components/StepPage';
 defineOptions({ name: 'WarehousingPage' });
 
 definePage({
-  name: 'page-warehousing',
+  name: 'page-outOrBack',
   meta: {
     title: '重要实物取出放回',
   },
@@ -46,7 +46,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <ContentContainer :title="type === 1 ? '重要实物出库' : '重要实物入库'" user-name="龙傲天" user-id="12315556456">
+  <ContentContainer :title="type === 1 ? '重要实物取出' : '重要实物放回'" user-name="龙傲天" user-id="12315556456">
     <div class="container">
       <div class="step-container">
         <StepPage

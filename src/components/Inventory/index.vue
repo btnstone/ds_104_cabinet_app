@@ -4,7 +4,7 @@ import type { StepItemParams } from '@/components/StepPage';
 
 defineOptions({ name: 'Inventory' });
 
-defineProps<{
+const props = defineProps<{
   param: StepItemParams;
 }>();
 
@@ -26,6 +26,23 @@ onMounted(() => {
   }];
 });
 
+const receiver = ref();
+const supervisor = ref();
+const receiverOptions = [
+  {
+    label: 'Except Me and My Monkey',
+    value: 'song0',
+  },
+  {
+    label: 'Drive My Car',
+    value: 'song1',
+  },
+];
+
+const listHeight = computed(() => {
+  return props.param.isShowReceiver ? 350 : 400;
+});
+
 function successCheck() {
   handleNext();
   // todo 数据校验
@@ -43,15 +60,32 @@ function failCheck() {
 </script>
 
 <template>
-  <div class="mt-20 h-full w-full flex flex-col items-center justify-center">
+  <div class="mt-15 h-full w-full flex flex-col items-center justify-center">
     <div class="text-26 font-bold line-height-none">
       {{ param.title }}
     </div>
-    <div class="list-container mt-20">
-      <n-list
-        clickable :show-divider="false" class="w-full"
-        style="height: 430px;overflow-y: hidden; overflow-y: auto;"
-      >
+    <template v-if="param.isShowReceiver || param.isShowSupervisor">
+      <div class="flex flex-row">
+        <template v-if="param.isShowSupervisor">
+          <div class="mr-15 mt-15 flex flex-row items-center">
+            <div class="w-120 text-20">
+              请选择监交人
+            </div>
+            <n-select v-model:value="supervisor" :options="receiverOptions" class="ml-10 w-220" />
+          </div>
+        </template>
+        <template v-if="param.isShowSupervisor">
+          <div class="mt-15 flex flex-row items-center">
+            <div class="w-120 text-20">
+              请选择接收人
+            </div>
+            <n-select v-model:value="receiver" :options="receiverOptions" class="ml-10 w-220" />
+          </div>
+        </template>
+      </div>
+    </template>
+    <div class="list-container mt-15">
+      <n-list clickable :show-divider="false" class="w-full" :style="`height:${listHeight}px;overflow-y: hidden; overflow-y: auto;`">
         <template v-for="(item, index) in goodsList" :key="item.electagNo">
           <n-list-item>
             <div class="flex flex-row items-center justify-start text-26">
@@ -77,19 +111,11 @@ function failCheck() {
         </template>
       </n-list>
     </div>
-
-    <div class="mt-20">
-      <n-button
-        size="large" type="info" round
-        style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:300px;margin-right:50px;" color="#ededf1"
-        text-color="#000" @click="failCheck"
-      >
+    <div class="mt-15">
+      <n-button size="large" type="info" round style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:300px;margin-right:50px;" color="#ededf1" text-color="#000" @click="failCheck">
         {{ param.btn1Text }}
       </n-button>
-      <n-button
-        size="large" type="info" round
-        style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:300px;" @click="successCheck"
-      >
+      <n-button size="large" type="info" round style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:300px;" @click="successCheck">
         {{ param.btn2Text }}
       </n-button>
     </div>

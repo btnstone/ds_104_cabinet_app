@@ -9,4 +9,6 @@ export interface StepItemParams {
   btn1Text?: string;
   btn2Text?: string;
   response?: object;
+  isShowReceiver?: boolean;
+  isShowSupervisor?: boolean;
 }
