@@ -4,12 +4,12 @@ import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
 
-defineOptions({ name: 'WarehousingPage' });
+defineOptions({ name: 'ImportantWarehousePage' });
 
 definePage({
-  name: 'page-outOrBack',
+  name: 'page-important-warehouse',
   meta: {
-    title: '重要实物取出放回',
+    title: '重要实物入库',
   },
 });
 
@@ -26,6 +26,12 @@ const stepItems: StepItem[] = [
     title: '关柜盘点',
     component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
     params: { title: '请核对物品是否一致', btn1Text: '核对不一致', btn2Text: '核对一致' },
+  },
+  { title: '主管身份验证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
+  {
+    title: '主管授权',
+    component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
+    params: { title: '', btn1Text: '授权不通过', btn2Text: '授权通过' },
   },
   { title: '完成', component: defineAsyncComponent(() => import('@/components/SuccessPage/index.vue')) },
 ];
@@ -46,29 +52,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <ContentContainer :title="type === 1 ? '重要实物取出' : '重要实物放回'" user-name="龙傲天" user-id="12315556456">
-    <div class="container">
-      <div class="step-container">
-        <StepPage
-          v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk"
-          @error="onError"
-        />
+  <ContentContainer title="重要实物入库" user-name="龙傲天" user-id="12315556456">
+    <div class="m-20 h-full w-full flex flex-col items-center">
+      <div class="w-90%">
+        <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
       </div>
     </div>
   </ContentContainer>
 </template>
-
-<style setup lang="scss">
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 20px;
-  width: 100%;
-  height: 100%;
-
-  .step-container {
-    width: 90%;
-  }
-}
-</style>

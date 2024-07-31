@@ -23,17 +23,17 @@ const contentMap = computed<Array<ContentItem>>(() => {
   // type 1弹窗 2直接跳转路由
   return [
     { title: '重要实物', titleDetail: '出入库', bgString: 'btn-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-1.png', type: 1, routerUrl: '', childrens: [
-      { title: '重要实物', titleDetail: '出库', bgString: 'bound-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-1.png', type: 2, routerUrl: '\warehousing', query: { type: 1 } },
-      { title: '重要实物', titleDetail: '入库', bgString: 'bound-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-1.png', type: 2, routerUrl: '\warehousing', query: { type: 2 } },
+      { title: '重要实物', titleDetail: '出库', bgString: 'bound-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-1.png', type: 2, routerUrl: '/important/outbound' },
+      { title: '重要实物', titleDetail: '入库', bgString: 'bound-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-1.png', type: 2, routerUrl: '/important/warehouse' },
     ] },
     { title: '重要实物', titleDetail: '取出放回', bgString: 'btn-bg-1', logoUrl: 'src/assets/images/shouye/btn-logo-2.png', type: 1, routerUrl: '', childrens: [
-      { title: '重要实物', titleDetail: '取出', bgString: 'bound-bg-1', logoUrl: 'src/assets/images/shouye/btn-logo-2.png', type: 2, routerUrl: '\outOrBack', query: { type: 1 } },
-      { title: '重要实物', titleDetail: '放回', bgString: 'bound-bg-1', logoUrl: 'src/assets/images/shouye/btn-logo-2.png', type: 2, routerUrl: '\outOrBack', query: { type: 2 } },
+      { title: '重要实物', titleDetail: '取出', bgString: 'bound-bg-1', logoUrl: 'src/assets/images/shouye/btn-logo-2.png', type: 2, routerUrl: '/important/takeOut' },
+      { title: '重要实物', titleDetail: '放回', bgString: 'bound-bg-1', logoUrl: 'src/assets/images/shouye/btn-logo-2.png', type: 2, routerUrl: '/important/putBack' },
     ] },
     { title: '重要实物', titleDetail: '交接', bgString: 'btn-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-3.png', type: 1, routerUrl: '', childrens: [
-      { title: '重要实物交接', titleDetail: '现场交接', bgString: 'bound-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-3.png', type: 2, routerUrl: '\handover', query: { type: 1 } },
-      { title: '重要实物交接', titleDetail: '预约交接（模式一）', bgString: 'bound-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-3.png', type: 2, routerUrl: '\handover', query: { type: 2 } },
-      { title: '重要实物交接', titleDetail: '预约交接（模式二）', bgString: 'bound-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-3.png', type: 2, routerUrl: '\handover', query: { type: 3 } },
+      { title: '重要实物交接', titleDetail: '现场交接', bgString: 'bound-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-3.png', type: 2, routerUrl: '/important/siteHandover' },
+      { title: '重要实物交接', titleDetail: '预约交接（模式一）', bgString: 'bound-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-3.png', type: 2, routerUrl: '/important/reservationOneHandover' },
+      { title: '重要实物交接', titleDetail: '预约交接（模式二）', bgString: 'bound-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-3.png', type: 2, routerUrl: '/important/reservationTwoHandover' },
     ] },
     { title: '保管格', titleDetail: '交接', bgString: 'btn-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-4.png', type: 1, routerUrl: '', childrens: [
       { title: '保管格交接', titleDetail: '现场交接', bgString: 'bound-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-4.png', type: 2, routerUrl: '' },
