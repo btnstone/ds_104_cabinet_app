@@ -18,7 +18,7 @@ const data = ref<{ foo: string }>({
 });
 
 const stepItems: StepItem[] = [
-  { title: '身份验证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
+  { title: '身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
   { title: '开柜门', component: defineAsyncComponent(() => import('@/components/Cabinet/List/index.vue')) },
   {
     title: '关柜盘点',
@@ -31,7 +31,7 @@ const stepItems: StepItem[] = [
     component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
     params: { title: '', btn1Text: '授权不通过', btn2Text: '授权通过' },
   },
-  { title: '接收人身份验证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
+  { title: '接收人身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
   { title: '开柜门', component: defineAsyncComponent(() => import('@/components/Cabinet/List/index.vue')) },
   {
     title: '关柜盘点',

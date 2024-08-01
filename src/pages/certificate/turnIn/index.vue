@@ -18,7 +18,7 @@ const data = ref<{ foo: string }>({
 });
 
 const stepItems: StepItem[] = [
-  { title: '身份验证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
+  { title: '身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
   {
     title: '选择上缴柜员',
     component: defineAsyncComponent(() => import('@/components/CompulsorySurrender/index.vue')),
@@ -29,7 +29,7 @@ const stepItems: StepItem[] = [
       isShowReceiver: true,
     },
   },
-  { title: '另一位主管身份验证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
+  { title: '另一位主管身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
   {
     title: '另一位主管授权',
     component: defineAsyncComponent(() => import('@/components/CompulsorySurrender/index.vue')),

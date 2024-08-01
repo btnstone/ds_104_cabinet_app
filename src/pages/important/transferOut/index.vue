@@ -9,7 +9,7 @@ defineOptions({ name: 'ImportantTransferOutPage' });
 definePage({
   name: 'page-important-transfer-out',
   meta: {
-    title: '凭证调拨出库',
+    title: '重要物品调拨出库',
   },
 });
 
@@ -20,20 +20,13 @@ const data = ref<{ foo: string }>({
   foo: 'bar',
 });
 const stepItems: StepItem[] = [
-  { title: '身份验证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
-  { title: '开柜门', component: defineAsyncComponent(() => import('@/components/Cabinet/List/index.vue')) },
-  {
-    title: '关柜盘点',
-    component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
-    params: { title: '请核对物品是否一致', btn1Text: '核对不一致', btn2Text: '核对一致',
-    },
-  },
-  { title: '主管身份验证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
+  { title: '身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
+  { title: '调拨内容关柜盘点', component: defineAsyncComponent(() => import('@/components/Cabinet/Inventory/index.vue')) },
+  { title: '主管身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
   {
     title: '主管授权',
     component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
-    params: { title: '', btn1Text: '授权不通过', btn2Text: '授权通过',
-    },
+    params: { title: '', btn1Text: '授权不通过', btn2Text: '授权通过' },
   },
   { title: '完成', component: defineAsyncComponent(() => import('@/components/SuccessPage/index.vue')) },
 ];
@@ -54,7 +47,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <ContentContainer title="凭证调拨出库" user-name="龙傲天" user-id="12315556456">
+  <ContentContainer title="重要物品调拨出库" user-name="龙傲天" user-id="12315556456">
     <div class="m-20 h-full w-full flex flex-col items-center">
       <div class="w-90%">
         <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
