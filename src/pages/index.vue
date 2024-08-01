@@ -36,22 +36,27 @@ const contentMap = computed<Array<ContentItem>>(() => {
       { title: '重要实物交接', titleDetail: '预约交接（模式二）', bgString: 'bound-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-3.png', type: 2, routerUrl: '/important/reservationTwoHandover' },
     ] },
     { title: '保管格', titleDetail: '交接', bgString: 'btn-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-4.png', type: 1, routerUrl: '', childrens: [
-      { title: '保管格交接', titleDetail: '现场交接', bgString: 'bound-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-4.png', type: 2, routerUrl: '' },
-      { title: '保管格交接', titleDetail: '预约交接（模式一）', bgString: 'bound-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-4.png', type: 2, routerUrl: '' },
-      { title: '保管格交接', titleDetail: '预约交接（模式二）', bgString: 'bound-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-4.png', type: 2, routerUrl: '' },
+      { title: '保管格交接', titleDetail: '现场交接', bgString: 'bound-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-4.png', type: 2, routerUrl: '/storage/siteHandover' },
+      { title: '保管格交接', titleDetail: '预约交接（模式一）', bgString: 'bound-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-4.png', type: 2, routerUrl: '/storage/reservationOneHandover' },
+      { title: '保管格交接', titleDetail: '预约交接（模式二）', bgString: 'bound-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-4.png', type: 2, routerUrl: '/storage/reservationTwoHandover' },
     ] },
     { title: '实物凭证尾箱', titleDetail: '交接', bgString: 'btn-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-5.png', type: 1, routerUrl: '', childrens: [
       { title: '实物凭证尾箱', titleDetail: '现场交接', bgString: 'bound-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-5.png', type: 2, routerUrl: '/certificate/siteHandover' },
       { title: '实物凭证尾箱', titleDetail: '预约交接（模式一）', bgString: 'bound-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-5.png', type: 2, routerUrl: '/certificate/reservationOneHandover' },
       { title: '实物凭证尾箱', titleDetail: '预约交接（模式二）', bgString: 'bound-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-5.png', type: 2, routerUrl: '/certificate/reservationTwoHandover' },
     ] },
-    { title: '实物凭证尾箱', titleDetail: '强制上缴', bgString: 'btn-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-6.png', type: 1, routerUrl: '' },
-    { title: '实物凭证尾箱', titleDetail: '领用', bgString: 'btn-bg-1', logoUrl: 'src/assets/images/shouye/btn-logo-7.png', type: 1, routerUrl: '' },
-    { title: '重要物品', titleDetail: '强制上缴', bgString: 'btn-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-8.png', type: 1, routerUrl: '' },
-    { title: '重要实物', titleDetail: '调拨', bgString: 'btn-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-9.png', type: 1, routerUrl: '' },
-    { title: '凭证调拨', titleDetail: '撤销', bgString: 'btn-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-10.png', type: 1, routerUrl: '' },
+    { title: '实物凭证尾箱', titleDetail: '强制上缴', bgString: 'btn-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-6.png', type: 2, routerUrl: '/certificate/turnIn' },
+    { title: '实物凭证尾箱', titleDetail: '领用', bgString: 'btn-bg-1', logoUrl: 'src/assets/images/shouye/btn-logo-7.png', type: 2, routerUrl: '/certificate/use' },
+    { title: '重要物品', titleDetail: '强制上缴', bgString: 'btn-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-8.png', type: 2, routerUrl: '/important/turnIn' },
+    { title: '重要实物', titleDetail: '调拨', bgString: 'btn-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-9.png', type: 1, routerUrl: '', childrens: [
+      { title: '凭证调拨', titleDetail: '出库', bgString: 'bound-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-9.png', type: 2, routerUrl: '/certificate/transferOut' },
+      { title: '重要物品调拨', titleDetail: '出库', bgString: 'bound-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-9.png', type: 2, routerUrl: '/important/transferOut' },
+      { title: '凭证调拨', titleDetail: '入库', bgString: 'bound-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-9.png', type: 2, routerUrl: '/certificate/transferIn' },
+      { title: '重要物品调拨', titleDetail: '入库', bgString: 'bound-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-9.png', type: 2, routerUrl: '/important/transferIn' },
+    ] },
+    { title: '凭证调拨', titleDetail: '撤销', bgString: 'btn-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-10.png', type: 2, routerUrl: '/certificate/revocation' },
     { title: '代办事项', titleDetail: '', bgString: 'btn-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-11.png', type: 2, routerUrl: '/todo/list' },
-    { title: '查询', titleDetail: '', bgString: 'btn-bg-1', logoUrl: 'src/assets/images/shouye/btn-logo-12.png', type: 2, routerUrl: '' },
+    // { title: '查询', titleDetail: '', bgString: 'btn-bg-1', logoUrl: 'src/assets/images/shouye/btn-logo-12.png', type: 2, routerUrl: '' },
   ];
 });
 

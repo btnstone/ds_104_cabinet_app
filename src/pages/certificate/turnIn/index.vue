@@ -3,12 +3,12 @@ import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
 
-defineOptions({ name: 'ReceiverOneHandover' });
+defineOptions({ name: 'CertificateTurnInPage' });
 
 definePage({
-  name: 'page-receiver-one-handover',
+  name: 'page-certificate-turn-in',
   meta: {
-    title: '接受重要实物操作-预约（模式一）',
+    title: '实物凭证尾箱强制上缴',
   },
 });
 
@@ -18,19 +18,20 @@ const data = ref<{ foo: string }>({
 });
 
 const stepItems: StepItem[] = [
-  { title: '监交人身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
-  {
-    title: '监交人授权',
-    component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
-    params: { title: '', btn1Text: '授权不通过', btn2Text: '授权通过',
-    },
-  },
-  { title: '开交接格', component: defineAsyncComponent(() => import('@/components/Cabinet/List/index.vue')) },
+  { title: '身份验证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
+  { title: '开柜门', component: defineAsyncComponent(() => import('@/components/Cabinet/List/index.vue')) },
   {
     title: '关柜盘点',
     component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
     params: { title: '请核对物品是否一致', btn1Text: '核对不一致', btn2Text: '核对一致' },
   },
+  { title: '监交人身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
+  {
+    title: '监交人授权',
+    component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
+    params: { title: '', btn1Text: '授权不通过', btn2Text: '授权通过' },
+  },
+  { title: '接收人身份验证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
   { title: '开柜门', component: defineAsyncComponent(() => import('@/components/Cabinet/List/index.vue')) },
   {
     title: '关柜盘点',
@@ -55,7 +56,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <ContentContainer title="接受重要实物操作-预约（模式一）" user-name="龙傲天" user-id="12315556456">
+  <ContentContainer title="实物凭证尾箱强制上缴" user-name="龙傲天" user-id="12315556456">
     <div class="m-20 h-full w-full flex flex-col items-center">
       <div class="w-90%">
         <StepPage
