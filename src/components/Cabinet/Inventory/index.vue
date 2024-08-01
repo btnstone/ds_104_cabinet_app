@@ -4,7 +4,7 @@ import { getCabinetList } from '@/api/cabinet';
 import type { GoodVO } from '@/api/goods/types';
 import type { StepItemParams } from '@/components/StepPage';
 
-defineOptions({ name: 'Inventory' });
+defineOptions({ name: 'CabinetInventory' });
 
 const props = defineProps<{
   param: StepItemParams;
@@ -28,7 +28,7 @@ const receiverOptions = [
 ];
 
 const listHeight = computed(() => {
-  return props.param.isShowReceiver ? 350 : 400;
+  return props.param && props.param.isShowReceiver ? 350 : 400;
 });
 
 function openDoor() {
@@ -88,30 +88,31 @@ onMounted(async () => {
         </div>
       </div>
     </div>
-
     <div class="w-56% flex flex-col items-center justify-center">
       <div class="text-26 font-bold line-height-none">
         请核对物品是否一致
       </div>
-      <template v-if="param.isShowReceiver || param.isShowSupervisor">
-        <div class="flex flex-row">
-          <template v-if="param.isShowSupervisor">
-            <div class="mr-15 mt-15 flex flex-row items-center">
-              <div class="w-120 text-20">
-                请选择监交人
+      <template v-if="param">
+        <template v-if="param.isShowReceiver || param.isShowSupervisor">
+          <div class="flex flex-row">
+            <template v-if="param.isShowSupervisor">
+              <div class="mr-15 mt-15 flex flex-row items-center">
+                <div class="w-120 text-20">
+                  请选择监交人
+                </div>
+                <n-select v-model:value="supervisor" :options="receiverOptions" class="ml-10 w-220" />
               </div>
-              <n-select v-model:value="supervisor" :options="receiverOptions" class="ml-10 w-220" />
-            </div>
-          </template>
-          <template v-if="param.isShowReceiver">
-            <div class="mt-15 flex flex-row items-center">
-              <div class="w-120 text-20">
-                请选择接收人
+            </template>
+            <template v-if="param.isShowReceiver">
+              <div class="mt-15 flex flex-row items-center">
+                <div class="w-120 text-20">
+                  请选择接收人
+                </div>
+                <n-select v-model:value="receiver" :options="receiverOptions" class="ml-10 w-220" />
               </div>
-              <n-select v-model:value="receiver" :options="receiverOptions" class="ml-10 w-220" />
-            </div>
-          </template>
-        </div>
+            </template>
+          </div>
+        </template>
       </template>
       <div class="list-container mt-15">
         <n-list clickable :show-divider="false" class="w-full" :style="`height:${listHeight}px;overflow-y: hidden; overflow-y: auto;`">

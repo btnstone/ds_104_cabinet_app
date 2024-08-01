@@ -3,12 +3,12 @@ import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
 
-defineOptions({ name: 'StorageReservationTwoHandover' });
+defineOptions({ name: 'StorageSupervisorTwoHandover' });
 
 definePage({
-  name: 'page-storage-two-handover',
+  name: 'page-storage-supervisor-two-handover',
   meta: {
-    title: '保管格预约交接（模式二）',
+    title: '保管格预约交接（模式二）监交',
   },
 });
 
@@ -18,8 +18,7 @@ const data = ref<{ foo: string }>({
 });
 
 const stepItems: StepItem[] = [
-  { title: '身份验证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
-  { title: '开柜门盘点选择接收人', component: defineAsyncComponent(() => import('@/components/Cabinet/Inventory/index.vue')), params: { isShowReceiver: true } },
+  { title: '监交人开柜盘点', component: defineAsyncComponent(() => import('@/components/Cabinet/Inventory/index.vue')) },
   { title: '完成', component: defineAsyncComponent(() => import('@/components/SuccessPage/index.vue')) },
 ];
 
@@ -38,7 +37,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <ContentContainer title="保管格预约交接（模式二）" user-name="龙傲天" user-id="12315556456">
+  <ContentContainer title="保管格预约交接（模式二）监交" user-name="龙傲天" user-id="12315556456">
     <div class="m-20 h-full w-full flex flex-col items-center">
       <div class="w-90%">
         <StepPage

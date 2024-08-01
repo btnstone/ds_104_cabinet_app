@@ -49,5 +49,8 @@ declare module 'vue-router/auto-routes' {
     'page-important-receiver-two-handover': RouteRecordInfo<'page-important-receiver-two-handover', '/todo/Important/receiverTwoHandover', Record<never, never>, Record<never, never>>,
     'page-important-supervisor-two-handover': RouteRecordInfo<'page-important-supervisor-two-handover', '/todo/Important/supervisorTwoHandover', Record<never, never>, Record<never, never>>,
     'page-todo-list': RouteRecordInfo<'page-todo-list', '/todo/list', Record<never, never>, Record<never, never>>,
+    'page-storage-receiver-one-handover': RouteRecordInfo<'page-storage-receiver-one-handover', '/todo/storage/receiverOneHandover', Record<never, never>, Record<never, never>>,
+    'page-storage-receiver-two-handover': RouteRecordInfo<'page-storage-receiver-two-handover', '/todo/storage/receiverTwoHandover', Record<never, never>, Record<never, never>>,
+    'page-storage-supervisor-two-handover': RouteRecordInfo<'page-storage-supervisor-two-handover', '/todo/storage/supervisorTwoHandover', Record<never, never>, Record<never, never>>,
   }
 }
