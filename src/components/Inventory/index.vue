@@ -74,10 +74,10 @@ function failCheck() {
             <n-select v-model:value="supervisor" :options="receiverOptions" class="ml-10 w-220" />
           </div>
         </template>
-        <template v-if="param.isShowSupervisor">
+        <template v-if="param.isShowReceiver">
           <div class="mt-15 flex flex-row items-center">
-            <div class="w-120 text-20">
-              请选择接收人
+            <div class="text-20">
+              {{ param.subTitle ? param.subTitle : '请选择接收人' }}
             </div>
             <n-select v-model:value="receiver" :options="receiverOptions" class="ml-10 w-220" />
           </div>
@@ -112,12 +112,19 @@ function failCheck() {
       </n-list>
     </div>
     <div class="mt-15">
-      <n-button size="large" type="info" round style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:300px;margin-right:50px;" color="#ededf1" text-color="#000" @click="failCheck">
-        {{ param.btn1Text }}
-      </n-button>
-      <n-button size="large" type="info" round style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:300px;" @click="successCheck">
-        {{ param.btn2Text }}
-      </n-button>
+      <template v-if="param.btn1Text">
+        <n-button size="large" type="info" round style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:300px;margin-right:50px;" color="#ededf1" text-color="#000" @click="failCheck">
+          {{ param.btn1Text }}
+        </n-button>
+        <n-button size="large" type="info" round style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:300px;" @click="successCheck">
+          {{ param.btn2Text }}
+        </n-button>
+      </template>
+      <template v-else>
+        <n-button size="large" type="info" round style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:600px;" @click="successCheck">
+          {{ param.btn2Text }}
+        </n-button>
+      </template>
     </div>
   </div>
 </template>

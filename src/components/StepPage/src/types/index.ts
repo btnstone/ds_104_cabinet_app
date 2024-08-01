@@ -6,6 +6,7 @@ export interface StepItem {
 
 export interface StepItemParams {
   title?: string;
+  subTitle?: string;
   btn1Text?: string;
   btn2Text?: string;
   response?: object;
