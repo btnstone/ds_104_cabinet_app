@@ -46,7 +46,7 @@ const contentMap = computed<Array<ContentItem>>(() => {
     { title: '重要物品', titleDetail: '强制上缴', bgString: 'btn-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-8.png', type: 1, routerUrl: '' },
     { title: '重要实物', titleDetail: '调拨', bgString: 'btn-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-9.png', type: 1, routerUrl: '' },
     { title: '凭证调拨', titleDetail: '撤销', bgString: 'btn-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-10.png', type: 1, routerUrl: '' },
-    { title: '代办事项', titleDetail: '', bgString: 'btn-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-11.png', type: 2, routerUrl: '' },
+    { title: '代办事项', titleDetail: '', bgString: 'btn-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-11.png', type: 2, routerUrl: '/todo/list' },
     { title: '查询', titleDetail: '', bgString: 'btn-bg-1', logoUrl: 'src/assets/images/shouye/btn-logo-12.png', type: 2, routerUrl: '' },
   ];
 });
