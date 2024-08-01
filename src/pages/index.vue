@@ -40,7 +40,11 @@ const contentMap = computed<Array<ContentItem>>(() => {
       { title: '保管格交接', titleDetail: '预约交接（模式一）', bgString: 'bound-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-4.png', type: 2, routerUrl: '' },
       { title: '保管格交接', titleDetail: '预约交接（模式二）', bgString: 'bound-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-4.png', type: 2, routerUrl: '' },
     ] },
-    { title: '实物凭证尾箱', titleDetail: '交接', bgString: 'btn-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-5.png', type: 1, routerUrl: '' },
+    { title: '实物凭证尾箱', titleDetail: '交接', bgString: 'btn-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-5.png', type: 1, routerUrl: '', childrens: [
+      { title: '实物凭证尾箱', titleDetail: '现场交接', bgString: 'bound-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-5.png', type: 2, routerUrl: '' },
+      { title: '实物凭证尾箱', titleDetail: '预约交接（模式一）', bgString: 'bound-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-5.png', type: 2, routerUrl: '' },
+      { title: '实物凭证尾箱', titleDetail: '预约交接（模式二）', bgString: 'bound-bg-3', logoUrl: 'src/assets/images/shouye/btn-logo-5.png', type: 2, routerUrl: '' },
+    ] },
     { title: '实物凭证尾箱', titleDetail: '强制上缴', bgString: 'btn-bg-4', logoUrl: 'src/assets/images/shouye/btn-logo-6.png', type: 1, routerUrl: '' },
     { title: '实物凭证尾箱', titleDetail: '领用', bgString: 'btn-bg-1', logoUrl: 'src/assets/images/shouye/btn-logo-7.png', type: 1, routerUrl: '' },
     { title: '重要物品', titleDetail: '强制上缴', bgString: 'btn-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-8.png', type: 1, routerUrl: '' },
