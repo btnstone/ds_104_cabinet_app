@@ -112,6 +112,14 @@ function close() {
   clearInterval(timer);
 }
 
+function menuClick(index) {
+  if (index === 0) {
+    router.push({
+      path: '/register',
+    });
+  }
+}
+
 onMounted(() => {
   start();
   console.log('index onMounted');
@@ -159,7 +167,7 @@ onUnmounted(() => {
           </template>
           <div class="flex flex-col">
             <template v-for="(item, index) in menuMap" :key="index">
-              <n-button color="#ffffffba" text-color="#000" size="large" style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px">
+              <n-button color="#ffffffba" text-color="#000" size="large" style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px" @click="menuClick(index)">
                 {{ item.title }}
               </n-button>
             </template>

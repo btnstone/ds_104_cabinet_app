@@ -38,6 +38,7 @@ declare module 'vue-router/auto-routes' {
     'page-important-transfer-out': RouteRecordInfo<'page-important-transfer-out', '/important/transferOut', Record<never, never>, Record<never, never>>,
     'page-important-turn-in': RouteRecordInfo<'page-important-turn-in', '/important/turnIn', Record<never, never>, Record<never, never>>,
     'page-important-warehouse': RouteRecordInfo<'page-important-warehouse', '/important/warehouse', Record<never, never>, Record<never, never>>,
+    'page-register': RouteRecordInfo<'page-register', '/register', Record<never, never>, Record<never, never>>,
     'page-storage-one-handover': RouteRecordInfo<'page-storage-one-handover', '/storage/reservationOneHandover', Record<never, never>, Record<never, never>>,
     'page-storage-two-handover': RouteRecordInfo<'page-storage-two-handover', '/storage/reservationTwoHandover', Record<never, never>, Record<never, never>>,
     'page-storage-site-handover': RouteRecordInfo<'page-storage-site-handover', '/storage/siteHandover', Record<never, never>, Record<never, never>>,
