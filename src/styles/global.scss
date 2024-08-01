@@ -160,3 +160,12 @@ body {
 .clickable-div:active {
   transform: scale(0.98);
 }
+
+.right-arrow {
+  display: inline-block;
+  width: 10px; /* 根据需要调整宽度 */
+  height: 10px; /* 根据需要调整高度 */
+  border-right: 2px solid #babbbc; /* 右边框 */
+  border-top: 2px solid #babbbc; /* 上边框 */
+  transform: rotate(45deg); /* 旋转45度 */
+}
