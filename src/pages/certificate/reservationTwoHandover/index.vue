@@ -3,12 +3,12 @@ import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
 
-defineOptions({ name: 'ReservationTwoHandover' });
+defineOptions({ name: 'CertificateReservationTwoHandover' });
 
 definePage({
-  name: 'page-reservation-two-handover',
+  name: 'page-certificate-two-handover',
   meta: {
-    title: '重要实物预约交接（模式二）',
+    title: '实物凭证尾箱预约交接（模式二）',
   },
 });
 
@@ -49,7 +49,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <ContentContainer title="重要实物预约交接（模式二）" user-name="龙傲天" user-id="12315556456">
+  <ContentContainer title="实物凭证尾箱预约交接（模式二）" user-name="龙傲天" user-id="12315556456">
     <div class="m-20 h-full w-full flex flex-col items-center">
       <div class="w-90%">
         <StepPage

@@ -3,12 +3,12 @@ import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
 
-defineOptions({ name: 'SiteHandoverPage' });
+defineOptions({ name: 'CertificateSiteHandoverPage' });
 
 definePage({
-  name: 'page-site-handover',
+  name: 'page-certificate-site-handover',
   meta: {
-    title: '重要实物现场交接',
+    title: '实物凭证尾箱现场交接',
   },
 });
 
@@ -56,7 +56,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <ContentContainer title="重要实物现场交接" user-name="龙傲天" user-id="12315556456">
+  <ContentContainer title="实物凭证尾箱现场交接" user-name="龙傲天" user-id="12315556456">
     <div class="m-20 h-full w-full flex flex-col items-center">
       <div class="w-90%">
         <StepPage

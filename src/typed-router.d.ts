@@ -19,8 +19,9 @@ declare module 'vue-router/auto-routes' {
    */
   export interface RouteNamedMap {
     'page-index': RouteRecordInfo<'page-index', '/', Record<never, never>, Record<never, never>>,
-    'page-reservation-one-handover': RouteRecordInfo<'page-reservation-one-handover', '/certificate/reservationOneHandover/inde', Record<never, never>, Record<never, never>>,
-    'page-reservation-two-handover': RouteRecordInfo<'page-reservation-two-handover', '/certificate/reservationTwoHandover', Record<never, never>, Record<never, never>>,
+    'page-certificate-one-handover': RouteRecordInfo<'page-certificate-one-handover', '/certificate/reservationOneHandover/inde', Record<never, never>, Record<never, never>>,
+    'page-certificate-two-handover': RouteRecordInfo<'page-certificate-two-handover', '/certificate/reservationTwoHandover', Record<never, never>, Record<never, never>>,
+    'page-certificate-site-handover': RouteRecordInfo<'page-certificate-site-handover', '/certificate/siteHandover', Record<never, never>, Record<never, never>>,
     'page-demo': RouteRecordInfo<'page-demo', '/demo', Record<never, never>, Record<never, never>>,
     'page-important-outbound': RouteRecordInfo<'page-important-outbound', '/important/outbound', Record<never, never>, Record<never, never>>,
     'page-important-putBack': RouteRecordInfo<'page-important-putBack', '/important/putBack', Record<never, never>, Record<never, never>>,
