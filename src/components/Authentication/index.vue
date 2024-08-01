@@ -78,7 +78,7 @@ onMounted(() => {
   </n-modal>
 </template>
 
-<style setup lang="scss">
+<style scoped lang="scss">
 .item-container {
   width: 250px;
   height: 300px;

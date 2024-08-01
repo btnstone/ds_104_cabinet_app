@@ -47,12 +47,3 @@ onMounted(async () => {
     </div>
   </div>
 </template>
-
-<style setup lang="scss">
-.list-container {
-  border-radius: 20px;
-  border: 2px solid #939193;
-  padding: 10px 20px;
-  width: 900px;
-}
-</style>

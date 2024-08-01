@@ -19,25 +19,15 @@ const data = ref<{ foo: string }>({
 
 const stepItems: StepItem[] = [
   { title: '身份验证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
-  { title: '开柜门', component: defineAsyncComponent(() => import('@/components/Cabinet/List/index.vue')) },
-  {
-    title: '关柜盘点选择接收人',
-    component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
-    params: { title: '请核对物品是否一致', btn1Text: '核对不一致', btn2Text: '核对一致', isShowReceiver: true },
-  },
+  { title: '开柜门盘点选择接收人', component: defineAsyncComponent(() => import('@/components/Cabinet/Inventory/index.vue')), params: { isShowReceiver: true } },
   { title: '监交人身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
   {
     title: '监交人授权',
     component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
-    params: { title: '', btn1Text: '授权不通过', btn2Text: '授权通过' },
+    params: { title: '', btn1Text: '授权不通过', btn2Text: '授权通过', isShowReceiver: true },
   },
-  { title: '开交接格', component: defineAsyncComponent(() => import('@/components/Cabinet/List/index.vue')) },
-  {
-    title: '关柜盘点',
-    component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
-    params: { title: '请核对物品是否一致', btn1Text: '核对不一致', btn2Text: '核对一致' },
-  },
-  { title: '完成', component: defineAsyncComponent(() => import('@/components/SuccessPage/index.vue')) },
+  { title: '开交接格盘点', component: defineAsyncComponent(() => import('@/components/Cabinet/Inventory/index.vue')), params: { isShowReceiver: true } },
+  { title: '预约完成', component: defineAsyncComponent(() => import('@/components/SuccessPage/index.vue')) },
 ];
 
 // 完成事件

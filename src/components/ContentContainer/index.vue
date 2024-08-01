@@ -32,7 +32,7 @@ onUnmounted(() => {
   </div>
 </template>
 
-<style setup lang="scss">
+<style scoped lang="scss">
 .content-container {
   background-color: #fff;
   width: calc(100vw - 20px);

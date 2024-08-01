@@ -3,12 +3,12 @@ import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
 
-defineOptions({ name: 'ReceiverImportantOneHandover' });
+defineOptions({ name: 'CertificateReceiverOneHandover' });
 
 definePage({
-  name: 'page-receiver-important-one-handover',
+  name: 'page-certificate-receiver-one-handover',
   meta: {
-    title: '接受重要实物操作-预约（模式一）',
+    title: '实物凭证尾箱接收操作-预约（模式一）',
   },
 });
 
@@ -25,18 +25,8 @@ const stepItems: StepItem[] = [
     params: { title: '', btn1Text: '授权不通过', btn2Text: '授权通过',
     },
   },
-  { title: '开交接格', component: defineAsyncComponent(() => import('@/components/Cabinet/List/index.vue')) },
-  {
-    title: '关柜盘点',
-    component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
-    params: { title: '请核对物品是否一致', btn1Text: '核对不一致', btn2Text: '核对一致' },
-  },
-  { title: '开柜门', component: defineAsyncComponent(() => import('@/components/Cabinet/List/index.vue')) },
-  {
-    title: '关柜盘点',
-    component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
-    params: { title: '请核对物品是否一致', btn1Text: '核对不一致', btn2Text: '核对一致' },
-  },
+  { title: '开交接柜盘点', component: defineAsyncComponent(() => import('@/components/Cabinet/Inventory/index.vue')) },
+  { title: '开柜盘点选择接收人', component: defineAsyncComponent(() => import('@/components/Cabinet/Inventory/index.vue')) },
   { title: '完成', component: defineAsyncComponent(() => import('@/components/SuccessPage/index.vue')) },
 ];
 
@@ -55,7 +45,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <ContentContainer title="接受重要实物操作-预约（模式一）" user-name="龙傲天" user-id="12315556456">
+  <ContentContainer title="实物凭证尾箱接收操作-预约（模式一）" user-name="龙傲天" user-id="12315556456">
     <div class="m-20 h-full w-full flex flex-col items-center">
       <div class="w-90%">
         <StepPage

@@ -3,12 +3,12 @@ import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
 
-defineOptions({ name: 'SupervisorImportantTwoHandover' });
+defineOptions({ name: 'ImportantReceiverTwoHandover' });
 
 definePage({
-  name: 'page-supervisor-important-two-handover',
+  name: 'page-important-receiver-two-handover',
   meta: {
-    title: '重要实物预约交接（模式二）监交',
+    title: '重要实物预约交接（模式二）接收',
   },
 });
 
@@ -18,8 +18,15 @@ const data = ref<{ foo: string }>({
 });
 
 const stepItems: StepItem[] = [
+  { title: '接收人开交接格', component: defineAsyncComponent(() => import('@/components/Cabinet/List/index.vue')) },
   {
-    title: '监交人开柜盘点',
+    title: '关柜盘点',
+    component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
+    params: { title: '请核对物品是否一致', btn1Text: '核对不一致', btn2Text: '核对一致' },
+  },
+  { title: '开柜门', component: defineAsyncComponent(() => import('@/components/Cabinet/List/index.vue')) },
+  {
+    title: '关柜盘点',
     component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
     params: { title: '请核对物品是否一致', btn1Text: '核对不一致', btn2Text: '核对一致' },
   },
@@ -41,7 +48,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <ContentContainer title="重要实物预约交接（模式二）监交" user-name="龙傲天" user-id="12315556456">
+  <ContentContainer title="重要实物预约交接（模式二）接收" user-name="龙傲天" user-id="12315556456">
     <div class="m-20 h-full w-full flex flex-col items-center">
       <div class="w-90%">
         <StepPage

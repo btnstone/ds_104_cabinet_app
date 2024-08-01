@@ -42,9 +42,12 @@ declare module 'vue-router/auto-routes' {
     'page-storage-one-handover': RouteRecordInfo<'page-storage-one-handover', '/storage/reservationOneHandover', Record<never, never>, Record<never, never>>,
     'page-storage-two-handover': RouteRecordInfo<'page-storage-two-handover', '/storage/reservationTwoHandover', Record<never, never>, Record<never, never>>,
     'page-storage-site-handover': RouteRecordInfo<'page-storage-site-handover', '/storage/siteHandover', Record<never, never>, Record<never, never>>,
+    'page-certificate-receiver-one-handover': RouteRecordInfo<'page-certificate-receiver-one-handover', '/todo/certificate/receiverOneHandover', Record<never, never>, Record<never, never>>,
+    'page-certificate-receiver-two-handover': RouteRecordInfo<'page-certificate-receiver-two-handover', '/todo/certificate/receiverTwoHandover', Record<never, never>, Record<never, never>>,
+    'page-certificate-supervisor-two-handover': RouteRecordInfo<'page-certificate-supervisor-two-handover', '/todo/certificate/supervisorTwoHandover', Record<never, never>, Record<never, never>>,
+    'page-important-receiver-one-handover': RouteRecordInfo<'page-important-receiver-one-handover', '/todo/Important/receiverOneHandover', Record<never, never>, Record<never, never>>,
+    'page-important-receiver-two-handover': RouteRecordInfo<'page-important-receiver-two-handover', '/todo/Important/receiverTwoHandover', Record<never, never>, Record<never, never>>,
+    'page-important-supervisor-two-handover': RouteRecordInfo<'page-important-supervisor-two-handover', '/todo/Important/supervisorTwoHandover', Record<never, never>, Record<never, never>>,
     'page-todo-list': RouteRecordInfo<'page-todo-list', '/todo/list', Record<never, never>, Record<never, never>>,
-    'page-receiver-important-one-handover': RouteRecordInfo<'page-receiver-important-one-handover', '/todo/receiverImportantOneHandover', Record<never, never>, Record<never, never>>,
-    'page-receiver-important-two-handover': RouteRecordInfo<'page-receiver-important-two-handover', '/todo/receiverImportantTwoHandover', Record<never, never>, Record<never, never>>,
-    'page-supervisor-important-two-handover': RouteRecordInfo<'page-supervisor-important-two-handover', '/todo/supervisorImportantTwoHandover', Record<never, never>, Record<never, never>>,
   }
 }

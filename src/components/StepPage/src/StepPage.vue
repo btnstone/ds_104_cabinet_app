@@ -109,7 +109,7 @@ function handleError(...args: any) {
   </div>
 </template>
 
-<style setup lang="scss">
+<style scoped lang="scss">
 .bg-blue {
   background-color: #429fff;
 }

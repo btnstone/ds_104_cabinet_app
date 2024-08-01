@@ -122,7 +122,7 @@ function failCheck() {
   </div>
 </template>
 
-<style setup lang="scss">
+<style scoped lang="scss">
 .list-container {
   border-radius: 20px;
   border: 2px solid #939193;
