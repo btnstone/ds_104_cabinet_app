@@ -207,7 +207,7 @@ onUnmounted(() => {
     <!-- footer -->
     <div class="h-48" />
 
-    <n-modal v-model:show="showModal">
+    <n-modal v-model:show="showModal" style="box-shadow:none">
       <div class="flex">
         <template v-for="(item, index) in currentItem?.childrens" :key="index">
           <div class="clickable-div pos-relative wh-full" :class="item.bgString" style="width: 298px; height:329px" @click="contentItemClick(item)">
