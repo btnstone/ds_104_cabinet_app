@@ -23,7 +23,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <ContentContainer title="代办事项" user-name="龙傲天" user-id="12315556456">
+  <ContentContainer title="代办事项">
     <div class="m-20 h-full flex flex-col items-center">
       <div v-for="item in todoList" :key="item.rspId" class="content-container">
         <div>

@@ -16,20 +16,19 @@ export const useUserStore = defineStore('user', () => {
     // const [err, res] = await to(loginApi(userInfo));
     // if (res) {
     //   const data = res.data;
-    //   setToken(data.access_token);
-    //   token.value = data.access_token;
-    //   return Promise.resolve();
     // }
-    // return Promise.reject(err);
+    // 登录成功后，将用户信息保存到 store 中
+    // name.value = '1123123';// userInfo.username;
+    // userId.value = '12312';// userInfo.uid;
   };
 
   // 注销
   const logout = async (): Promise<void> => {
-    // await logoutApi();
-    // token.value = '';
-    // roles.value = [];
-    // permissions.value = [];
-    // removeToken();
+  };
+
+  const change = (newName: string, newUserId: string) => {
+    name.value = newName;
+    userId.value = newUserId;
   };
 
   return {
@@ -37,6 +36,7 @@ export const useUserStore = defineStore('user', () => {
     name,
     login,
     logout,
+    change,
   };
 });
 

@@ -41,7 +41,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <ContentContainer title="重要实物预约交接（模式二）监交" user-name="龙傲天" user-id="12315556456">
+  <ContentContainer title="重要实物预约交接（模式二）监交">
     <div class="m-20 h-full w-full flex flex-col items-center">
       <div class="w-90%">
         <StepPage

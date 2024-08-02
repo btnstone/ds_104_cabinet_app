@@ -47,7 +47,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <ContentContainer title="凭证调拨入库" user-name="龙傲天" user-id="12315556456">
+  <ContentContainer title="凭证调拨入库">
     <div class="m-20 h-full w-full flex flex-col items-center">
       <div class="w-90%">
         <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />

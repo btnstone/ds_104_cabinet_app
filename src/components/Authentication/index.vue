@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // import type { StepItemParams } from '@/components/StepPage';
+// import useUserStore from '@/store/modules/user';
 
 defineOptions({ name: 'Authentication' });
 
@@ -9,6 +10,7 @@ defineOptions({ name: 'Authentication' });
 
 const emits = defineEmits(['next', 'prev', 'error']);
 const model = defineModel({ default: { foo2: 0 } });
+// const userStore = useUserStore();
 
 const showModal = ref(false);
 const showModalType = ref(1);
@@ -27,6 +29,7 @@ function showModalView(type: number) {
 }
 
 function checkDate() {
+  // userStore.change(`日了狗${Math.random()}`, `草泥马${Math.random()}`);
   handleNext();
   // todo 数据校验
   // if (showModalType.value === 1) {

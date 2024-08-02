@@ -46,7 +46,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <ContentContainer title="实物凭证尾箱现场交接" user-name="龙傲天" user-id="12315556456">
+  <ContentContainer title="实物凭证尾箱现场交接">
     <div class="mt-20 h-full w-full flex flex-col items-center">
       <div class="w-95%">
         <StepPage

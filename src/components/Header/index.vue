@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import useUserStore from '@/store/modules/user';
+
 defineOptions({ name: 'ContentHeader' });
 defineProps({
   title: {
@@ -13,6 +15,7 @@ defineProps({
 });
 
 const router = useRouter();
+const userStore = useUserStore();
 
 let formatted = useDateFormat(useNow(), 'HH:mm');
 
@@ -54,10 +57,10 @@ onUnmounted(() => {
     <div class="h-full flex items-center">
       <div class="mr-10 h-full flex items-center">
         <div class="mr-10 text-26 font-bold line-height-none">
-          {{ userName }}
+          {{ userStore.name }}
         </div>
         <div class="text-26 font-bold line-height-none">
-          {{ userId }}
+          {{ userStore.userId }}
         </div>
       </div>
       <div class="h-full flex items-center">
