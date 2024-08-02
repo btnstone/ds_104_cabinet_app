@@ -66,3 +66,7 @@ export interface GoodVO {
   cellNo?: number;
 
 }
+
+export interface CertificateVO {
+  isShowDetail?: boolean;
+}

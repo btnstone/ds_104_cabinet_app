@@ -2,6 +2,16 @@
  * DeviceCabinetVo
  */
 export interface DeviceCabinetVo {
+
+  cabinetCode?: string;
+
+  position?: {
+    col?: number;
+    colSpan?: number;
+    row?: number;
+    rowSpan?: number;
+  };
+
   cabinetCol?: number;
   cabinetGrids?: CabinetCellVo[];
   /**
@@ -55,7 +65,7 @@ export interface CabinetCellVo {
   /**
    * 格子序号，从1开始
    */
-  cellIndex?: number;
+  cellIndex: number;
   /**
    * 格子排序
    */

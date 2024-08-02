@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { DeviceCabinetVo } from '@/api/cabinet/types';
 import { getCabinetList } from '@/api/cabinet';
-import type { GoodVO } from '@/api/goods/types';
+import type { CertificateVO, GoodVO } from '@/api/goods/types';
 import type { StepItemParams } from '@/components/StepPage';
 
 defineOptions({ name: 'CabinetInventory' });
@@ -14,8 +14,11 @@ const emits = defineEmits(['next', 'prev', 'error']);
 const model = defineModel({ default: { foo2: 0 } });
 const cabinetList = ref<DeviceCabinetVo[]>([]);
 const goodsList = ref<GoodVO[]>([]);
-const receiver = ref();
-const supervisor = ref();
+const receiver = ref('');
+const supervisor = ref('');
+const org = ref('');
+const showModal = ref(false);
+const certificateList = ref<CertificateVO[]>([]);
 const receiverOptions = [
   {
     label: 'Except Me and My Monkey',
@@ -28,7 +31,10 @@ const receiverOptions = [
 ];
 
 const listHeight = computed(() => {
-  return props.param && props.param.isShowReceiver ? 350 : 400;
+  if (!props.param)
+    return 400;
+
+  return props.param.isShowReceiver || props.param.isShowSupervisor || props.param.isShowOrg ? 350 : 400;
 });
 
 function openDoor() {
@@ -40,7 +46,14 @@ function handleNext() {
 }
 
 function successCheck() {
-  handleNext();
+  if (props.param.isShowOrg) {
+    showModal.value = true;
+  }
+  else {
+    handleNext();
+  }
+
+  //
   // todo 数据校验
   // if (showModalType.value === 1) {
 
@@ -54,6 +67,16 @@ function failCheck() {
 
 }
 
+function detailChange(index: number) {
+  if (index >= 0) {
+    certificateList.value[index].isShowDetail = !certificateList.value[index].isShowDetail;
+  }
+}
+
+function modalCheck() {
+  handleNext();
+}
+
 onMounted(async () => {
   cabinetList.value = await getCabinetList();
   console.log(model);
@@ -62,6 +85,12 @@ onMounted(async () => {
     electagNo: '112312312312',
     custodygoodsId: '2sadasdasdasd',
     custodygoodsQuantity: '3',
+  }];
+
+  certificateList.value = [{
+    isShowDetail: true,
+  }, {
+    isShowDetail: false,
   }];
 });
 </script>
@@ -93,26 +122,32 @@ onMounted(async () => {
         请核对物品是否一致
       </div>
       <template v-if="param">
-        <template v-if="param.isShowReceiver || param.isShowSupervisor">
-          <div class="flex flex-row">
-            <template v-if="param.isShowSupervisor">
-              <div class="mr-15 mt-15 flex flex-row items-center">
-                <div class="w-120 text-20">
-                  请选择监交人
-                </div>
-                <n-select v-model:value="supervisor" :options="receiverOptions" class="ml-10 w-220" />
+        <div v-if="param.isShowReceiver || param.isShowSupervisor || param.isShowOrg" class="flex flex-row">
+          <template v-if="param.isShowSupervisor">
+            <div class="mr-15 mt-15 flex flex-row items-center">
+              <div class="w-120 text-20">
+                请选择监交人
               </div>
-            </template>
-            <template v-if="param.isShowReceiver">
-              <div class="mt-15 flex flex-row items-center">
-                <div class="w-120 text-20">
-                  请选择接收人
-                </div>
-                <n-select v-model:value="receiver" :options="receiverOptions" class="ml-10 w-220" />
+              <n-select v-model:value="supervisor" :options="receiverOptions" class="ml-10 w-220" />
+            </div>
+          </template>
+          <template v-if="param.isShowReceiver">
+            <div class="mt-15 flex flex-row items-center">
+              <div class="w-120 text-20">
+                请选择接收人
               </div>
-            </template>
-          </div>
-        </template>
+              <n-select v-model:value="receiver" :options="receiverOptions" class="ml-10 w-220" />
+            </div>
+          </template>
+          <template v-if="param.isShowOrg">
+            <div class="mt-15 flex flex-row items-center">
+              <div class="w-120 text-20">
+                调入机构
+              </div>
+              <n-input v-model:value="org" type="text" class="ml-10 w-220" placeholder="请输入调入机构id" />
+            </div>
+          </template>
+        </div>
       </template>
       <div class="list-container mt-15">
         <n-list clickable :show-divider="false" class="w-full" :style="`height:${listHeight}px;overflow-y: hidden; overflow-y: auto;`">
@@ -150,6 +185,55 @@ onMounted(async () => {
         </n-button>
       </div>
     </div>
+
+    <n-modal v-model:show="showModal">
+      <n-card style="width: 90%;" :bordered="false" size="huge" role="dialog" aria-modal="true">
+        <div class="w-full text-align-center">
+          凭证申请信息
+        </div>
+        <n-list clickable hoverable>
+          <n-list-item v-for="(item, index) in certificateList" :key="index">
+            <div>
+              <div class="w-full flex flex-row justify-between" @click="detailChange(index)">
+                <div>
+                  凭证申请编号：123123124810928
+                </div>
+                <div :class="item.isShowDetail ? 'up-arrow' : 'down-arrow'" />
+              </div>
+              <n-table v-if="item.isShowDetail" :bordered="false" :single-line="false">
+                <thead>
+                  <tr>
+                    <th>凭证申请编号</th>
+                    <th>凭证种类</th>
+                    <th>凭证单位</th>
+                    <th>数量</th>
+                    <th>总张数</th>
+                    <th>张数</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>123123124810928</td>
+                    <td>银行汇票</td>
+                    <td />
+                    <td>28</td>
+                    <td>28</td>
+                    <td>28</td>
+                  </tr>
+                </tbody>
+              </n-table>
+            </div>
+          </n-list-item>
+        </n-list>
+        <template #footer>
+          <div class="flex flex-row items-center justify-center">
+            <n-button size="large" type="info" round style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:250px;" @click="modalCheck">
+              下一步
+            </n-button>
+          </div>
+        </template>
+      </n-card>
+    </n-modal>
   </div>
 </template>
 

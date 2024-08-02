@@ -12,4 +12,5 @@ export interface StepItemParams {
   response?: object;
   isShowReceiver?: boolean;
   isShowSupervisor?: boolean;
+  isShowOrg?: boolean;
 }

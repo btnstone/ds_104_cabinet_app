@@ -21,7 +21,7 @@ const data = ref<{ foo: string }>({
 });
 const stepItems: StepItem[] = [
   { title: '身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
-  { title: '调拨内容关柜盘点', component: defineAsyncComponent(() => import('@/components/Cabinet/Inventory/index.vue')) },
+  { title: '调拨内容关柜盘点', component: defineAsyncComponent(() => import('@/components/Cabinet/Inventory/index.vue')), params: { isShowOrg: true } },
   { title: '主管身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
   {
     title: '主管授权',

@@ -169,3 +169,30 @@ body {
   border-top: 2px solid #babbbc; /* 上边框 */
   transform: rotate(45deg); /* 旋转45度 */
 }
+
+.left-arrow {
+  display: inline-block;
+  width: 10px; /* 根据需要调整宽度 */
+  height: 10px; /* 根据需要调整高度 */
+  border-left: 2px solid #babbbc; /* 左边框 */
+  border-bottom: 2px solid #babbbc; /* 下边框 */
+  transform: rotate(45deg); /* 旋转45度 */
+}
+
+.up-arrow {
+  display: inline-block;
+  width: 10px; /* 根据需要调整宽度 */
+  height: 10px; /* 根据需要调整高度 */
+  border-left: 2px solid #babbbc; /* 左边框 */
+  border-top: 2px solid #babbbc; /* 上边框 */
+  transform: rotate(45deg); /* 旋转-45度 */
+}
+
+.down-arrow {
+  display: inline-block;
+  width: 10px; /* 根据需要调整宽度 */
+  height: 10px; /* 根据需要调整高度 */
+  border-right: 2px solid #babbbc; /* 右边框 */
+  border-bottom: 2px solid #babbbc; /* 下边框 */
+  transform: rotate(45deg); /* 旋转45度 */
+}
