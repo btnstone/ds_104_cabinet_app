@@ -122,29 +122,29 @@ onMounted(async () => {
         请核对物品是否一致
       </div>
       <template v-if="param">
-        <div v-if="param.isShowReceiver || param.isShowSupervisor || param.isShowOrg" class="flex flex-row">
+        <div v-if="param.isShowReceiver || param.isShowSupervisor || param.isShowOrg" class="w-full flex flex-row">
           <template v-if="param.isShowOrg">
-            <div class="mt-15 flex flex-row items-center">
-              <div class="w-120 text-20">
+            <div class="mr-10 mt-15 w-full flex flex-row items-center justify-center">
+              <div class="text-20">
                 调入机构：
               </div>
-              <n-input v-model:value="org" type="text" class="ml-10 w-220" placeholder="请输入调入机构id" />
+              <n-input v-model:value="org" type="text" class="ml-10" placeholder="请输入调入机构id" style="width: 150px;" />
             </div>
           </template>
           <template v-if="param.isShowSupervisor">
-            <div class="mr-15 mt-15 flex flex-row items-center">
-              <div class="w-120 text-20">
+            <div class="mr-10 mt-15 w-full flex flex-row items-center">
+              <div class="text-20">
                 请选择监交人：
               </div>
-              <n-select v-model:value="supervisor" :options="receiverOptions" class="ml-10 w-220" />
+              <n-select v-model:value="supervisor" :options="receiverOptions" class="ml-10 w-150" />
             </div>
           </template>
           <template v-if="param.isShowReceiver">
-            <div class="mt-15 flex flex-row items-center">
-              <div class="w-120 text-20">
+            <div class="mt-15 w-full flex flex-row items-center">
+              <div class="text-20">
                 请选择接收人：
               </div>
-              <n-select v-model:value="receiver" :options="receiverOptions" class="ml-10 w-220" />
+              <n-select v-model:value="receiver" :options="receiverOptions" class="ml-10 w-150" />
             </div>
           </template>
         </div>
