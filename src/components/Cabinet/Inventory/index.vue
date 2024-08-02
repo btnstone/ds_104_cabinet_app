@@ -46,7 +46,7 @@ function handleNext() {
 }
 
 function successCheck() {
-  if (props.param.isShowOrg) {
+  if (props.param?.isShowOrg) {
     showModal.value = true;
   }
   else {
