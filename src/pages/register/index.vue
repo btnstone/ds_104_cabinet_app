@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ContentContainer from '@/components/ContentContainer/index.vue';
+// import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { DeviceCabinetVo } from '@/api/cabinet/types';
 import { getCabinetList } from '@/api/cabinet';
 
@@ -12,6 +12,7 @@ definePage({
   },
 });
 
+const router = useRouter();
 const cabinetList = ref<DeviceCabinetVo[]>([]);
 const deviceName = ref('');
 const orgName = ref('');
@@ -21,18 +22,33 @@ const deviceIp = ref('');
 const deviceMAC = ref('');
 const devicePort = ref('');
 
+function gotoHome() {
+  router.back();
+}
+
+function registerDevice() {
+  // todo  注册设备
+}
+
 onMounted(async () => {
   cabinetList.value = await getCabinetList();
   // console.log(props);
-  console.log(model);
 });
 </script>
 
 <template>
-  <ContentContainer title="柜体注册" user-name="龙傲天" user-id="12315556456">
-    <div class="h-full w-full flex flex-row items-center justify-between">
+  <div class="bw-bg wh-full flex-col">
+    <div class="h-88 w-full flex items-center justify-between bg-#f8f6f9 p-20">
+      <n-button color="#ffffff" text-color="#409EFF" round size="large" style="--n-font-size: 26px;font-weight: bold;--n-height: 60px;--n-icon-size: 28px; margin-right:20px;" @click="gotoHome">
+        返回
+      </n-button>
+      <n-button color="#849dfb" text-color="#ffffff" round size="large" style="--n-font-size: 26px;font-weight: bold;--n-height: 60px;--n-icon-size: 28px; margin-right:20px;" @click="registerDevice">
+        提交
+      </n-button>
+    </div>
+    <div class="h-full w-full flex flex-row items-center justify-between px-10 py-20">
       <div class="h-full w-40% flex flex-col justify-between">
-        <div class="cell-container h-30">
+        <div class="cell-container">
           <div>
             设备名称
           </div>
@@ -94,14 +110,20 @@ onMounted(async () => {
           </div>
         </div>
       </div>
-      <div class="p-f-10 h-full w-58% flex flex-col items-center justify-between p-20">
+      <div class="p-f-10 h-full w-58% flex flex-col items-center justify-between bg-#fff p-20" style="border-radius: 20px;">
         <div class="w-full flex flex-row items-center justify-between text-align-center text-size-18">
           <div>
             柜格信息
           </div>
           <div class="flex flex-row items-center justify-between">
-            <div>带电</div>
-            <div>不带电</div>
+            <div class="mr-20 flex flex-row items-center justify-center">
+              <div class="mr-10 h-30 w-30 bg-#26e7ed" />
+              <div>带电</div>
+            </div>
+            <div class="flex flex-row items-center justify-center">
+              <div class="mr-10 h-30 w-30 bg-#e9e9e9" />
+              <div>不带电</div>
+            </div>
           </div>
         </div>
         <div class="mt-15 flex flex-1 gap-10">
@@ -124,7 +146,7 @@ onMounted(async () => {
         </div>
       </div>
     </div>
-  </ContentContainer>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -134,8 +156,8 @@ onMounted(async () => {
   justify-content: space-between;
   align-items: center;
   padding: 0px 20px;
-  height: 90px;
-  border-radius: 30px;
+  height: 85px;
+  border-radius: 20px;
   background-color: #fff;
   font-size: 24px;
 }
