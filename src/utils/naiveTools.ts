@@ -8,8 +8,8 @@ export function setupNaiveDiscreteApi() {
     theme: appStore.isDark ? NaiveUI.darkTheme : undefined,
     themeOverrides: useAppStore().naiveThemeOverrides,
   }));
-  const { message, dialog, notification, loadingBar } = NaiveUI.createDiscreteApi(
-    ['message', 'dialog', 'notification', 'loadingBar'],
+  const { message, dialog, notification, loadingBar, modal } = NaiveUI.createDiscreteApi(
+    ['message', 'dialog', 'notification', 'loadingBar', 'modal'],
     { configProviderProps },
   );
 
@@ -17,4 +17,5 @@ export function setupNaiveDiscreteApi() {
   window.$notification = notification;
   window.$message = message;
   window.$dialog = dialog;
+  window.$modal = modal;
 }

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useLoading } from '@/hooks/useLoading';
+
 defineOptions({ name: 'IndexPage' });
 
 interface ContentItem {
@@ -18,6 +20,8 @@ definePage({
     title: '首页',
   },
 });
+
+const loading = useLoading();
 
 const contentMap = computed<Array<ContentItem>>(() => {
   // type 1弹窗 2直接跳转路由
@@ -112,7 +116,7 @@ function close() {
   clearInterval(timer);
 }
 
-function menuClick(index) {
+function menuClick(index: number) {
   if (index === 0) {
     router.push({
       path: '/register',
@@ -123,6 +127,11 @@ function menuClick(index) {
 onMounted(() => {
   start();
   console.log('index onMounted');
+  loading.showLoading('加载中，请稍后。。。');
+
+  setTimeout(() => {
+    loading.hideLoading();
+  }, 2000);
 });
 
 onUnmounted(() => {
