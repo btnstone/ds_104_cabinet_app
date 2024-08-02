@@ -117,7 +117,9 @@ onMounted(async () => {
           </div>
           <div class="flex flex-row items-center justify-between">
             <div class="mr-20 flex flex-row items-center justify-center">
-              <div class="mr-10 h-30 w-30 bg-#26e7ed" />
+              <div class="mr-10 h-30 w-30 flex flex-row items-center justify-center bg-#26e7ed">
+                <img src="@/assets/images/other/lightning.png" alt="" class="h-22 h-full w-16">
+              </div>
               <div>带电</div>
             </div>
             <div class="flex flex-row items-center justify-center">
