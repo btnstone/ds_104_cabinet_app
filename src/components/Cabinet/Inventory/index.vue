@@ -123,10 +123,18 @@ onMounted(async () => {
       </div>
       <template v-if="param">
         <div v-if="param.isShowReceiver || param.isShowSupervisor || param.isShowOrg" class="flex flex-row">
+          <template v-if="param.isShowOrg">
+            <div class="mt-15 flex flex-row items-center">
+              <div class="w-120 text-20">
+                调入机构：
+              </div>
+              <n-input v-model:value="org" type="text" class="ml-10 w-220" placeholder="请输入调入机构id" />
+            </div>
+          </template>
           <template v-if="param.isShowSupervisor">
             <div class="mr-15 mt-15 flex flex-row items-center">
               <div class="w-120 text-20">
-                请选择监交人
+                请选择监交人：
               </div>
               <n-select v-model:value="supervisor" :options="receiverOptions" class="ml-10 w-220" />
             </div>
@@ -134,17 +142,9 @@ onMounted(async () => {
           <template v-if="param.isShowReceiver">
             <div class="mt-15 flex flex-row items-center">
               <div class="w-120 text-20">
-                请选择接收人
+                请选择接收人：
               </div>
               <n-select v-model:value="receiver" :options="receiverOptions" class="ml-10 w-220" />
-            </div>
-          </template>
-          <template v-if="param.isShowOrg">
-            <div class="mt-15 flex flex-row items-center">
-              <div class="w-120 text-20">
-                调入机构
-              </div>
-              <n-input v-model:value="org" type="text" class="ml-10 w-220" placeholder="请输入调入机构id" />
             </div>
           </template>
         </div>
