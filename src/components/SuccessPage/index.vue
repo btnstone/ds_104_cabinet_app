@@ -46,7 +46,7 @@ onUnmounted(() => {
 
 <template>
   <div class="w-full flex flex-col items-center justify-center pl-20 pr-20" style="height:600px">
-    <img src="@/assets/images/components/success.png" alt="" class="border-none">
+    <img src="@/assets/images/components/successpage.png" alt="" class="border-none">
     <div class="mt-10 text-26">
       交接成功
     </div>
