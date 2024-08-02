@@ -38,11 +38,11 @@ onMounted(async () => {
 
 <template>
   <div class="bw-bg wh-full flex-col">
-    <div class="h-88 w-full flex items-center justify-between bg-#f8f6f9 p-20">
-      <n-button color="#ffffff" text-color="#409EFF" round size="large" style="--n-font-size: 26px;font-weight: bold;--n-height: 60px;--n-icon-size: 28px; margin-right:20px;" @click="gotoHome">
+    <div class="h-88 w-full flex items-center justify-between bg-gray:30 p-20">
+      <n-button color="#ffffff" text-color="#409EFF" round size="large" style="--n-font-size: 26px;font-weight: bold;--n-height: 60px;--n-icon-size: 28px;" @click="gotoHome">
         返回
       </n-button>
-      <n-button color="#849dfb" text-color="#ffffff" round size="large" style="--n-font-size: 26px;font-weight: bold;--n-height: 60px;--n-icon-size: 28px; margin-right:20px;" @click="registerDevice">
+      <n-button color="#849dfb" text-color="#ffffff" round size="large" style="--n-font-size: 26px;font-weight: bold;--n-height: 60px;--n-icon-size: 28px;" @click="registerDevice">
         提交
       </n-button>
     </div>
