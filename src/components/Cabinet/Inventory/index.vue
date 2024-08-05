@@ -122,7 +122,7 @@ onMounted(async () => {
         请核对物品是否一致
       </div>
       <template v-if="param">
-        <div v-if="param.isShowReceiver || param.isShowSupervisor || param.isShowOrg" class="w-full flex flex-row">
+        <div v-if="param.isShowReceiver || param.isShowSupervisor || param.isShowOrg" class="w-full flex flex-row items-center justify-center">
           <template v-if="param.isShowOrg">
             <div class="mr-10 mt-15 w-full flex flex-row items-center justify-center">
               <div class="text-20">
@@ -132,7 +132,7 @@ onMounted(async () => {
             </div>
           </template>
           <template v-if="param.isShowSupervisor">
-            <div class="mr-10 mt-15 w-full flex flex-row items-center">
+            <div class="mr-10 mt-15 w-full flex flex-row items-center justify-center">
               <div class="text-20">
                 请选择监交人：
               </div>
@@ -140,7 +140,7 @@ onMounted(async () => {
             </div>
           </template>
           <template v-if="param.isShowReceiver">
-            <div class="mt-15 w-full flex flex-row items-center">
+            <div class="mt-15 w-full flex flex-row items-center justify-center">
               <div class="text-20">
                 请选择接收人：
               </div>
