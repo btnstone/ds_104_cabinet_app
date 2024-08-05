@@ -7,7 +7,7 @@ import type { StepItemParams } from '@/components/StepPage';
 defineOptions({ name: 'CabinetInventory' });
 
 const props = defineProps<{
-  param: StepItemParams;
+  param?: StepItemParams;
 }>();
 
 const emits = defineEmits(['next', 'prev', 'error']);

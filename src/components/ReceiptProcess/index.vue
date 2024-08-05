@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import type { StepItemParams } from '@/components/StepPage';
 import type { TodoItem } from '@/api/todo/types';
 
 defineOptions({ name: 'SuccessPage' });
 
-defineProps<{
-  param: StepItemParams;
-}>();
+// defineProps<{
+//   param: StepItemParams;
+// }>();
 const emits = defineEmits(['next', 'prev', 'error']);
 const todoList = ref<TodoItem[]>([]);
 const model = defineModel({ default: { foo2: 0 } });
