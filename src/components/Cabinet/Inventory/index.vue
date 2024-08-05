@@ -96,12 +96,12 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="mt-15 h-full w-full flex flex-row items-center justify-between">
-    <div class="w-40% flex flex-col items-center justify-center">
+  <div class="mt-15 h-full w-full flex flex-row items-start justify-between">
+    <div class="mr-30 flex flex-col shrink-0 grow-0 items-center justify-center">
       <div class="text-26 font-bold line-height-none">
         请选择要打开的柜门
       </div>
-      <div class="mt-15 flex flex-1 gap-10">
+      <div class="mt-15 flex flex-1 flex-1 gap-10">
         <div v-if="cabinetList.length > 0" class="flex gap-8">
           <div v-for="cabinet in cabinetList" :key="`cabinet-${cabinet.cabinetCode}`">
             <div class="grid gap-8" :style="{ gridTemplateColumns: `repeat(${cabinet.cabinetCol}, 1fr)`, gridTemplateRows: `repeat(${cabinet.cabinetRow}, 37px)`, width: `${cabinet.cabinetWidth}px` }">
@@ -117,7 +117,7 @@ onMounted(async () => {
         </div>
       </div>
     </div>
-    <div class="w-56% flex flex-col items-center justify-center">
+    <div class="flex flex-col flex-1 items-center justify-center">
       <div class="text-26 font-bold line-height-none">
         请核对物品是否一致
       </div>
@@ -243,5 +243,7 @@ onMounted(async () => {
   border: 2px solid #939193;
   padding: 10px 20px;
   width: 100%;
+  flex-shrink: 0;
+  flex-grow: 0;
 }
 </style>

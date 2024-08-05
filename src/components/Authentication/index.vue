@@ -45,7 +45,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="mt-100px h-full w-full flex items-center justify-center">
+  <div class="h-full w-full flex items-center justify-center">
     <div class="clickable-div item-container mr-100 flex flex-col items-center justify-center" style="background-color: #ededf1;" @click="showModalView(1)">
       <img src="@/assets/images/components/fingerprint.png" alt="" class="border-none">
       <div class="text-26 font-bold line-height-none">

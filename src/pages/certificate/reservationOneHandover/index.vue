@@ -46,13 +46,8 @@ onMounted(() => {
 
 <template>
   <ContentContainer title="实物凭证尾箱预约交接（模式一）">
-    <div class="m-20 h-full w-full flex flex-col items-center">
-      <div class="w-90%">
-        <StepPage
-          v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk"
-          @error="onError"
-        />
-      </div>
+    <div class="h-full w-full flex flex-col items-center p-20">
+      <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
     </div>
   </ContentContainer>
 </template>

@@ -50,12 +50,7 @@ onMounted(() => {
 <template>
   <ContentContainer title="重要实物预约交接（模式二）接收">
     <div class="m-20 h-full w-full flex flex-col items-center">
-      <div class="w-90%">
-        <StepPage
-          v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk"
-          @error="onError"
-        />
-      </div>
+      <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
     </div>
   </ContentContainer>
 </template>

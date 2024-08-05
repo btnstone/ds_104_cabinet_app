@@ -62,7 +62,7 @@ function handleError(...args: any) {
 <template>
   <div class="wh-full flex flex-col items-center justify-center">
     <!--  -->
-    <div class="w-full flex">
+    <div class="w-90% flex">
       <div
         v-for="(step, index) in stepItems" :key="step.key" class="flex flex-col"
         :class="[index > 0 ? 'flex-1' : '']"
@@ -100,7 +100,7 @@ function handleError(...args: any) {
       </div>
     </div>
     <!--  -->
-    <div class="w-full flex-1">
+    <div class="component-container">
       <component
         :is="componentMaps.get(current)" v-model="vData" v-bind="paramAttributes" @next="handleNext" @prev="handlePrev"
         @error="handleError"
@@ -124,5 +124,10 @@ function handleError(...args: any) {
 
 .radius-color {
   background-color: #edeced;
+}
+
+.component-container {
+  width: calc(100vw - 80px);
+  flex: 1 1 0%;
 }
 </style>
