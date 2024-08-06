@@ -9,7 +9,7 @@ class StompService {
 
   constructor() {
     this.client = new Client({
-      brokerURL: 'ws://192.168.88.168:8900/ws',
+      brokerURL: 'ws://192.168.88.168:8900/stomp',
       debug(str) {
         console.log(`STOMP: ${str}`);
       },
@@ -90,6 +90,22 @@ class StompService {
           stompStore.setError(topic, response.msg);
         }
       });
+    });
+  }
+
+  public openDoor(cabinets: any) {
+    this.client.publish({
+      destination: '/app/cell/open',
+      body: JSON.stringify({ cabinets }),
+    });
+  }
+
+  public getDeviceInfo() {
+    this.client.publish({
+      destination: '/app/changeMode',
+      body: JSON.stringify({
+        mode: '1',
+      }),
     });
   }
 }

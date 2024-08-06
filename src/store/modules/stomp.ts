@@ -18,6 +18,12 @@ export const useStompStore = defineStore('stomp', {
   state: (): StompState => ({
     topics: {},
   }),
+  getters: {
+    // 获取指定 topic 的数据
+    getTopicData: (state) => {
+      return (topic: string) => state.topics[topic];
+    },
+  },
   actions: {
     setTopicData<T>(topic: string, data: T): void {
       this.topics[topic] = {

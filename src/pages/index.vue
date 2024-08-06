@@ -131,7 +131,7 @@ onMounted(() => {
 
   setTimeout(() => {
     loading.hideLoading();
-  }, 2000);
+  }, 500);
 });
 
 onUnmounted(() => {

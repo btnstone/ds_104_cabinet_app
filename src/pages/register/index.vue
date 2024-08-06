@@ -1,9 +1,16 @@
 <script setup lang="ts">
 // import ContentContainer from '@/components/ContentContainer/index.vue';
-import type { DeviceCabinetVo } from '@/api/cabinet/types';
+import { onMounted } from 'vue';
+import type { DeviceCabinetVo } from '@/api/machine/types/DeviceCabinetVo';
 import { getCabinetList } from '@/api/cabinet';
+import { useLoading } from '@/hooks/useLoading';
+import { useStompStore } from '@/store/modules/stomp';
+import StompService from '@/stomp/StompService';
+import type { stompCabinetInfoVo } from '@/stomp/types/stompDeviceTypes';
+import { getCabinetDetails } from '@/api/machine/machineGet';
 
 defineOptions({ name: 'Register' });
+const loading = useLoading();
 
 definePage({
   name: 'page-register',
@@ -33,6 +40,66 @@ function registerDevice() {
 onMounted(async () => {
   cabinetList.value = await getCabinetList();
   // console.log(props);
+});
+
+const stompStore = useStompStore();
+const stompService = StompService.getInstance();
+
+// async function getDeviceInfo() {
+//   // 发送设备信息请求
+//   stompService.getDeviceInfo();
+//
+//   // 开始时间
+//   const startTime = Date.now();
+//   const timeout = 5000; // 5秒超时
+//
+//   // 轮询检查数据
+//   while (Date.now() - startTime < timeout) {
+//     const deviceInfo = stompStore.getTopicData('/device/cabinet/info');
+//     if (deviceInfo) {
+//       if (deviceInfo.code === 200) {
+//         return deviceInfo.data as stompCabinetInfoVo[]; // 成功获取数据
+//       }
+//       else {
+//         throw new Error(deviceInfo.msg || '获取设备信息失败');
+//       }
+//     }
+//     // 等待一段时间再次检查（例如，每 500 毫秒检查一次）
+//     await new Promise(resolve => setTimeout(resolve, 500));
+//   }
+//
+//   // 如果超过了超时时间仍未获取到数据，抛出超时错误
+//   throw new Error('获取设备信息超时，请稍后再试');
+// }
+
+function setDeviceInfo(data: DeviceCabinetVo) {
+  deviceName.value = data.cabinetName ?? '未命名';
+  deviceType.value = data.cabinetType ?? '未知类型';
+  deviceIp.value = data.ip ?? '未知IP';
+  deviceMAC.value = data.mac ?? '未知地址';
+  deviceNumber.value = data.deviceCode ?? '未知编号';
+  // devicePort.value =
+}
+
+onMounted(() => {
+  console.log('index onMounted');
+  loading.showLoading('正在加载。。。');
+  // 使用这个函数
+  // getDeviceInfo().then((data) => {
+  //   setDeviceInfo(data[0]);
+  // }).catch((error) => {
+  //   console.error('错误:', error);
+  // });
+  getCabinetDetails().then((res) => {
+    if (res.isSuccess && res.data) {
+      setDeviceInfo(res.data[0]);
+    }
+  }).catch((e) => {
+    console.error(e);
+  });
+  setTimeout(() => {
+    loading.hideLoading();
+  }, 500);
 });
 </script>
 
@@ -76,12 +143,11 @@ onMounted(async () => {
           </div>
         </div>
         <div class="cell-container">
-          <div>
+          <div class="min-w-xl">
             设备编号
           </div>
           <div>
             {{ deviceNumber }}
-            <div class="right-arrow" />
           </div>
         </div>
         <div class="cell-container">
@@ -144,7 +210,7 @@ onMounted(async () => {
           </div>
         </div>
         <div class="w-full flex flex-row items-center justify-center text-align-center text-size-18">
-          请点击对应规格切换带点状态
+          请点击对应规格切换带电状态
         </div>
       </div>
     </div>
