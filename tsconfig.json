@@ -2,6 +2,9 @@
   "compilerOptions": {
     "target": "ESNext",
     "jsx": "preserve",
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "Fragment",
+    "jsxImportSource": "vue",
     "lib": ["ESNext", "DOM"],
     "useDefineForClassFields": true,
     "baseUrl": ".",

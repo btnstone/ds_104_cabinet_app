@@ -6,8 +6,8 @@ import { getCabinetList } from '@/api/cabinet';
 import { useLoading } from '@/hooks/useLoading';
 import { useStompStore } from '@/store/modules/stomp';
 import StompService from '@/stomp/StompService';
-import type { stompCabinetInfoVo } from '@/stomp/types/stompDeviceTypes';
 import { getCabinetDetails } from '@/api/machine/machineGet';
+import Counter from '@/components/Common/Dialog/CommonDialog';
 
 defineOptions({ name: 'Register' });
 const loading = useLoading();
@@ -96,14 +96,22 @@ onMounted(() => {
     }
   }).catch((e) => {
     console.error(e);
-  });
-  setTimeout(() => {
+    // dialog.error({
+    //   title: '硬件连接失败',
+    //   content: e,
+    //   positiveText: '返回',
+    //   onPositiveClick: () => {
+    //     console.log(1111);
+    //   },
+    // });
+  }).finally(() => {
     loading.hideLoading();
-  }, 500);
+  });
 });
 </script>
 
 <template>
+  <Counter />
   <div class="bw-bg wh-full flex-col">
     <div class="h-88 w-full flex items-center justify-between bg-gray:30 p-20">
       <n-button color="#ffffff" text-color="#409EFF" round size="large" style="--n-font-size: 26px;font-weight: bold;--n-height: 60px;--n-icon-size: 28px;" @click="gotoHome">
