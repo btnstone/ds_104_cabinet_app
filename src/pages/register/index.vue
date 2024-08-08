@@ -7,7 +7,7 @@ import { useLoading } from '@/hooks/useLoading';
 import { useStompStore } from '@/store/modules/stomp';
 import StompService from '@/stomp/StompService';
 import { getCabinetDetails } from '@/api/machine/machineGet';
-import Counter from '@/components/Common/Dialog/CommonDialog';
+// import Counter from '@/components/Common/Dialog/CommonDialog';
 
 defineOptions({ name: 'Register' });
 const loading = useLoading();
