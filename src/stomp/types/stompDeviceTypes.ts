@@ -9,6 +9,8 @@ interface cabinetGrid {
     row: number;
     rowSpan: number;
   };
+  // 是否启用
+  enable: boolean;
 }
 
 export interface stompCabinetInfoVo {
