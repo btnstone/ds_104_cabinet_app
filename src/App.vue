@@ -1,17 +1,12 @@
 <script setup lang="ts">
 import { darkTheme, dateZhCN, zhCN } from 'naive-ui';
-import { onMounted, watchEffect } from 'vue';
+import { watchEffect } from 'vue';
 import { useAppStore } from './store';
-import StompService from '@/stomp/StompService';
 
 const appStore = useAppStore();
 
 watchEffect(() => {
   appStore.setThemeColor(appStore.primaryColor, appStore.isDark);
-});
-
-onMounted(() => {
-  StompService.getInstance();
 });
 </script>
 

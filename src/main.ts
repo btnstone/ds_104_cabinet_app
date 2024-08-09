@@ -7,6 +7,7 @@ import App from './App.vue';
 import { setupStore } from './store';
 import { setupNaiveDiscreteApi } from './utils';
 import { setupRouter } from './router';
+import { setupCabinetClient } from './utils/websocket';
 
 async function bootstrap() {
   const app = createApp(App);
@@ -16,6 +17,7 @@ async function bootstrap() {
     postMessage({ payload: 'removeLoading' }, '*');
   });
   setupNaiveDiscreteApi();
+  setupCabinetClient();
 }
 
 bootstrap();
