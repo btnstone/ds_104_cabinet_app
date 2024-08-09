@@ -11,6 +11,7 @@ import removeNoMatch from 'vite-plugin-router-warn';
 import VueRouter from 'unplugin-vue-router/vite';
 import VueMacros from 'unplugin-vue-macros/vite';
 import { VueRouterAutoImports } from 'unplugin-vue-router';
+import VueDevTools from 'vite-plugin-vue-devtools';
 import pkg from './package.json';
 
 // https://vitejs.dev/config/
@@ -102,6 +103,7 @@ export default defineConfig(({ command }) => {
         // See 👉 https://github.com/electron-vite/vite-plugin-electron-renderer
         renderer: {},
       }),
+      VueDevTools(),
       removeNoMatch(),
     ],
     resolve: {

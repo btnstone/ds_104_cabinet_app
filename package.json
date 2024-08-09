@@ -37,7 +37,8 @@
   "dependencies": {
     "@stomp/stompjs": "^7.0.0",
     "@vue/runtime-dom": "^3.4.36",
-    "axios": "^1.7.2"
+    "axios": "^1.7.2",
+    "lodash-es": "^4.17.21"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.23.2",
@@ -69,6 +70,7 @@
     "vite-plugin-electron": "^0.28.4",
     "vite-plugin-electron-renderer": "^0.14.5",
     "vite-plugin-router-warn": "^1.0.0",
+    "vite-plugin-vue-devtools": "^7.3.7",
     "vite-plugin-vue-layouts": "^0.11.0",
     "vue": "^3.4.21",
     "vue-router": "^4.4.0",
