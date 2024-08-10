@@ -57,10 +57,10 @@ onUnmounted(() => {
     <div class="h-full flex items-center">
       <div class="mr-10 h-full flex items-center">
         <div class="mr-10 text-26 font-bold line-height-none">
-          {{ userStore.name }}
+          {{ userStore.userName }}
         </div>
         <div class="text-26 font-bold line-height-none">
-          {{ userStore.userId }}
+          {{ userStore.userCode }}
         </div>
       </div>
       <div class="h-full flex items-center">

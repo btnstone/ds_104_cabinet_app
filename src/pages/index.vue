@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useLoading } from '@/hooks/useLoading';
+import { useUserStore } from '@/store';
 
 defineOptions({ name: 'IndexPage' });
 
@@ -21,14 +22,16 @@ definePage({
   },
 });
 
+const userStore = useUserStore();
+
 const loading = useLoading();
 
 const contentMap = computed<Array<ContentItem>>(() => {
   // type 1弹窗 2直接跳转路由
   return [
     { title: '重要实物', titleDetail: '出入库', bgString: 'btn-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-1.png', type: 1, routerUrl: '', childrens: [
-      { title: '重要实物', titleDetail: '出库', bgString: 'bound-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-1.png', type: 2, routerUrl: '/important/outbound' },
       { title: '重要实物', titleDetail: '入库', bgString: 'bound-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-1.png', type: 2, routerUrl: '/important/warehouse' },
+      { title: '重要实物', titleDetail: '出库', bgString: 'bound-bg-2', logoUrl: 'src/assets/images/shouye/btn-logo-1.png', type: 2, routerUrl: '/important/outbound' },
     ] },
     { title: '重要实物', titleDetail: '取出放回', bgString: 'btn-bg-1', logoUrl: 'src/assets/images/shouye/btn-logo-2.png', type: 1, routerUrl: '', childrens: [
       { title: '重要实物', titleDetail: '取出', bgString: 'bound-bg-1', logoUrl: 'src/assets/images/shouye/btn-logo-2.png', type: 2, routerUrl: '/important/takeOut' },
@@ -128,6 +131,8 @@ onMounted(() => {
   start();
   console.log('index onMounted');
   loading.showLoading('加载中，请稍后。。。');
+
+  userStore.$reset();
 
   setTimeout(() => {
     loading.hideLoading();

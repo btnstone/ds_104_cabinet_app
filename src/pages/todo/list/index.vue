@@ -24,14 +24,12 @@ onMounted(() => {
 
 <template>
   <ContentContainer title="代办事项">
-    <div class="m-20 h-full flex flex-col items-center">
-      <div v-for="item in todoList" :key="item.rspId" class="content-container">
-        <div>
-          <span>{{ item.reqUser }}</span>
-          <span>{{ item.reqCellNo }}</span>
-        </div>
-        <div class="right-arrow" />
+    <div v-for="item in todoList" :key="item.rspId" class="content-container">
+      <div>
+        <span>{{ item.reqUser }}</span>
+        <span>{{ item.reqCellNo }}</span>
       </div>
+      <div class="right-arrow" />
     </div>
   </ContentContainer>
 </template>

@@ -4,10 +4,9 @@ import { onMounted } from 'vue';
 import type { DeviceCabinetVo } from '@/api/machine/types/DeviceCabinetVo';
 import { getCabinetList } from '@/api/cabinet';
 import { useLoading } from '@/hooks/useLoading';
-import { useStompStore } from '@/store/modules/stomp';
-import StompService from '@/stomp/StompService';
 import { getCabinetDetails } from '@/api/machine/machineGet';
 // import Counter from '@/components/Common/Dialog/CommonDialog';
+import CabinetGrid from '@/components/Cabinet/Grid/index.vue';
 
 defineOptions({ name: 'Register' });
 const loading = useLoading();
@@ -42,8 +41,8 @@ onMounted(async () => {
   // console.log(props);
 });
 
-const stompStore = useStompStore();
-const stompService = StompService.getInstance();
+// const stompStore = useStompStore();
+// const stompService = StompService.getInstance();
 
 // async function getDeviceInfo() {
 //   // 发送设备信息请求
@@ -203,19 +202,7 @@ onMounted(() => {
           </div>
         </div>
         <div class="mt-15 flex flex-1 gap-10">
-          <div v-if="cabinetList.length > 0" class="flex gap-8">
-            <div v-for="cabinet in cabinetList" :key="`cabinet-${cabinet.cabinetCode}`">
-              <div class="grid gap-8" :style="{ gridTemplateColumns: `repeat(${cabinet.cabinetCol}, 1fr)`, gridTemplateRows: `repeat(${cabinet.cabinetRow}, 37px)`, width: `${cabinet.cabinetWidth}px` }">
-                <div v-for="item in cabinet.cabinetGrids" :key="`${item.position.row}-${item.position.col}`" :style="{ gridRow: `${item.position.row} / span ${item.position.rowSpan}`, gridColumn: `${item.position.col}/ span ${item.position.colSpan}` }" class="clickable-div pos-relative select-none" @click="openDoor">
-                  <div class="wh-full flex cursor-pointer items-center justify-center border-rd-12 bg-gray:30">
-                    <div v-if="item.cellIndex > 0" class="h-30 w-30 flex items-center justify-center border-#333 border-rd-full border-solid text-14 color-#333 font-bold line-height-none">
-                      {{ item.cellIndex }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <CabinetGrid />
         </div>
         <div class="w-full flex flex-row items-center justify-center text-align-center text-size-18">
           请点击对应规格切换带电状态

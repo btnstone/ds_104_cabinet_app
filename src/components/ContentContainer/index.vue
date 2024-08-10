@@ -19,26 +19,16 @@ onMounted(() => {
   console.log(props);
 });
 
-onUnmounted(() => {
-});
+onUnmounted(() => {});
 </script>
 
 <template>
   <div class="bw-bg wh-full flex-col">
-    <Header :title="title" :user-name="userName" :user-id="userId" />
-    <div class="content-container">
-      <slot />
+    <Header :title="title" :user-name="userName" :user-id="userId" class="flex-shrink-0" />
+    <div class="flex-1 px-20 pb-20">
+      <div class="wh-full flex flex-col items-center border-rd-20 bg-#fff pt-20">
+        <slot />
+      </div>
     </div>
   </div>
 </template>
-
-<style scoped lang="scss">
-.content-container {
-  background-color: #fff;
-  width: calc(100vw - 20px);
-  border-radius: 20px;
-  height: calc(100vh - 88px);
-  border-radius: 20px;
-  margin-left: 10px;
-}
-</style>

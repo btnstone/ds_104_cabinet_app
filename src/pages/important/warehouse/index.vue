@@ -16,23 +16,13 @@ definePage({
 const route = useRoute();
 const current = ref(1);
 const type = ref(1);
-const data = ref<{ foo: string }>({
-  foo: 'bar',
-});
+const data = ref({});
 const stepItems: StepItem[] = [
-  { title: '身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
+  { title: '身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')), params: { authType: 1 } },
   { title: '开柜门', component: defineAsyncComponent(() => import('@/components/Cabinet/List/index.vue')) },
-  {
-    title: '关柜盘点',
-    component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
-    params: { title: '请核对物品是否一致', btn1Text: '核对不一致', btn2Text: '核对一致' },
-  },
-  { title: '主管身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
-  {
-    title: '主管授权',
-    component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
-    params: { title: '', btn1Text: '授权不通过', btn2Text: '授权通过' },
-  },
+  { title: '关柜盘点', component: defineAsyncComponent(() => import('@/components/Inventory/CheckOne.vue')) },
+  { title: '主管身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')), params: { authType: 2 } },
+  { title: '主管授权', component: defineAsyncComponent(() => import('@/components/Inventory/CheckTwo.vue')) },
   { title: '完成', component: defineAsyncComponent(() => import('@/components/SuccessPage/index.vue')) },
 ];
 
@@ -53,8 +43,6 @@ onMounted(() => {
 
 <template>
   <ContentContainer title="重要实物入库">
-    <div class="m-20 h-full w-full flex flex-col items-center">
-      <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
-    </div>
+    <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
   </ContentContainer>
 </template>

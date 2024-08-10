@@ -1,7 +1,7 @@
 // 文件路径可能需要根据你的项目结构调整
 import { defineStore } from 'pinia';
 import { filter, forEach, map, sortBy } from 'lodash-es';
-import type { stompCabinetInfoVo } from '@/stomp/types/stompDeviceTypes';
+import type { cabinetGrid, stompCabinetInfoVo } from '@/stomp/types/stompDeviceTypes';
 
 interface IDeviceState {
   cabinets: stompCabinetInfoVo[];
@@ -46,6 +46,13 @@ export const useDeviceStore = defineStore('device', {
         };
       });
     },
+    getCabinetGrids: (state) => {
+      const grids: cabinetGrid[] = [];
+      state.cabinets.forEach((data) => {
+        grids.push(...filter(data.cabinetGrids, v => v.cellIndex > 0));
+      });
+      return sortBy(grids, 'index');
+    },
   },
 
   // 定义 actions
@@ -74,7 +81,9 @@ export const useDeviceStore = defineStore('device', {
     setCabinetGridChange(opened: boolean[]) {
       forEach(this.cabinets, (cabinet) => {
         forEach(cabinet.cabinetGrids, (grid) => {
-          grid.isOpened = opened?.[grid.cellIndex] ?? true;
+          if (grid.cellIndex > 0) {
+            grid.isOpened = opened?.[grid.cellIndex - 1] ?? true;
+          }
         });
       });
     },
