@@ -1,7 +1,7 @@
 export interface StepItem {
   title: string;
   component: Component;
-  params?: StepItemParams;
+  params?: any;
 }
 
 export interface StepItemParams {

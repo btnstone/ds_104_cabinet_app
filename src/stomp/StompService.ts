@@ -27,6 +27,7 @@ class StompService {
   private client: Client;
   private handlers: Map<string, StompMessageHandler> = new Map();
   private topicPrefix: string = '/device';
+  private publishPrefix: string = '/app';
 
   constructor(topics: string[]) {
     this.client = new Client({
@@ -40,6 +41,9 @@ class StompService {
       onConnect: () => {
         console.log('Connected');
         this.subscribeTopics(topics);
+        setTimeout(() => {
+          this.changeMode();
+        }, 200);
       },
       onStompError: (frame) => {
         console.error(`Broker reported error: ${frame.headers.message}`);
@@ -76,29 +80,30 @@ class StompService {
    * @param params
    * @returns
    */
-  private publish(params: { destination: string; data: any }) {
-    const fetchSucess = createEventHook();
-    const fetchError = createEventHook();
-    const key = `${this.topicPrefix}${params.destination}`;
-    const stompMessageHandler = new StompMessageHandler();
-    stompMessageHandler.resolve = fetchSucess.trigger;
-    stompMessageHandler.reject = fetchError.trigger;
-    // 5s超时
-    stompMessageHandler.timer = setTimeout(() => {
-      stompMessageHandler.reject?.(new Error('timeout'));
-      this.handlers.delete(key);
-    }, 5000);
+  private publish<T>(params: { destination: string; data: any }) {
+    return new Promise<T>((resolve, reject) => {
+      const key = `${this.topicPrefix}${params.destination}`;
+      const stompMessageHandler = new StompMessageHandler();
 
-    this.handlers.set(key, stompMessageHandler);
-    this.client.publish({ destination: `/app${params.destination}`, body: JSON.stringify(params.data) });
-    return [fetchSucess.on, fetchError.on];
+      stompMessageHandler.resolve = resolve;
+      stompMessageHandler.reject = reject;
+
+      // 5s超时
+      // stompMessageHandler.timer = setTimeout(() => {
+      //   stompMessageHandler.reject?.(new Error('timeout'));
+      //   this.handlers.delete(key);
+      // }, 5000);
+
+      this.handlers.set(key, stompMessageHandler);
+      this.client.publish({ destination: `${this.publishPrefix}${params.destination}`, body: JSON.stringify(params.data) });
+    });
   }
 
   /**
    * 同步订阅
    * @param destination
    */
-  subscribe(destination: string) {
+  private subscribe(destination: string) {
     const fetchSucess = createEventHook();
     const fetchError = createEventHook();
     const key = `${this.topicPrefix}${destination}`;
@@ -133,12 +138,20 @@ class StompService {
     return this.subscribe('/cell/change');
   }
 
-  startFingerprintCollection() {
+  startFingerprintCollection(): Promise<any> {
     return this.publish({ destination: '/fingerPrint/collection/start', data: {} });
   }
 
   stopFingerprintCollection() {
     return this.publish({ destination: '/fingerPrint/collection/stop', data: {} });
+  }
+
+  openDoor(data: { cells: Key[] }) {
+    return this.publish({ destination: '/cell/open', data });
+  }
+
+  syncGetEpcData(data: { cells: Key[] }) {
+    return this.publish<{ epc: string }[]>({ destination: '/rfidReader/inventory', data });
   }
 }
 
@@ -147,4 +160,5 @@ export default new StompService([
   '/changeMode',
   '/cell/change',
   '/fingerPrint/collection/start',
+  '/rfidReader/inventory',
 ]);

@@ -6,7 +6,6 @@ export function setupCabinetClient() {
 
   const [onGetCabinetSuccess] = StompService.getCabinetInfo();
   const [onGetCabinetGridChange] = StompService.getCabinetGridChange();
-  StompService.changeMode();
 
   onGetCabinetSuccess((data) => {
     deviceStore.setCabinetInfo(data);

@@ -1,4 +1,4 @@
-interface cabinetGrid {
+export interface cabinetGrid {
   cellIndex: number;
   isOpened: boolean;
   reader: Record<string, any>;
@@ -26,4 +26,5 @@ export interface stompCabinetInfoVo {
   cabinetCol: number;
   cabinetWidth: number;
   cabinetGrids: cabinetGrid[];
+  deviceCode: string;
 }

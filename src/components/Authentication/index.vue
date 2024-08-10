@@ -1,32 +1,42 @@
 <script setup lang="ts">
+import type { ModalReactive } from 'naive-ui';
 import { NButton } from 'naive-ui';
+import { storeToRefs } from 'pinia';
+import { useRequest } from 'vue-request';
+import { promiseTimeout } from '@vueuse/core';
 import StompService from '@/stomp/StompService';
+import { getEnableCabinetGrid, goLogin } from '@/api/index';
+import { PopoverInput } from '@/components/Keyboard';
+import { useUserStore } from '@/store';
 
 defineOptions({ name: 'Authentication' });
+
+// authType: 1-操作员,2-主管
+const props = defineProps({
+  authType: Number,
+});
+
 const emits = defineEmits(['next', 'prev', 'error']);
-// defineProps<{
-//   param?: StepItemParams;
-// }>();
 
 enum AuthModalType {
   FINGERPRINT, PASSWORD,
 }
 
-const model = defineModel({ default: { featureBase64: '' } });
-
-const showModal = ref(false);
-const showModalType = ref(1);
-const userId = ref('');
-const password = ref('');
-const finger = ref('');
-
-function handleNext() {
-  emits('next');
-}
+const userStore = useUserStore();
+const { userId, userName, userCode } = storeToRefs(userStore);
+const model = defineModel<any>();
+const username = ref('test');
+const password = ref('123456');
+const modalRef = ref<ModalReactive>();
+const { loading, runAsync: runLogin } = useRequest(handleLogin, { manual: true });
 
 function showModalView(type: AuthModalType) {
+  if (unref(loading)) {
+    return;
+  }
+
   if (type === AuthModalType.FINGERPRINT) {
-    const modal = window.$modal.create({
+    modalRef.value = window.$modal.create({
       style: {
         width: '200px',
       },
@@ -37,20 +47,7 @@ function showModalView(type: AuthModalType) {
       closable: false,
       onAfterEnter() {
         console.log('--onAfterEnter--');
-
-        const [onStartFingerprintCollectionSuccess, onStartFingerprintCollectionError] = StompService.startFingerprintCollection();
-
-        onStartFingerprintCollectionSuccess((data) => {
-          const { featureBase64 } = data;
-          model.value.featureBase64 = featureBase64;
-          modal.destroy();
-          emits('next');
-        });
-
-        onStartFingerprintCollectionError((err) => {
-          window.$message.error(err.message);
-          modal.destroy();
-        });
+        StompService.startFingerprintCollection().then(handleLoginFingerprint);
       },
       onAfterLeave() {
         console.log('--onAfterLeave--');
@@ -62,29 +59,97 @@ function showModalView(type: AuthModalType) {
         block: true,
         size: 'large',
         onClick: () => {
-          modal.destroy();
+          unref(modalRef)?.destroy();
         },
       }, { default: () => '取消' }),
     });
+  }
+  else if (type === AuthModalType.PASSWORD) {
+    modalRef.value = window.$modal.create({
+      title: '密码认证',
+      style: {
+        width: '400px',
+      },
+      preset: 'card',
+      bordered: false,
+      segmented: false,
+      transformOrigin: 'center',
+      maskClosable: false,
+      content() {
+        return h('div', { class: 'flex-col gap-14' }, {
+          default: () => [
+            h(PopoverInput, { 'size': 'large', 'placeholder': '请输入账号', 'value': username.value, 'onUpdate:value': value => (username.value = value) }),
+            h(PopoverInput, { 'size': 'large', 'type': 'password', 'placeholder': '请输入密码', 'value': password.value, 'onUpdate:value': value => (password.value = value) }),
+          ],
+        });
+      },
+      footer() {
+        return h(NButton, { block: true, type: 'info', loading: loading.value, onClick: handleLoginPassword }, { default: () => '确认' });
+      },
+    });
+  }
+}
+
+function handleLogin(data: any) {
+  unref(modalRef)?.destroy();
+  const msgLoaded = window.$message.loading('登录中...', { duration: 0 });
+  return promiseTimeout(500).then(() => {
+    goLogin(data).then((res) => {
+      const userinfo = res.data;
+      if (props.authType === 1) {
+        userId.value = userinfo.userId;
+        userName.value = userinfo.nickName;
+        userCode.value = userinfo.userCode;
+        return getEnableCabinetGrid({ deviceNo: unref(model).deviceNo, userId: unref(userId) }).then((res) => {
+          const { bindCell, handOverCell, turnOverCell } = res.data;
+          model.value.operator = {
+            ...userinfo,
+            bindCell,
+            handOverCell,
+            turnOverCell,
+          };
+        });
+      }
+      else if (props.authType === 2) {
+        if (!res.data.super) {
+          throw new Error('当前登录身份不是主管，请重新登录');
+        }
+        model.value.admin = {
+          ...userinfo,
+        };
+      }
+    }).then(() => {
+      emits('next');
+    }).catch((err) => {
+      window.$message.error(err.message);
+    }).finally(() => {
+      msgLoaded.destroy();
+    });
+  });
+}
+
+/**
+ * 指纹登录
+ */
+function handleLoginFingerprint(data: any) {
+  return runLogin({ grantType: 'fingerprint', fingerprint: data.featureBase64 });
+}
+
+/**
+ * 账号密码登录
+ */
+function handleLoginPassword() {
+  if (!unref(username)) {
+    window.$message.warning('请输入账号');
     return;
   }
-  showModal.value = true;
-  showModalType.value = type;
+  if (!unref(password)) {
+    window.$message.warning('请输入密码');
+    return;
+  }
+
+  return runLogin({ grantType: 'password', username: unref(username), password: unref(password) });
 }
-
-function checkDate() {
-  // userStore.change(`日了狗${Math.random()}`, `草泥马${Math.random()}`);
-  handleNext();
-  // todo 数据校验
-  // if (showModalType.value === 1) {
-
-  // }
-  // else {
-
-  // }
-}
-
-onMounted(() => {});
 </script>
 
 <template>
@@ -102,26 +167,6 @@ onMounted(() => {});
       </div>
     </div>
   </div>
-
-  <n-modal v-model:show="showModal">
-    <div class="modal-container flex flex-col pb-30 pl-30 pr-30 pt-33">
-      <div class="text-26 font-bold line-height-none">
-        {{ showModalType === 1 ? '指纹认证' : '密码认证' }}
-      </div>
-      <n-space vertical>
-        <n-input v-model:value="userId" size="large" type="text" placeholder="请输入用户ID" class="mt-20" />
-        <template v-if="showModalType === 1">
-          <n-input v-model:value="finger" type="textarea" placeholder="指纹特征码" class="mt-20" disabled />
-        </template>
-        <template v-else>
-          <n-input v-model:value="password" size="large" type="password" placeholder="请输入密码" class="mt-20" />
-        </template>
-        <NButton type="info" size="large" block class="mt-20" @click="checkDate">
-          确认
-        </NButton>
-      </n-space>
-    </div>
-  </n-modal>
 </template>
 
 <style scoped lang="scss">

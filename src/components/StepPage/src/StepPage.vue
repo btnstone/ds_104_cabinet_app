@@ -33,7 +33,7 @@ const componentParams = computed(() => {
 
 const paramAttributes = computed(() => {
   const params = componentParams.value.get(vCurrent.value);
-  return params ? { param: params } : {};
+  return { ...params };
 });
 
 // 上一步
@@ -101,10 +101,7 @@ function handleError(...args: any) {
     </div>
     <!--  -->
     <div class="component-container">
-      <component
-        :is="componentMaps.get(current)" v-model="vData" v-bind="paramAttributes" @next="handleNext" @prev="handlePrev"
-        @error="handleError"
-      />
+      <component :is="componentMaps.get(current)" v-model="vData" v-bind="paramAttributes" @next="handleNext" @prev="handlePrev" @error="handleError" />
     </div>
   </div>
 </template>
