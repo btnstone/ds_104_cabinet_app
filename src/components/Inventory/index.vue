@@ -3,14 +3,14 @@ import { map } from 'lodash-es';
 import StompService from '@/stomp/StompService';
 import { useDeviceStore } from '@/store';
 
-defineOptions({ name: 'Inventory' });
+defineOptions({ name: 'Inventory2' });
 
 const props = defineProps(['title', 'subTitle', 'btn1Text', 'btn2Text', 'isShowReceiver', 'isShowSupervisor']);
 
 const emits = defineEmits(['next', 'prev', 'error']);
 const deviceStore = useDeviceStore();
 const model = defineModel<any>();
-// 规格是否全部关闭
+// 柜格是否全部关闭
 const isClosed = ref(false);
 
 const receiver = ref();

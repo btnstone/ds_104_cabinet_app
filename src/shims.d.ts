@@ -29,3 +29,32 @@ declare interface Fn<T = any, R = T> {
 declare interface PromiseFn<T = any, R = T> {
   (...arg: T[]): Promise<R>;
 }
+
+interface StepPageUserModel {
+  userId?: Key[];
+  nickName?: string;
+  orgId?: number;
+  userCode?: number;
+  roleList?: string[];
+  bindCell?: Key[];
+  handOverCell?: Key[];
+  turnOverCell?: Key[];
+  gridIndex?: Key[];
+  goodsList?: Recordable[];
+  epcList?: Recordable[];
+}
+
+interface StepPageModel {
+  // 全局流水号
+  serialNum?: string;
+  // 设备编码
+  deviceNo?: string;
+  // 柜员
+  operator?: StepPageUserModel;
+  // 主管
+  admin?: StepPageUserModel;
+  // 监交人
+  auth?: StepPageUserModel;
+  // 接收人
+  receive?: StepPageUserModel;
+}
