@@ -1,15 +1,12 @@
 <script setup lang="ts" generic="T">
+import { omit } from 'lodash-es';
 import type { StepItem } from './types';
+import { isFunction } from '@/utils';
 import { buildShortUUID } from '@/utils/uuid';
 
 defineOptions({ name: 'StepPage', inheritAttrs: false });
 
 const props = defineProps({
-  current: {
-    type: Number,
-    default: 1,
-  },
-  data: Object,
   stepItems: {
     type: Array<StepItem>,
     default: [],
@@ -20,8 +17,10 @@ const props = defineProps({
 const emits = defineEmits(['ok', 'error', 'update:current']);
 
 const stepItems = computed(() => props.stepItems.map(v => ({ key: buildShortUUID('step-item'), title: v.title })));
-const vData = useVModel(props, 'data', emits);
-const vCurrent = useVModel(props, 'current', emits);
+// const vData = useVModel(props, 'data', emits);
+// const vCurrent = useVModel(props, 'current', emits);
+// const vData = defineModel<StepPageModel>('data', { default: {} });
+const vCurrent = defineModel<number>('current', { default: 1 });
 
 const componentMaps = computed(() => {
   return new Map(props.stepItems.map((v, i) => ([i + 1, v.component])));
@@ -33,6 +32,9 @@ const componentParams = computed(() => {
 
 const paramAttributes = computed(() => {
   const params = componentParams.value.get(vCurrent.value);
+  if (isFunction(params)) {
+    return { ...params() };
+  }
   return { ...params };
 });
 
@@ -101,7 +103,7 @@ function handleError(...args: any) {
     </div>
     <!--  -->
     <div class="component-container">
-      <component :is="componentMaps.get(current)" v-model="vData" v-bind="paramAttributes" @next="handleNext" @prev="handlePrev" @error="handleError" />
+      <component :is="componentMaps.get(vCurrent)" v-bind="omit(paramAttributes, ['data'])" @next="handleNext" @prev="handlePrev" @error="handleError" />
     </div>
   </div>
 </template>

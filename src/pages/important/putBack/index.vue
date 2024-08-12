@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
@@ -13,20 +12,12 @@ definePage({
   },
 });
 
-const route = useRoute();
 const current = ref(1);
-const type = ref(1);
-const data = ref<{ foo: string }>({
-  foo: 'bar',
-});
+const data = ref();
 const stepItems: StepItem[] = [
-  { title: '身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
+  { title: '身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')), params: { authType: 1 } },
   { title: '开柜门', component: defineAsyncComponent(() => import('@/components/Cabinet/List/index.vue')) },
-  {
-    title: '关柜盘点',
-    component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
-    params: { title: '请核对物品是否一致', btn1Text: '核对不一致', btn2Text: '核对一致' },
-  },
+  { title: '关柜盘点', component: defineAsyncComponent(() => import('@/components/Inventory/CheckOne.vue')) },
   { title: '完成', component: defineAsyncComponent(() => import('@/components/SuccessPage/index.vue')) },
 ];
 
@@ -39,10 +30,6 @@ function onOk() {
 function onError(step: number, data: any) {
   console.log(step, data);
 }
-
-onMounted(() => {
-  type.value = Number(route.query.type) || 1;
-});
 </script>
 
 <template>
