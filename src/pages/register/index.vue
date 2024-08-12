@@ -9,6 +9,14 @@ import CabinetGrid from '@/components/Cabinet/Grid/index.vue';
 import { useDeviceStore } from '@/store';
 import { deviceBind, getOrgTree } from '@/api';
 
+interface orgTreeItem {
+  id: string;
+  parentId?: string;
+  label: string;
+  weight?: number;
+  children?: orgTreeItem[];
+}
+
 defineOptions({ name: 'Register' });
 const loading = useLoading();
 
@@ -36,35 +44,6 @@ function gotoHome() {
   router.back();
 }
 
-async function registerDevice() {
-  // const cellList = deviceStore.getCabinetInfo?.cabinetGrids.filter(item => item.cellIndex > 0).map(item => item.cellIndex.toString());
-  const cellList = deviceStore.getCabinetGrids?.map(item => item.cellIndex.toString());
-  if (!cellList) {
-    message.error('无法获取柜子信息');
-    return;
-  }
-  if (!orgName.value) {
-    message.error('请选择机构');
-    return;
-  }
-  try {
-    const res = await deviceBind({
-      deviceName: deviceName.value,
-      deviceIp: deviceIp.value,
-      deviceNo: deviceNumber.value,
-      deviceMac: deviceMAC.value,
-      devicePort: devicePort.value,
-      orgId: 0,
-      cellList,
-    });
-    message.success('注册成功');
-    console.log(res);
-  }
-  catch (e) {
-    console.error(e);
-  }
-}
-
 onMounted(async () => {
   cabinetList.value = await getCabinetList();
 });
@@ -87,22 +66,24 @@ function setDeviceInfo(data: DeviceCabinetVo) {
 
 onMounted(() => {
   console.log('index onMounted');
-  loading.showLoading('正在加载。。。');
+  // loading.showLoading('正在加载。。。');
   initDevice();
   getOrgInfo();
 });
 
 const showSelectOrg = ref(false);
-const orgOptions = ref([]);
+const orgOptions = ref<any>([]);
 const checkStrategyIsChild = ref(true);
 const hoverTrigger = ref(true);
-const orgVal = ref<any>(null);
+const orgVal = ref<orgTreeItem | null>(null);
+const orgLabel = ref('');
+const selectOrgVal = ref<any>(null);
 
 async function getOrgInfo() {
   try {
     const res = await getOrgTree();
-    orgVal.value = res;
-    console.log(res.data);
+    const orgTree = res.data;
+    orgOptions.value = transformData(orgTree);
   }
   catch (e) {
     console.error(e);
@@ -111,28 +92,84 @@ async function getOrgInfo() {
     loading.hideLoading();
   }
 }
-function handleUpdateValue(value: string, option: CascaderOption) {
-  console.log(value, option);
+
+function transformData(data: orgTreeItem[]): CascaderOption[] {
+  return data.map(item => ({
+    value: item.id.toString(),
+    label: item.label,
+    disabled: false, // 根据实际情况设置是否禁用
+    children: item.children ? transformData(item.children) : undefined,
+  }));
 }
+
+function handleUpdateValue(value: string, option: CascaderOption) {
+  orgLabel.value = option.label!;
+}
+
+function handleSelectOrg() {
+  selectOrgVal.value = orgVal.value;
+  orgName.value = orgLabel.value;
+  message.success('机构设置成功');
+  showSelectOrg.value = false;
+}
+
+async function registerDevice() {
+  // const cellList = deviceStore.getCabinetInfo?.cabinetGrids.filter(item => item.cellIndex > 0).map(item => item.cellIndex.toString());
+  const cellList = deviceStore.getCabinetGrids?.map(item => item.cellIndex.toString());
+  if (!cellList) {
+    message.error('无法获取柜子信息');
+    return;
+  }
+  if (!selectOrgVal.value) {
+    message.error('请选择机构');
+    return;
+  }
+  try {
+    const res = await deviceBind({
+      deviceName: deviceName.value,
+      deviceIp: deviceIp.value,
+      deviceNo: deviceNumber.value,
+      deviceMac: deviceMAC.value,
+      devicePort: devicePort.value,
+      orgId: selectOrgVal.value,
+      cellList,
+    });
+    message.success('注册成功');
+    console.log(res);
+  }
+  catch (e) {
+    console.error(e);
+  }
+}
+
 </script>
 
 <template>
   <div class="bw-bg wh-full flex-col">
-    <n-modal v-model:show="showSelectOrg">
-      <div class="h-2/5 w-2/5 flex flex-col bg-white p-6">
-        <div class="h-full w-full flex items-center justify-center text-25 font-bold">
+    <n-modal :show="showSelectOrg">
+      <div class="h-2/5 w-2/5 flex flex-col bg-white px-25 py-10">
+        <div class="m-6 h-full w-full flex items-center justify-center text-22">
           请选择机构
         </div>
         <n-cascader
           v-model:value="orgVal"
-          placeholder="没啥用的值"
+          placeholder="未选择机构"
           :expand-trigger="hoverTrigger ? 'hover' : 'click'"
           :options="orgOptions"
           :check-strategy="checkStrategyIsChild ? 'child' : 'all'"
           :show-path="true"
           :filterable="false"
+          size="large"
           @update:value="handleUpdateValue"
         />
+        <div class="h-full w-full flex gap-15 py-15">
+          <NButton class="h-40 flex-1" type="warning" @click="showSelectOrg = false">
+            取消
+          </NButton>
+          <NButton class="h-40 flex-1" type="info" @click="handleSelectOrg">
+            确认
+          </NButton>
+        </div>
       </div>
     </n-modal>
     <div class="h-88 w-full flex items-center justify-between bg-gray:30 p-20">
