@@ -1,12 +1,13 @@
 <script setup lang="ts">
 // import ContentContainer from '@/components/ContentContainer/index.vue';
 import { onMounted } from 'vue';
+import type { CascaderOption } from 'naive-ui';
 import type { DeviceCabinetVo } from '@/api/machine/types/DeviceCabinetVo';
 import { getCabinetList } from '@/api/cabinet';
 import { useLoading } from '@/hooks/useLoading';
-import { getCabinetDetails } from '@/api/machine/machineGet';
-// import Counter from '@/components/Common/Dialog/CommonDialog';
 import CabinetGrid from '@/components/Cabinet/Grid/index.vue';
+import { useDeviceStore } from '@/store';
+import { deviceBind, getOrgTree } from '@/api';
 
 defineOptions({ name: 'Register' });
 const loading = useLoading();
@@ -27,49 +28,53 @@ const deviceNumber = ref('');
 const deviceIp = ref('');
 const deviceMAC = ref('');
 const devicePort = ref('');
+const deviceStore = useDeviceStore();
+
+const message = window.$message;
 
 function gotoHome() {
   router.back();
 }
 
-function registerDevice() {
-  // todo  注册设备
+async function registerDevice() {
+  // const cellList = deviceStore.getCabinetInfo?.cabinetGrids.filter(item => item.cellIndex > 0).map(item => item.cellIndex.toString());
+  const cellList = deviceStore.getCabinetGrids?.map(item => item.cellIndex.toString());
+  if (!cellList) {
+    message.error('无法获取柜子信息');
+    return;
+  }
+  if (!orgName.value) {
+    message.error('请选择机构');
+    return;
+  }
+  try {
+    const res = await deviceBind({
+      deviceName: deviceName.value,
+      deviceIp: deviceIp.value,
+      deviceNo: deviceNumber.value,
+      deviceMac: deviceMAC.value,
+      devicePort: devicePort.value,
+      orgId: 0,
+      cellList,
+    });
+    message.success('注册成功');
+    console.log(res);
+  }
+  catch (e) {
+    console.error(e);
+  }
 }
 
 onMounted(async () => {
   cabinetList.value = await getCabinetList();
-  // console.log(props);
 });
 
-// const stompStore = useStompStore();
-// const stompService = StompService.getInstance();
-
-// async function getDeviceInfo() {
-//   // 发送设备信息请求
-//   stompService.getDeviceInfo();
-//
-//   // 开始时间
-//   const startTime = Date.now();
-//   const timeout = 5000; // 5秒超时
-//
-//   // 轮询检查数据
-//   while (Date.now() - startTime < timeout) {
-//     const deviceInfo = stompStore.getTopicData('/device/cabinet/info');
-//     if (deviceInfo) {
-//       if (deviceInfo.code === 200) {
-//         return deviceInfo.data as stompCabinetInfoVo[]; // 成功获取数据
-//       }
-//       else {
-//         throw new Error(deviceInfo.msg || '获取设备信息失败');
-//       }
-//     }
-//     // 等待一段时间再次检查（例如，每 500 毫秒检查一次）
-//     await new Promise(resolve => setTimeout(resolve, 500));
-//   }
-//
-//   // 如果超过了超时时间仍未获取到数据，抛出超时错误
-//   throw new Error('获取设备信息超时，请稍后再试');
-// }
+function initDevice() {
+  const deviceInfo = deviceStore.getCabinetInfo;
+  if (deviceInfo) {
+    setDeviceInfo(deviceInfo);
+  }
+}
 
 function setDeviceInfo(data: DeviceCabinetVo) {
   deviceName.value = data.cabinetName ?? '未命名';
@@ -77,41 +82,59 @@ function setDeviceInfo(data: DeviceCabinetVo) {
   deviceIp.value = data.ip ?? '未知IP';
   deviceMAC.value = data.mac ?? '未知地址';
   deviceNumber.value = data.deviceCode ?? '未知编号';
-  // devicePort.value =
+  // devicePort.value = data
 }
 
 onMounted(() => {
   console.log('index onMounted');
   loading.showLoading('正在加载。。。');
-  // 使用这个函数
-  // getDeviceInfo().then((data) => {
-  //   setDeviceInfo(data[0]);
-  // }).catch((error) => {
-  //   console.error('错误:', error);
-  // });
-  getCabinetDetails().then((res) => {
-    if (res.isSuccess && res.data) {
-      setDeviceInfo(res.data[0]);
-    }
-  }).catch((e) => {
-    console.error(e);
-    // dialog.error({
-    //   title: '硬件连接失败',
-    //   content: e,
-    //   positiveText: '返回',
-    //   onPositiveClick: () => {
-    //     console.log(1111);
-    //   },
-    // });
-  }).finally(() => {
-    loading.hideLoading();
-  });
+  initDevice();
+  getOrgInfo();
 });
+
+const showSelectOrg = ref(false);
+const orgOptions = ref([]);
+const checkStrategyIsChild = ref(true);
+const hoverTrigger = ref(true);
+const orgVal = ref<any>(null);
+
+async function getOrgInfo() {
+  try {
+    const res = await getOrgTree();
+    orgVal.value = res;
+    console.log(res.data);
+  }
+  catch (e) {
+    console.error(e);
+  }
+  finally {
+    loading.hideLoading();
+  }
+}
+function handleUpdateValue(value: string, option: CascaderOption) {
+  console.log(value, option);
+}
 </script>
 
 <template>
-  <Counter />
   <div class="bw-bg wh-full flex-col">
+    <n-modal v-model:show="showSelectOrg">
+      <div class="h-2/5 w-2/5 flex flex-col bg-white p-6">
+        <div class="h-full w-full flex items-center justify-center text-25 font-bold">
+          请选择机构
+        </div>
+        <n-cascader
+          v-model:value="orgVal"
+          placeholder="没啥用的值"
+          :expand-trigger="hoverTrigger ? 'hover' : 'click'"
+          :options="orgOptions"
+          :check-strategy="checkStrategyIsChild ? 'child' : 'all'"
+          :show-path="true"
+          :filterable="false"
+          @update:value="handleUpdateValue"
+        />
+      </div>
+    </n-modal>
     <div class="h-88 w-full flex items-center justify-between bg-gray:30 p-20">
       <n-button color="#ffffff" text-color="#409EFF" round size="large" style="--n-font-size: 26px;font-weight: bold;--n-height: 60px;--n-icon-size: 28px;" @click="gotoHome">
         返回
@@ -128,15 +151,20 @@ onMounted(() => {
           </div>
           <div>
             {{ deviceName }}
-            <div class="right-arrow" />
+            <!--            <div class="right-arrow" /> -->
           </div>
         </div>
         <div class="cell-container">
           <div>
             机构信息
           </div>
-          <div>
-            {{ orgName }}
+          <div @click="showSelectOrg = true">
+            <text v-if="orgName">
+              {{ orgName }}
+            </text>
+            <text v-if="!orgName" class="text-red">
+              未注册机构
+            </text>
             <div class="right-arrow" />
           </div>
         </div>
@@ -146,7 +174,7 @@ onMounted(() => {
           </div>
           <div>
             {{ deviceType }}
-            <div class="right-arrow" />
+            <!--            <div class="right-arrow" /> -->
           </div>
         </div>
         <div class="cell-container">
@@ -179,7 +207,7 @@ onMounted(() => {
           </div>
           <div>
             {{ devicePort }}
-            <div class="right-arrow" />
+            <!--            <div class="right-arrow" /> -->
           </div>
         </div>
       </div>
