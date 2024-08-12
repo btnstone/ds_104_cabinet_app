@@ -1,3 +1,5 @@
+import type { AxiosResponse } from 'axios';
+import type { IElectagInfo } from './types';
 import { request } from '@/utils/http';
 import type { deviceBindPost } from '@/api/types/deviceBind';
 
@@ -16,8 +18,35 @@ export function getGlobalSerialNumber() {
  * @param data
  * @returns
  */
-export function getEnableCabinetGrid(data: { deviceNo: string;userId: Key }) {
+export function getEnableCabinetGrid(data: { deviceNo?: string;userId?: Key }) {
   return request.post('/cell/available', data);
+}
+
+/**
+ * 重要实物入库
+ * @param data
+ * @returns
+ */
+export function postInGoods(data: any) {
+  return request.post('/record/inGoods', data);
+}
+
+/**
+ * 重要实物出库
+ * @param data
+ * @returns
+ */
+export function postOutGoods(data: any) {
+  return request.post('/record/outGoods', data);
+}
+
+/**
+ * 查询柜格重要实物信息
+ * @param data
+ * @returns
+ */
+export function getElectagInfo(data: { deviceNo?: string;electagNoList?: { cellNo?: string;electagNo?: string[] }[] }): Promise<AxiosResponse<{ inElectagList: IElectagInfo[];outElectagList: IElectagInfo[] }>> {
+  return request.post('/electag/info', data);
 }
 
 /**
@@ -34,5 +63,5 @@ export function deviceBind(deviceInfo: deviceBindPost) {
  * @returns
  */
 export function getOrgTree() {
-  return request.get('orgTree');
+  return request.get('/orgTree');
 }

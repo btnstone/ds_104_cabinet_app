@@ -2,7 +2,7 @@
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import os from 'node:os';
-import { BrowserWindow, Menu, app, ipcMain, shell } from 'electron';
+import { BrowserWindow, app, ipcMain, shell } from 'electron';
 
 // const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -45,13 +45,16 @@ const preload = path.join(__dirname, '../preload/index.mjs');
 const indexHtml = path.join(RENDERER_DIST, 'index.html');
 
 async function createWindow() {
+  const isProd = app.isPackaged;
   win = new BrowserWindow({
-    title: 'Main window',
+    title: '智能重控柜',
     icon: path.join(process.env.VITE_PUBLIC, 'favicon.ico'),
     width: 1280,
     height: 800,
     center: true,
     useContentSize: true,
+    titleBarStyle: isProd ? 'hidden' : 'default',
+    fullscreen: isProd,
     webPreferences: {
       preload,
       // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
@@ -64,7 +67,7 @@ async function createWindow() {
   });
 
   // 软件工具栏为空
-  Menu.setApplicationMenu(null);
+  // Menu.setApplicationMenu(null);
 
   if (VITE_DEV_SERVER_URL) { // #298
     win.loadURL(VITE_DEV_SERVER_URL);

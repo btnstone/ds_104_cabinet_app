@@ -7,11 +7,11 @@ import { promiseTimeout } from '@vueuse/core';
 import StompService from '@/stomp/StompService';
 import { getEnableCabinetGrid, goLogin } from '@/api/index';
 import { PopoverInput } from '@/components/Keyboard';
-import { useUserStore } from '@/store';
+import { useDeviceStore, useUserStore } from '@/store';
 
 defineOptions({ name: 'Authentication' });
 
-// authType: 1-操作员,2-主管
+// authType: 1-柜员,2-主管,3-监交人
 const props = defineProps({
   authType: Number,
 });
@@ -22,9 +22,13 @@ enum AuthModalType {
   FINGERPRINT, PASSWORD,
 }
 
+const deviceStore = useDeviceStore();
 const userStore = useUserStore();
 const { userId, userName, userCode } = storeToRefs(userStore);
-const model = defineModel<any>();
+// const model = defineModel<StepPageModel>('data', { default: {} });
+const model = defineModel<StepPageUserModel>('user', { default: {} });
+
+const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const username = ref('test');
 const password = ref('123456');
 const modalRef = ref<ModalReactive>();
@@ -78,8 +82,8 @@ function showModalView(type: AuthModalType) {
       content() {
         return h('div', { class: 'flex-col gap-14' }, {
           default: () => [
-            h(PopoverInput, { 'size': 'large', 'placeholder': '请输入账号', 'value': username.value, 'onUpdate:value': value => (username.value = value) }),
-            h(PopoverInput, { 'size': 'large', 'type': 'password', 'placeholder': '请输入密码', 'value': password.value, 'onUpdate:value': value => (password.value = value) }),
+            h(PopoverInput, { 'size': 'large', 'placeholder': '请输入账号', 'value': username.value, 'onUpdate:value': value => (username.value = value), 'layoutName': 'simple' }),
+            h(PopoverInput, { 'size': 'large', 'type': 'password', 'placeholder': '请输入密码', 'value': password.value, 'onUpdate:value': value => (password.value = value), 'layoutName': 'simple' }),
           ],
         });
       },
@@ -94,31 +98,37 @@ function handleLogin(data: any) {
   unref(modalRef)?.destroy();
   const msgLoaded = window.$message.loading('登录中...', { duration: 0 });
   return promiseTimeout(500).then(() => {
-    goLogin(data).then((res) => {
+    return goLogin(data).then((res) => {
       const userinfo = res.data;
+      userId.value = userinfo.userId;
+      userName.value = userinfo.nickName;
+      userCode.value = userinfo.userCode;
       if (props.authType === 1) {
-        userId.value = userinfo.userId;
-        userName.value = userinfo.nickName;
-        userCode.value = userinfo.userCode;
-        return getEnableCabinetGrid({ deviceNo: unref(model).deviceNo, userId: unref(userId) }).then((res) => {
-          const { bindCell, handOverCell, turnOverCell } = res.data;
-          model.value.operator = {
-            ...userinfo,
-            bindCell,
-            handOverCell,
-            turnOverCell,
-          };
-        });
+        //
       }
       else if (props.authType === 2) {
-        if (!res.data.super) {
+        if (!res.data.roleList.includes('super')) {
           throw new Error('当前登录身份不是主管，请重新登录');
         }
-        model.value.admin = {
-          ...userinfo,
-        };
       }
-    }).then(() => {
+      else if (props.authType === 3) {
+        if (!res.data.roleList.includes('auth')) {
+          throw new Error('当前登录身份不是监交人，请重新登录');
+        }
+      }
+      return getEnableCabinetGrid({ deviceNo: unref(getDeviceNo), userId: unref(userId) }).then((res) => {
+        const { bindCell, handOverCell, turnOverCell } = res.data;
+        return {
+          ...userinfo,
+          bindCell,
+          handOverCell,
+          turnOverCell,
+        };
+      });
+    }).then((data) => {
+      Object.assign(model.value, {
+        ...data,
+      });
       emits('next');
     }).catch((err) => {
       window.$message.error(err.message);

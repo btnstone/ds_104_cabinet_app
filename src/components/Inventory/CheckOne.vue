@@ -1,15 +1,25 @@
 <script setup lang="ts">
-import { map } from 'lodash-es';
+import { chain, map } from 'lodash-es';
 import StompService from '@/stomp/StompService';
 import { useDeviceStore } from '@/store';
+import { useLoading } from '@/hooks/useLoading';
+import { getElectagInfo } from '@/api';
 
 defineOptions({ name: 'InventoryCheckOne' });
 
+// inventoryType: 1-放入，2-取出
+const props = defineProps({
+  checkType: Number,
+});
+
 const emits = defineEmits(['next', 'prev', 'error']);
-const model = defineModel<any>();
+// const model = defineModel<any>();
+const model = defineModel<StepPageUserModel>('user', { default: {} });
 const deviceStore = useDeviceStore();
+const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 // 柜格是否全部关闭
 const isClosed = ref(false);
+const { showLoading, hideLoading } = useLoading();
 
 function handleNo() {
   unref(model).goodsList = [];
@@ -24,28 +34,44 @@ function handleYes() {
   emits('next');
 }
 
-onMounted(async () => {
-  if (unref(model)?.gridIndex?.length > 0) {
-    StompService.openDoor({ cells: unref(model)?.gridIndex });
+onMounted(() => {
+  const { gridIndex: cells = [] } = unref(model);
+  if (cells.length > 0) {
+    StompService.openDoor({ cells });
   }
-
   until(isClosed).toBe(true).then(() => {
     console.log('开始盘点');
-    StompService.syncGetEpcData({ cells: unref(model)?.gridIndex }).then((data) => {
-      unref(model).goodsList = map(data, (item) => {
-        return {
-          goodsType: '3',
-          electagNo: item.epc,
-          custodygoodsId: item.epc,
-          custodygoodsQuantity: '3',
+    showLoading('盘点中...');
+    return StompService.syncGetEpcData({ cells }).then((data) => {
+      console.log(data);
+      unref(model).epcList = data;
+      return getElectagInfo({
+        deviceNo: unref(getDeviceNo),
+        electagNoList: chain(data).groupBy('cellIndex').map((value, key) => ({ cellNo: String(key), electagNo: map(value, 'epc') })).value(),
+      }).then((res) => {
+        const { inElectagList, outElectagList } = res.data;
+        const getGoodsList = () => {
+          if (props.checkType === 1) {
+            return chain(inElectagList).map(v => ({ ...v, _status: 1 })).concat(map(outElectagList, v => ({ ...v, _status: 2 }))).value();
+          }
+          else if (props.checkType === 2) {
+            return chain(outElectagList).map(v => ({ ...v, _status: 1 })).concat(map(inElectagList, v => ({ ...v, _status: 2 }))).value();
+          }
+          return [];
         };
+        unref(model).goodsList = [...getGoodsList()];
       });
-    });
+    }).catch((err) => {
+      window.$message.error(err.message);
+    }).finally(() => {
+      hideLoading();
+    }); ;
   });
 });
 
 watch(deviceStore.getCabinetGrids, () => {
-  isClosed.value = deviceStore.getCabinetGrids.filter(v => unref(model)?.gridIndex.includes(v.cellIndex)).every(v => !v.isOpened);
+  const { gridIndex = [] } = unref(model);
+  isClosed.value = deviceStore.getCabinetGrids.filter(v => gridIndex.includes(v.cellIndex)).every(v => !v.isOpened);
 }, { deep: true, flush: 'post' });
 </script>
 
@@ -58,29 +84,35 @@ watch(deviceStore.getCabinetGrids, () => {
     <!--  -->
     <div class="mt-15 w-900 border-2 border-#939193 border-rd-20 border-solid px-20 py-10">
       <n-list clickable :show-divider="false" class="w-full" style="height: 400px;overflow: auto">
-        <template v-for="(item, index) in model.goodsList" :key="item.electagNo">
-          <n-list-item>
-            <div class="flex flex-row items-center justify-start text-26">
-              <div class="mr-10">
-                {{ index + 1 }}
+        <n-scrollbar>
+          <template v-for="(item, index) in model.goodsList" :key="item.electagNo">
+            <n-list-item>
+              <div class="flex flex-row items-center justify-start text-26 line-height-normal">
+                <div class="mr-10">
+                  {{ index + 1 }}
+                </div>
+                <img v-if="item._status === 1" class="mr-10 h-40 w-40 border-none" src="@/assets/images/components/success.png" alt="">
+                <img v-else-if="item._status === 2" class="mr-10 h-40 w-40 border-none" src="@/assets/images/components/error.png" alt="">
+                <div class="flex-1">
+                  <template v-if="item.goodsType === '1' || item.goodsType === '4'">
+                    <div>{{ item.electagNo }} {{ item.name }}，数量：{{ item.voucherNumber }}</div>
+                    <div>凭证批号：{{ item.voucherBatchnumber }}，起始凭证序号：{{ item.voucherStartno }}</div>
+                    <div>终止凭证序号：{{ item.voucherEndno }}</div>
+                  </template>
+                  <template v-else-if="item.goodsType === '2'">
+                    <div>{{ item.cellNo }}格，{{ item.electagNo }}&nbsp;{{ item.name }}文件，数量：{{ item.importgoodsNumber }}</div>
+                    <div>起始物品号：{{ item.importgoodsStartno }}</div>
+                    <div>终止物品号：{{ item.importgoodsEndno }}</div>
+                  </template>
+                  <template v-else-if="item.goodsType === '3'">
+                    <div>{{ item.electagNo }}文件，数量：{{ item.custodygoodsQuantity }}</div>
+                    <div>代保管品编号：{{ item.custodygoodsId }}</div>
+                  </template>
+                </div>
               </div>
-              <img class="mr-10 h-40 w-40 border-none" src="@/assets/images/components/success.png" alt="">
-              <div>
-                <template v-if="item.goodsType === '3'">
-                  <div>
-                    <span>{{ item.electagNo }}</span>
-                    <span> 文件，数量：</span>
-                    <span>{{ item.custodygoodsQuantity }}</span>
-                  </div>
-                  <div>
-                    <span>代保管品编号：</span>
-                    <span>{{ item.custodygoodsId }}</span>
-                  </div>
-                </template>
-              </div>
-            </div>
-          </n-list-item>
-        </template>
+            </n-list-item>
+          </template>
+        </n-scrollbar>
       </n-list>
     </div>
     <!--  -->

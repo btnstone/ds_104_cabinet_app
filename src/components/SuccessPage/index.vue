@@ -3,9 +3,9 @@
 
 defineOptions({ name: 'SuccessPage' });
 
-// defineProps<{
-//   param: StepItemParams;
-// }>();
+defineProps<{
+  text: string;
+}>();
 
 const router = useRouter();
 
@@ -48,7 +48,7 @@ onUnmounted(() => {
   <div class="w-full flex flex-col items-center justify-center pl-20 pr-20" style="height:600px">
     <img src="@/assets/images/components/successpage.png" alt="" class="border-none">
     <div class="mt-10 text-26">
-      交接成功
+      {{ text ?? '操作成功' }}
     </div>
     <div class="mt-10 text-26 c-coolGray">
       <span>{{ time }}</span>
