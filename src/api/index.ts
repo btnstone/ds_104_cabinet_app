@@ -73,3 +73,29 @@ export function getOrgTree() {
 export function getDeviceInfo(deviceNo: string) {
   return request.get(`/device/${deviceNo}`);
 }
+
+/**
+ * 重要实物放回
+ * @param data
+ * @returns
+ */
+export function postPutBackGoods(data: any) {
+  return request.post('/record/putGoods', data);
+}
+
+/**
+ * 重要实物取出
+ * @param data
+ */
+export function postTaskOutGoods(data: any) {
+  return request.post('/record/getGoods', data);
+}
+
+/**
+ * 通过机构查询用户列表
+ * @param orgId
+ * @returns
+ */
+export function getUserListByOrg(orgId: Key) {
+  return request.get(`/userList/${orgId}`);
+}

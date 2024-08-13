@@ -1,6 +1,8 @@
 <script setup lang="ts" generic="T">
 import { omit } from 'lodash-es';
+import type { PropType } from 'vue';
 import type { StepItem } from './types';
+import { componentMap } from './componentMap';
 import { isFunction } from '@/utils';
 import { buildShortUUID } from '@/utils/uuid';
 
@@ -8,8 +10,8 @@ defineOptions({ name: 'StepPage', inheritAttrs: false });
 
 const props = defineProps({
   stepItems: {
-    type: Array<StepItem>,
-    default: [],
+    type: Array as PropType<StepItem[]>,
+    default: () => [],
   },
 });
 
@@ -23,7 +25,7 @@ const stepItems = computed(() => props.stepItems.map(v => ({ key: buildShortUUID
 const vCurrent = defineModel<number>('current', { default: 1 });
 
 const componentMaps = computed(() => {
-  return new Map(props.stepItems.map((v, i) => ([i + 1, v.component])));
+  return new Map(props.stepItems.map((v, i) => ([i + 1, componentMap.get(v.component)])));
 });
 
 const componentParams = computed(() => {
@@ -31,7 +33,7 @@ const componentParams = computed(() => {
 });
 
 const paramAttributes = computed(() => {
-  const params = componentParams.value.get(vCurrent.value);
+  const params = componentParams.value.get(vCurrent.value) as any;
   if (isFunction(params)) {
     return { ...params() };
   }

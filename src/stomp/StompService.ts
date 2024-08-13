@@ -151,7 +151,7 @@ class StompService {
   }
 
   syncGetEpcData(data: { cells: Key[] }) {
-    return this.publish<{ epc: string;cellIndex: Key[] }[]>({ destination: '/rfidReader/inventory', data });
+    return this.publish<{ epc: string;cellIndex: Key }[]>({ destination: '/rfidReader/inventory', data });
   }
 }
 
