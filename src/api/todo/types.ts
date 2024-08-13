@@ -30,7 +30,7 @@ export interface TodoItem {
   /**
    * 待办类型
    */
-  todoType?: string;
+  todoType?: number;
   /**
    * 推送系统
    */

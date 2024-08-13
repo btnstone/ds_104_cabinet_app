@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useLoading } from '@/hooks/useLoading';
 import { useUserStore } from '@/store';
+import Authentication from '@/components/Authentication/index.vue';
 
 defineOptions({ name: 'IndexPage' });
 
@@ -23,11 +24,11 @@ definePage({
 });
 
 const userStore = useUserStore();
-
 const loading = useLoading();
+const currentType = ref(1);
 
 const contentMap = computed<Array<ContentItem>>(() => {
-  // type 1弹窗 2直接跳转路由
+  // type 1.弹窗 2.直接跳转路由 3.自定义弹窗
   return [
     { title: '重要实物', titleDetail: '出入库', bgString: 'btn-bg-2', logoUrl: 'btn-logo-1', type: 1, routerUrl: '', childrens: [
       { title: '重要实物', titleDetail: '入库', bgString: 'bound-bg-2', logoUrl: 'btn-logo-1', type: 2, routerUrl: '/important/warehouse' },
@@ -62,7 +63,7 @@ const contentMap = computed<Array<ContentItem>>(() => {
       { title: '重要物品调拨', titleDetail: '入库', bgString: 'bound-bg-3', logoUrl: 'btn-logo-9', type: 2, routerUrl: '/important/transferIn' },
     ] },
     { title: '凭证调拨', titleDetail: '撤销', bgString: 'btn-bg-2', logoUrl: 'btn-logo-10', type: 2, routerUrl: '/certificate/revocation' },
-    { title: '代办事项', titleDetail: '', bgString: 'btn-bg-4', logoUrl: 'btn-logo-11', type: 2, routerUrl: '/todo/list' },
+    { title: '代办事项', titleDetail: '', bgString: 'btn-bg-4', logoUrl: 'btn-logo-11', type: 3, routerUrl: '' },
     // { title: '查询', titleDetail: '', bgString: 'btn-bg-1', logoUrl: 'btn-logo-12', type: 2, routerUrl: '' },
   ];
 });
@@ -94,11 +95,15 @@ let formatted = useDateFormat(useNow(), 'HH:mm');
 let timer: NodeJS.Timeout;
 
 function contentItemClick(item: ContentItem) {
+  currentType.value = item.type;
   showModal.value = false;
   if (item.type === 1) {
     // 弹窗
     showModal.value = true;
     currentItem.value = item;
+  }
+  else if (item.type === 3) {
+    showModal.value = true;
   }
   else {
     // 跳转页面
@@ -129,6 +134,12 @@ function menuClick(index: number) {
 
 function getImageUrl(name: string) {
   return new URL(`../assets/images/shouye/${name}.png?asset`, import.meta.url).href;
+}
+
+function gotoTodoList() {
+  router.push({
+    path: '/todo/list',
+  });
 }
 
 onMounted(() => {
@@ -217,23 +228,33 @@ onUnmounted(() => {
     <div class="h-48" />
 
     <n-modal v-model:show="showModal" style="box-shadow:none">
-      <div class="flex">
-        <template v-for="(item, index) in currentItem?.childrens" :key="index">
-          <div class="clickable-div pos-relative wh-full" :class="item.bgString" style="width: 298px; height:329px" @click="contentItemClick(item)">
-            <div class="pos-absolute left-18 top-18">
-              <div class="w-110 text-0">
-                <img :src="getImageUrl(item.logoUrl)" alt="">
-              </div>
-            </div>
-            <div class="pos-absolute bottom-32 right-20">
-              <div class="flex-col gap-4 text-right text-28px text-#fff font-bold line-height-none">
-                <div>{{ item.title }}</div>
-                <div>{{ item.titleDetail }}</div>
-              </div>
-            </div>
+      <template v-if="currentType === 3">
+        <div class="flex flex-col items-center justify-center gap-4 rounded-20 bg-white px-80 py-60 text-28px font-bold">
+          <div class="mb-30">
+            请选择认证方式
           </div>
-        </template>
-      </div>
+          <Authentication @next="gotoTodoList" />
+        </div>
+      </template>
+      <template v-else>
+        <div class="flex">
+          <template v-for="(item, index) in currentItem?.childrens" :key="index">
+            <div class="clickable-div pos-relative wh-full" :class="item.bgString" style="width: 298px; height:329px" @click="contentItemClick(item)">
+              <div class="pos-absolute left-18 top-18">
+                <div class="w-110 text-0">
+                  <img :src="getImageUrl(item.logoUrl)" alt="">
+                </div>
+              </div>
+              <div class="pos-absolute bottom-32 right-20">
+                <div class="flex-col gap-4 text-right text-28 text-#fff font-bold line-height-none">
+                  <div>{{ item.title }}</div>
+                  <div>{{ item.titleDetail }}</div>
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+      </template>
     </n-modal>
   </div>
 </template>
