@@ -19,32 +19,33 @@ const router = useRouter();
 const userStore = useUserStore();
 const loading = useLoading();
 
+interface PathMap {
+  [key: number]: string | undefined;
+}
+
+const pathMap: PathMap = {
+  0: '',
+  1: '', // 重要实物预约交接1(退回)
+  2: '/todo/Important/receiverOneHandover', //  重要实物预约交接1(接收)
+  3: '/todo/Important/supervisorTwoHandover', //  重要实物预约交接2(授权)
+  4: '/todo/Important/receiverTwoHandover', // 重要实物预约交接2(接收)
+  5: '', // 重要实物预约交接2(退回)
+  6: '', //
+  7: '', //
+  8: '', //
+  9: '', //
+  10: '',
+  11: '',
+  12: '',
+  13: '',
+  14: '',
+  15: '',
+};
+
 function cellClick(item: DsTodoVo) {
   console.log(item);
 
-  let path: string;
-
-  switch (item.todoType) {
-    case '1':
-      // 重要实物预约交接1(退回)
-      path = '';
-      break;
-    case '2':
-      // 重要实物预约交接1(接收)
-      path = '/todo/Important/receiverOneHandover';
-      break;
-    case '3':
-      // 重要实物预约交接2(授权)
-      path = '/todo/Important/supervisorTwoHandover';
-      break;
-    case '4':
-      path = '';
-      break;
-    default:
-      path = '';
-      break;
-  }
-
+  const path = pathMap[Number(item.todoType)];
   if (path) {
     router.push({
       path,
