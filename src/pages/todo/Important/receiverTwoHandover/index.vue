@@ -16,6 +16,7 @@ definePage({
 const current = ref(1);
 const router = useRouter();
 const data = reactive<StepPageModel>({ operator: {}, auth: {}, receive: {} });
+let todoInfo: DsTodoVo;
 
 const stepItems: StepItem[] = [
   { title: '接收人开交接格', component: 'CabinetList', params: () => ({ gridType: 2, user: data.receive }) },
@@ -28,6 +29,15 @@ const stepItems: StepItem[] = [
 // 完成事件
 function onOk() {
   console.log('--onOk--');
+  // postInGoods({
+  //   electagNoList: map(epcList, 'epc'),
+  //   deviceNo: unref(getDeviceNo),
+  //   cellNo,
+  //   updateOrgId: orgId,
+  //   updateBy: userId,
+  //   authUserId,
+  //   serialNum,
+  // });
 }
 
 // 错误事件
@@ -37,7 +47,7 @@ function onError(step: number, data: any) {
 
 onMounted(() => {
   data.auth = JSON.parse(router.currentRoute.value.query.userInfo as string);
-  const todoInfo: DsTodoVo = JSON.parse(router.currentRoute.value.query.todoInfo as string);
+  todoInfo = JSON.parse(router.currentRoute.value.query.todoInfo as string);
   data.auth!.goodsList = todoInfo.electagList;
   data.auth!.gridIndex = [todoInfo.recvCellNo!];
 });
