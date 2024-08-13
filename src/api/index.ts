@@ -65,3 +65,11 @@ export function deviceBind(deviceInfo: deviceBindPost) {
 export function getOrgTree() {
   return request.get('/orgTree');
 }
+
+/**
+ * 获取柜格信息
+ * @returns
+ */
+export function getDeviceInfo(deviceNo: string) {
+  return request.get(`/device/${deviceNo}`);
+}

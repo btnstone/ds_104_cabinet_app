@@ -7,7 +7,8 @@ import { getCabinetList } from '@/api/cabinet';
 import { useLoading } from '@/hooks/useLoading';
 import CabinetGrid from '@/components/Cabinet/Grid/index.vue';
 import { useDeviceStore } from '@/store';
-import { deviceBind, getOrgTree } from '@/api';
+import { deviceBind, getDeviceInfo, getOrgTree } from '@/api';
+import type { stompCabinetInfoVo } from '@/stomp/types/stompDeviceTypes';
 
 interface orgTreeItem {
   id: string;
@@ -55,18 +56,17 @@ function initDevice() {
   }
 }
 
-function setDeviceInfo(data: DeviceCabinetVo) {
+function setDeviceInfo(data: stompCabinetInfoVo) {
   deviceName.value = data.cabinetName ?? '未命名';
   deviceType.value = data.cabinetType ?? '未知类型';
   deviceIp.value = data.ip ?? '未知IP';
   deviceMAC.value = data.mac ?? '未知地址';
   deviceNumber.value = data.deviceCode ?? '未知编号';
-  // devicePort.value = data
+  devicePort.value = data.devicePort ?? '未知端口';
 }
 
 onMounted(() => {
   console.log('index onMounted');
-  // loading.showLoading('正在加载。。。');
   initDevice();
   getOrgInfo();
 });
@@ -90,6 +90,19 @@ async function getOrgInfo() {
   }
   finally {
     loading.hideLoading();
+  }
+}
+
+async function getDeviceInfoServer() {
+  try {
+    if (deviceNumber.value.length === 0) {
+      message.error('无法获取柜格编号');
+      return;
+    }
+    const deviceInfo = await getDeviceInfo(deviceNumber.value);
+  }
+  catch (e) {
+    console.error(e);
   }
 }
 
@@ -141,7 +154,6 @@ async function registerDevice() {
     console.error(e);
   }
 }
-
 </script>
 
 <template>
