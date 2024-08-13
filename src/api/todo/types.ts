@@ -1,3 +1,5 @@
+import type { IElectagInfo } from '@/api/types';
+
 /**
  * DsTodoVo，待办视图对象 ds_todo
  */
@@ -66,4 +68,6 @@ export interface DsTodoVo {
    * 交易信息
    */
   tradInfo?: string;
+
+  electagList: IElectagInfo[];
 }

@@ -90,6 +90,7 @@ const menuMap = computed(() => {
 const router = useRouter();
 const showModal = ref(false);
 const currentItem = ref<ContentItem>();
+const userObj = ref({});
 
 let formatted = useDateFormat(useNow(), 'HH:mm');
 let timer: NodeJS.Timeout;
@@ -137,9 +138,14 @@ function getImageUrl(name: string) {
 }
 
 function gotoTodoList() {
-  router.push({
-    path: '/todo/list',
-  });
+  if (userObj.value) {
+    router.push({
+      path: '/todo/list',
+      query: {
+        userInfo: JSON.stringify(userObj.value),
+      },
+    });
+  }
 }
 
 onMounted(() => {
@@ -233,7 +239,7 @@ onUnmounted(() => {
           <div class="mb-30">
             请选择认证方式
           </div>
-          <Authentication @next="gotoTodoList" />
+          <Authentication v-model:user="userObj" :auth-type="1" @next="gotoTodoList" />
         </div>
       </template>
       <template v-else>

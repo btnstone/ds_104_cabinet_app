@@ -22,24 +22,37 @@ const loading = useLoading();
 function cellClick(item: DsTodoVo) {
   console.log(item);
 
+  let path: string;
+
   switch (item.todoType) {
     case '1':
       // 重要实物预约交接1(退回)
-      router.push({ path: '' });
+      path = '';
       break;
     case '2':
       // 重要实物预约交接1(接收)
-      router.push({ path: '/todo/Important/receiverOneHandover' });
+      path = '/todo/Important/receiverOneHandover';
       break;
     case '3':
       // 重要实物预约交接2(授权)
-      router.push({ path: '/todo/Important/supervisorTwoHandover' });
+      path = '/todo/Important/supervisorTwoHandover';
       break;
     case '4':
-      router.push({ path: '' });
+      path = '';
       break;
     default:
+      path = '';
       break;
+  }
+
+  if (path) {
+    router.push({
+      path,
+      query: {
+        userInfo: router.currentRoute.value.query.userInfo,
+        todoInfo: JSON.stringify(item),
+      },
+    });
   }
 }
 
