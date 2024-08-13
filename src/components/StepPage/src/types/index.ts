@@ -1,7 +1,49 @@
-export interface StepItem {
+import type { Component, VNodeProps } from 'vue';
+
+export type ComponentType = keyof ComponentProps;
+
+type MethodsNameToCamelCase<
+  T extends string,
+  M extends string = '',
+> = T extends `${infer F}-${infer N}${infer Tail}`
+  ? MethodsNameToCamelCase<Tail, `${M}${F}${Uppercase<N>}`>
+  : `${M}${T}`;
+
+type MethodsNameTransform<T> = {
+  [K in keyof T as K extends `on${string}` ? MethodsNameToCamelCase<K> : never]: T[K];
+};
+
+type ExtractPropTypes<T extends Component> = T extends new (...args: any) => any
+  ? Omit<InstanceType<T>['$props'], keyof VNodeProps>
+  : never;
+
+interface _CustomComponents {
+  Auth: ExtractPropTypes<(typeof import('@/components/Authentication/index.vue')['default'])>;
+  CabinetList: ExtractPropTypes<(typeof import('@/components/Cabinet/List/index.vue')['default'])>;
+  InventoryCheckOne: ExtractPropTypes<(typeof import('@/components/Inventory/CheckOne.vue')['default'])>;
+  InventoryCheckTwo: ExtractPropTypes<(typeof import('@/components/Inventory/CheckTwo.vue')['default'])>;
+  Success: ExtractPropTypes<(typeof import('@/components/SuccessPage/index.vue')['default'])>;
+}
+
+type CustomComponents<T = _CustomComponents> = {
+  [K in keyof T]: T[K] & MethodsNameTransform<T[K]>;
+};
+
+export interface ComponentProps {
+  Auth: CustomComponents['Auth'];
+  CabinetList: CustomComponents['CabinetList'];
+  InventoryCheckOne: CustomComponents['InventoryCheckOne'];
+  InventoryCheckTwo: CustomComponents['InventoryCheckTwo'];
+  Success: CustomComponents['Success'];
+}
+
+export interface ComponentFormSchema<T extends ComponentType = any> extends StepItemSchema<T> {
+  component: T;
+}
+
+interface StepItemSchema<T extends ComponentType = any> {
   title: string;
-  component: Component;
-  params?: any;
+  params?: | (() => ComponentProps[T]) | ComponentProps[T];
 }
 
 export interface StepItemParams {
@@ -14,3 +56,7 @@ export interface StepItemParams {
   isShowSupervisor?: boolean;
   isShowOrg?: boolean;
 }
+
+type StepItemSchemaType<T extends ComponentType = ComponentType> = T extends any ? ComponentFormSchema<T> : never;
+
+export type StepItem = StepItemSchemaType;

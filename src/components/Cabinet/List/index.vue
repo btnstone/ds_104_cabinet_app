@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import CabinetGrid from '../Grid/index.vue';
+import StompService from '@/stomp/StompService';
 
 defineOptions({ name: 'Inventory' });
 
 // 1-柜员格，2-交接格，3-上缴格
 const props = defineProps(['gridType']);
 const emits = defineEmits(['next', 'prev', 'error', 'foo']);
-defineModel('data');
 const user = defineModel<StepPageUserModel>('user', { default: {} });
 
 const getEnableGridIndex = computed(() => {
@@ -28,6 +28,7 @@ function onGridClick(item: any) {
     return;
   }
   user.value.gridIndex = [item.index];
+  StompService.openDoor({ cells: [item.index] });
   emits('next');
 }
 </script>

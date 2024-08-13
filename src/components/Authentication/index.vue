@@ -4,6 +4,7 @@ import { NButton } from 'naive-ui';
 import { storeToRefs } from 'pinia';
 import { useRequest } from 'vue-request';
 import { promiseTimeout } from '@vueuse/core';
+import type { PropType } from 'vue';
 import StompService from '@/stomp/StompService';
 import { getEnableCabinetGrid, goLogin } from '@/api/index';
 import { PopoverInput } from '@/components/Keyboard';
@@ -13,7 +14,7 @@ defineOptions({ name: 'Authentication' });
 
 // authType: 1-柜员,2-主管,3-监交人
 const props = defineProps({
-  authType: Number,
+  authType: Number as PropType<number>,
 });
 
 const emits = defineEmits(['next', 'prev', 'error']);

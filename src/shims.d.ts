@@ -42,6 +42,10 @@ interface StepPageUserModel {
   gridIndex?: Key[];
   goodsList?: Recordable[];
   epcList?: Recordable[];
+  // 接收人
+  receiver?: Key;
+  // 监交人
+  supervisor?: Key;
 }
 
 interface StepPageModel {

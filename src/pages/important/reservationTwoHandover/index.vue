@@ -13,25 +13,14 @@ definePage({
 });
 
 const current = ref(1);
-const data = ref<{ foo: string }>({
-  foo: 'bar',
-});
-
+const data = reactive<StepPageModel>({ operator: {} });
 const stepItems: StepItem[] = [
-  { title: '身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
-  { title: '开柜门', component: defineAsyncComponent(() => import('@/components/Cabinet/List/index.vue')) },
-  {
-    title: '关柜盘点',
-    component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
-    params: { title: '请核对物品是否一致', btn1Text: '核对不一致', btn2Text: '核对一致' },
-  },
-  { title: '开交接格', component: defineAsyncComponent(() => import('@/components/Cabinet/List/index.vue')) },
-  {
-    title: '关柜盘点',
-    component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
-    params: { title: '请核对物品是否一致', btn1Text: '核对不一致', btn2Text: '核对一致' },
-  },
-  { title: '完成', component: defineAsyncComponent(() => import('@/components/SuccessPage/index.vue')) },
+  { title: '身份认证', component: 'Auth', params: () => ({ authType: 1, user: data.operator }) },
+  { title: '开柜门', component: 'CabinetList', params: () => ({ gridType: 1, user: data.operator }) },
+  { title: '关柜盘点', component: 'InventoryCheckOne', params: () => ({ checkType: 2, user: data.operator, isShowReceiver: true, isShowSupervisor: true }) },
+  { title: '开交接格', component: 'CabinetList', params: () => ({ gridType: 2, user: data.operator }) },
+  { title: '关柜盘点', component: 'InventoryCheckOne', params: () => ({ checkType: 1, user: data.operator, isShowReceiver: true, isShowSupervisor: true }) },
+  { title: '完成', component: 'Success', params: () => ({ text: '提交预约交接成功' }) },
 ];
 
 // 完成事件
