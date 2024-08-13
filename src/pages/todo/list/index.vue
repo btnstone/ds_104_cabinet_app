@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import ContentContainer from '@/components/ContentContainer/index.vue';
-import type { TodoItem } from '@/api/todo/types';
+import { getTodoList } from '@/api/todo';
+import type { DsTodoVo } from '@/api/todo/types';
+import useUserStore from '@/store/modules/user';
+import { useLoading } from '@/hooks/useLoading';
 
 defineOptions({ name: 'TodoList' });
 
@@ -11,24 +14,28 @@ definePage({
   },
 });
 
-const isEnd = ref(true);
-const todoList = ref<TodoItem[]>([]);
+const todoList = ref<DsTodoVo[]>([]);
 const router = useRouter();
+const userStore = useUserStore();
+const loading = useLoading();
 
-function cellClick(item: TodoItem) {
+function cellClick(item: DsTodoVo) {
   console.log(item);
 
   switch (item.todoType) {
-    case 1:
+    case '1':
+      // 重要实物预约交接1(退回)
       router.push({ path: '' });
       break;
-    case 2:
-      router.push({ path: '' });
+    case '2':
+      // 重要实物预约交接1(接收)
+      router.push({ path: '/todo/Important/receiverOneHandover' });
       break;
-    case 3:
-      router.push({ path: '' });
+    case '3':
+      // 重要实物预约交接2(授权)
+      router.push({ path: '/todo/Important/supervisorTwoHandover' });
       break;
-    case 4:
+    case '4':
       router.push({ path: '' });
       break;
     default:
@@ -37,46 +44,32 @@ function cellClick(item: TodoItem) {
 }
 
 onMounted(() => {
-  todoList.value.push({
-    rspId: 'adjkhdhjk1',
-    reqUser: 'asdasdasd111',
-    reqCellNo: 16,
+  loading.showLoading('加载中，请稍后。。。');
+  getTodoList({
+    userId: userStore.userId,
+  }).then((result) => {
+    todoList.value = result.data;
+  }).catch((err) => {
+    console.log(err);
+  }).finally(() => {
+    loading.hideLoading();
   });
-
-  // 重要实物交接预约模式一
-  // 请前往智能重控柜，设备编号：xxxxxx 柜格：xxxxx 进行接受操作，监交人 xxxxx xxxxxx
-  // 重要实物交接预约模式二
-  // 柜员xxxxx xxxxx 重要实物已放置设备编号：xxxxxx 交接格xxxxx ，请尽快处理，谢谢
-  // 你有重要实物需要接受，请前往智能重控柜，设备编号xxxxxx 取出柜格xxx 进行接受操作
-
-  // 实物凭证尾箱交接模式一
-  // 请前往智能重控柜，设备编号：xxxxxx 柜格：xxxxx 进行接受操作，监交人 xxxxx xxxxxx
-  // 实物凭证尾箱交接模式二
-  // 柜员xxxxx xxxxx 重要实物已放置设备编号：xxxxxx 交接格xxxxx ，请尽快处理，谢谢
-  // 你有重要实物需要接受，请前往智能重控柜，设备编号xxxxxx 取出柜格xxx 进行接受操作
-
-  // 保管格交接模式一
-  // 请前往智能重控柜，设备编号：xxxxxx 柜格：xxxxx 进行接受操作，监交人 xxxxx xxxxxx
-  // 保管格交接模式二
-  // 请前往智能重控柜，设备编号：xxxxxx 柜格：xxxxx ，请尽快处理，谢谢
-  // 请前往智能重控柜，设备编号：xxxxxx 柜格：xxxxx 进行接受操作，监交人 xxxxx xxxxxx
 });
 </script>
 
 <template>
   <ContentContainer title="代办事项">
-    <div v-for="item in todoList" :key="item.rspId" class="content-container" @click="cellClick(item)">
-      <div>
-        <span>{{ item.reqUser }}</span>
-        <span>{{ item.reqCellNo }}</span>
+    <div class="mb-20 h-650 w-full flex flex-col items-center overflow-y-auto">
+      <div v-for="item in todoList" :key="item.id" class="content-container" @click="cellClick(item)">
+        <div class="line-clamp-2 text-18">
+          {{ item.todoContext }}
+        </div>
+        <div class="right-arrow" />
       </div>
-      <div class="right-arrow" />
-    </div>
-    <template v-if="isEnd">
       <div class="mt-20 text-18 c-coolgray">
         没有更多了
       </div>
-    </template>
+    </div>
   </ContentContainer>
 </template>
 
@@ -87,9 +80,10 @@ onMounted(() => {
   align-items: center;
   background-color: #fcfbfd;
   width: 95%;
-  height: 60px;
+  height: 80px;
   border-radius: 10px;
   border: 1px solid #e8e7e8;
-  padding: 0px 20px;
+  padding: 30px 20px;
+  margin-bottom: 20px;
 }
 </style>

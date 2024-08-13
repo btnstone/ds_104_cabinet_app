@@ -1,28 +1,59 @@
-export interface TodoItem {
+/**
+ * DsTodoVo，待办视图对象 ds_todo
+ */
+export interface DsTodoVo {
   /**
-   * 唯一标识符
+   * 设备编号
    */
-  rspId?: string;
+  deviceNo?: string;
   /**
-   * 发起机构
+   * 主键id
    */
-  reqOrg?: string;
+  id?: number;
   /**
-   * 发起柜员
+   * 处理标识
    */
-  reqUser?: string;
+  isDeal?: string;
+  /**
+   * 已读标识
+   */
+  isRead?: string;
+  /**
+   * 操作柜格编号
+   */
+  operCellNo?: string;
+  /**
+   * 接收柜格编号
+   */
+  recvCellNo?: string;
+  /**
+   * 接收机构
+   */
+  recvOrgName?: string;
+  /**
+   * 接收
+   */
+  recvUserName?: string;
+  /**
+   * 发起柜格编号
+   */
+  reqCellNo?: string;
   /**
    * 发起时间
    */
-  //   reqDatedate time
+  reqDate?: Date;
   /**
-   * 接受机构
+   * 发起机构
    */
-  recvOrg?: string;
+  reqOrgName?: string;
   /**
-   * 接受柜员
+   * 推送系统
    */
-  recvUser?: string;
+  reqSystem?: string;
+  /**
+   * 发起柜员
+   */
+  reqUserName?: string;
   /**
    * 待办内容
    */
@@ -30,59 +61,9 @@ export interface TodoItem {
   /**
    * 待办类型
    */
-  todoType?: number;
+  todoType?: string;
   /**
-   * 推送系统
+   * 交易信息
    */
-  reqSystem?: string;
-  /**
-   * 已读标识
-   */
-  isRead?: string;
-  /**
-   * 处理标识
-   */
-  isDeal?: string;
-  /**
-   * 创建时间
-   */
-  //   createTimedate time
-  /**
-   * 更新时间
-   */
-  //   updateTimedate time
-  /**
-   * 发起柜格编号
-   */
-  reqCellNo?: number;
-  /**
-   * 接受柜格编号
-   */
-  recvCellNo?: number;
-  /**
-   * 操作柜格编号
-   */
-  operCellNo?: number;
-  /**
-   * 发起柜格编号
-   */
-  reqCellNoList?: string;
-  /**
-   * 接受柜格编号
-   */
-  recvCellNoList?: string;
-  /**
-   * 操作柜格编号
-   */
-  operCellNoList?: string;
-  /**
-   * 全局流水号
-   */
-  ascsSerialNum?: string;
-  /**
-   * 柜格物品信息
-   */
-  //   detail柜格物品信息List
-  //   |--cellNo柜格编号?:string;
-  //   |--eletagList标签编号组List
+  tradInfo?: string;
 }

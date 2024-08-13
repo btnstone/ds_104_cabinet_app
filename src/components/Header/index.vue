@@ -22,7 +22,7 @@ let formatted = useDateFormat(useNow(), 'HH:mm');
 let timer: NodeJS.Timeout;
 
 function gotoHome() {
-  router.back();
+  router.push('/');
 }
 
 function start() {
