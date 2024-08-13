@@ -7,5 +7,6 @@ componentMap.set('CabinetList', defineAsyncComponent(() => import('@/components/
 componentMap.set('InventoryCheckOne', defineAsyncComponent(() => import('@/components/Inventory/CheckOne.vue')));
 componentMap.set('InventoryCheckTwo', defineAsyncComponent(() => import('@/components/Inventory/CheckTwo.vue')));
 componentMap.set('Success', defineAsyncComponent(() => import('@/components/SuccessPage/index.vue')));
+componentMap.set('RevocationList', defineAsyncComponent(() => import('@/components/RevocationList/index.vue')));
 
 export { componentMap };

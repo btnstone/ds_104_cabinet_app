@@ -16,19 +16,14 @@ definePage({
 const route = useRoute();
 const current = ref(1);
 const type = ref(1);
-const data = ref<{ foo: string }>({
-  foo: 'bar',
-});
+const data = reactive<StepPageModel>({ operator: {}, admin: {} });
+
 const stepItems: StepItem[] = [
-  { title: '身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
-  { title: '调拨内容关柜盘点', component: defineAsyncComponent(() => import('@/components/Cabinet/Inventory/index.vue')), params: { isShowOrg: true, isShowReceiver: true } },
-  { title: '主管身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
-  {
-    title: '主管授权',
-    component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
-    params: { title: '', btn1Text: '授权不通过', btn2Text: '授权通过' },
-  },
-  { title: '完成', component: defineAsyncComponent(() => import('@/components/SuccessPage/index.vue')) },
+  { title: '身份认证', component: 'Auth', params: () => ({ authType: 1, user: data.operator }) },
+  { title: '调拨内容关柜盘点', component: 'InventoryCheckOne', params: () => ({ checkType: 1, user: data.operator }) },
+  { title: '主管身份认证', component: 'Auth', params: () => ({ authType: 2, user: data.admin }) },
+  { title: '主管授权', component: 'InventoryCheckTwo', params: () => ({ user: data.operator }) },
+  { title: '完成', component: 'Success', params: () => ({ text: '重要物品调拨出库成功' }) },
 ];
 
 // 完成事件

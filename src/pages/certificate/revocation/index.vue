@@ -13,37 +13,21 @@ definePage({
 });
 
 const current = ref(1);
-const data = ref<{ foo: string }>({
-  foo: 'bar',
-});
+const data = reactive<StepPageModel>({ operator: {}, admin: {} });
 
 const stepItems: StepItem[] = [
-  { title: '身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
-  { title: '开柜门', component: defineAsyncComponent(() => import('@/components/Cabinet/List/index.vue')) },
-  {
-    title: '关柜盘点',
-    component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
-    params: { title: '请核对物品是否一致', btn1Text: '核对不一致', btn2Text: '核对一致' },
-  },
-  { title: '监交人身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
-  {
-    title: '监交人授权',
-    component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
-    params: { title: '', btn1Text: '授权不通过', btn2Text: '授权通过' },
-  },
-  { title: '接收人身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
-  { title: '开柜门', component: defineAsyncComponent(() => import('@/components/Cabinet/List/index.vue')) },
-  {
-    title: '关柜盘点',
-    component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
-    params: { title: '请核对物品是否一致', btn1Text: '核对不一致', btn2Text: '核对一致' },
-  },
-  { title: '完成', component: defineAsyncComponent(() => import('@/components/SuccessPage/index.vue')) },
+  { title: '身份认证', component: 'Auth', params: () => ({ authType: 1, user: data.operator }) },
+  { title: '请选择撤销的调拨流程', component: 'RevocationList', params: () => ({ }) },
+  { title: '开柜门关柜盘点', component: 'InventoryCheckOne', params: () => ({ checkType: 1, user: data.operator }) },
+  { title: '主管身份认证', component: 'Auth', params: () => ({ authType: 2, user: data.admin }) },
+  { title: '主管授权', component: 'InventoryCheckTwo', params: () => ({ user: data.operator }) },
+  { title: '完成', component: 'Success', params: { text: '撤销调拨成功' } },
 ];
 
 // 完成事件
 function onOk() {
   console.log('--onOk--');
+  // todo 请求接口撤销调拨
 }
 
 // 错误事件
