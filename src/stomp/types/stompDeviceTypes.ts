@@ -27,4 +27,5 @@ export interface stompCabinetInfoVo {
   cabinetWidth: number;
   cabinetGrids: cabinetGrid[];
   deviceCode: string;
+  devicePort: string;
 }
