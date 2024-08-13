@@ -8,7 +8,7 @@ defineOptions({ name: 'StorageReceiverTwoHandover' });
 definePage({
   name: 'page-storage-receiver-two-handover',
   meta: {
-    title: '保管格接受操作-预约（模式二）',
+    title: '保管格接收操作-预约（模式二）',
   },
 });
 
@@ -37,7 +37,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <ContentContainer title="保管格接受操作-预约（模式二）">
+  <ContentContainer title="保管格接收操作-预约（模式二）">
     <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
   </ContentContainer>
 </template>

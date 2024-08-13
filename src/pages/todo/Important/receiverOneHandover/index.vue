@@ -8,36 +8,21 @@ defineOptions({ name: 'ImportantReceiverOneHandover' });
 definePage({
   name: 'page-important-receiver-one-handover',
   meta: {
-    title: '接受重要实物操作-预约（模式一）',
+    title: '接收重要实物操作-预约（模式一）',
   },
 });
 
 const current = ref(1);
-const data = ref<{ foo: string }>({
-  foo: 'bar',
-});
+const data = reactive<StepPageModel>({ operator: {}, auth: {}, receive: {} });
 
 const stepItems: StepItem[] = [
-  { title: '监交人身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
-  {
-    title: '监交人授权',
-    component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
-    params: { title: '', btn1Text: '授权不通过', btn2Text: '授权通过',
-    },
-  },
-  { title: '开交接格', component: defineAsyncComponent(() => import('@/components/Cabinet/List/index.vue')) },
-  {
-    title: '关柜盘点',
-    component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
-    params: { title: '请核对物品是否一致', btn1Text: '核对不一致', btn2Text: '核对一致' },
-  },
-  { title: '开柜门', component: defineAsyncComponent(() => import('@/components/Cabinet/List/index.vue')) },
-  {
-    title: '关柜盘点',
-    component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
-    params: { title: '请核对物品是否一致', btn1Text: '核对不一致', btn2Text: '核对一致' },
-  },
-  { title: '完成', component: defineAsyncComponent(() => import('@/components/SuccessPage/index.vue')) },
+  { title: '监交人身份认证', component: 'Auth', params: () => ({ authType: 3, user: data.auth }) },
+  { title: '监交人授权', component: 'InventoryCheckTwo', params: () => ({ user: data.operator }) },
+  { title: '开交接格', component: 'CabinetList', params: () => ({ gridType: 2, user: data.receive }) },
+  { title: '关柜盘点', component: 'InventoryCheckOne', params: () => ({ checkType: 2, user: data.receive }) },
+  { title: '开柜门', component: 'CabinetList', params: () => ({ gridType: 1, user: data.receive }) },
+  { title: '关柜盘点', component: 'InventoryCheckOne', params: () => ({ checkType: 1, user: data.receive }) },
+  { title: '完成', component: 'Success', params: { text: '交接成功' } },
 ];
 
 // 完成事件
@@ -55,7 +40,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <ContentContainer title="接受重要实物操作-预约（模式一）">
+  <ContentContainer title="接收重要实物操作-预约（模式一）">
     <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
   </ContentContainer>
 </template>
