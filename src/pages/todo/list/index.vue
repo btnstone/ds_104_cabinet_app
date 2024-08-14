@@ -24,22 +24,22 @@ interface PathMap {
 }
 
 const pathMap: PathMap = {
-  0: '',
   1: '', // 重要实物预约交接1(退回)
-  2: '/todo/Important/receiverOneHandover', //  重要实物预约交接1(接收)
-  3: '/todo/Important/supervisorTwoHandover', //  重要实物预约交接2(授权)
-  4: '/todo/Important/receiverTwoHandover', // 重要实物预约交接2(接收)
+  2: '/todo/important/receiverOneHandover', //  重要实物预约交接1(接收)
+  3: '/todo/important/supervisorTwoHandover', //  重要实物预约交接2(授权)
+  4: '/todo/important/receiverTwoHandover', // 重要实物预约交接2(接收)
   5: '', // 重要实物预约交接2(退回)
-  6: '', //
-  7: '', //
-  8: '', //
-  9: '', //
-  10: '',
-  11: '',
-  12: '',
-  13: '',
-  14: '',
-  15: '',
+
+  6: '', // 保管格预约交接1(退回)
+  7: '/todo/certificate/receiverOneHandover', // 保管格预约交接1(接收)
+  8: '/todo/certificate/supervisorTwoHandover', // 保管格预约交接1(接收)
+  9: '/todo/certificate/receiverTwoHandover', // 保管格预约交接2(接收)
+  10: '', // 保管格预约交接2(退回)
+  11: '', // 实物凭证尾箱预约交接1(退回)
+  12: '/todo/storage/receiverOneHandover', // 实物凭证尾箱预约交接1(接受)
+  13: '/todo/storage/supervisorTwoHandover', // 实物凭证尾箱预约交接2(授权)
+  14: '/todo/storage/receiverTwoHandover', // 实物凭证尾箱预约交接2(接收)
+  15: '', // 实物凭证尾箱预约交接2(退回)
 };
 
 function cellClick(item: DsTodoVo) {
