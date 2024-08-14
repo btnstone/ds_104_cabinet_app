@@ -48,10 +48,12 @@ function onError(step: number, data: any) {
 }
 
 onMounted(() => {
-  data.auth = JSON.parse(router.currentRoute.value.query.userInfo as string);
   todoInfo = JSON.parse(router.currentRoute.value.query.todoInfo as string);
-  data.auth!.goodsList = todoInfo.electagList;
-  data.auth!.gridIndex = [todoInfo.recvCellNo!];
+  data.auth = Object.assign(JSON.parse(router.currentRoute.value.query.userInfo as string), {
+    goodsList: todoInfo.electagList,
+    gridIndex: [todoInfo.recvCellNo],
+  });
+  console.log(data.auth);
 });
 </script>
 

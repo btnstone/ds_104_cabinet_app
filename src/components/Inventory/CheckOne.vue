@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import type { ModalReactive } from 'naive-ui';
 import { chain, map } from 'lodash-es';
+import CredentialInfo from '../CredentialInfo/index.vue';
 import ComInventoryLayout from './src/components/ComInventoryLayout.vue';
 import ComInventoryList from './src/components/ComInventoryList.vue';
 import { getElectagInfo, getUserListByOrg } from '@/api';
@@ -18,6 +20,7 @@ export interface ICheckOneProps {
   checkType?: number;
   isShowReceiver?: boolean;
   isShowSupervisor?: boolean;
+  isShowCredential?: boolean;
   tips?: string;
 }
 
@@ -34,12 +37,36 @@ const isClosed = ref(false);
 const deviceStore = useDeviceStore();
 const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const { showLoading, hideLoading } = useLoading();
+const modalRef = ref<ModalReactive>();
 
 function handleNo() {
   emits('prev');
 }
 
 function handleYes() {
+  if (props.isShowCredential) {
+    // showModal.value = true;
+    modalRef.value = window.$modal.create({
+      style: {
+        width: '80%',
+        height: '500px',
+      },
+      preset: 'card',
+      closable: false,
+      content: () => h(CredentialInfo, {
+        onInfoSelected: () => {
+          handleNext();
+        },
+      }),
+    });
+  }
+  else {
+    handleNext();
+  }
+}
+
+function handleNext() {
+  unref(modalRef)?.destroy();
   emits('next');
 }
 

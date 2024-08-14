@@ -17,7 +17,7 @@ const model = defineModel<StepPageUserModel>('user', { default: {} });
       <CabinetList v-model:user="model" :grid-type="gridType" />
     </div>
     <div class="flex-1">
-      <CheckOne v-model:user="model" :check-type="checkType" :tips="tips" :is-show-receiver="isShowReceiver" :is-show-supervisor="isShowSupervisor" @prev="$emit('prev')" @next="$emit('next')" />
+      <CheckOne v-model:user="model" :check-type="checkType" :tips="tips" :is-show-receiver="isShowReceiver" :is-show-supervisor="isShowSupervisor" :is-show-credential="isShowCredential" @prev="$emit('prev')" @next="$emit('next')" />
     </div>
   </div>
 </template>
