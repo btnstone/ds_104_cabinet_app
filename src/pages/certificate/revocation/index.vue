@@ -18,7 +18,7 @@ const data = reactive<StepPageModel>({ operator: {}, admin: {} });
 const stepItems: StepItem[] = [
   { title: '身份认证', component: 'Auth', params: () => ({ authType: 1, user: data.operator }) },
   { title: '请选择撤销的调拨流程', component: 'RevocationList', params: () => ({ }) },
-  { title: '开柜门关柜盘点', component: 'InventoryCheckOne', params: () => ({ checkType: 1, user: data.operator }) },
+  { title: '开柜门关柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 1, user: data.operator }) },
   { title: '主管身份认证', component: 'Auth', params: () => ({ authType: 2, user: data.admin }) },
   { title: '主管授权', component: 'InventoryCheckTwo', params: () => ({ user: data.operator }) },
   { title: '完成', component: 'Success', params: { text: '撤销调拨成功' } },

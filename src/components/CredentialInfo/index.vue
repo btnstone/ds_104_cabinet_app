@@ -1,33 +1,32 @@
-<!-- <script setup lang="ts">
-import type { CertificateVO, GoodVO } from '@/api/goods/types';
+<script setup lang="ts">
+import { useMessage } from 'naive-ui';
+import type { CertificateVO } from '@/api/goods/types';
 
 defineOptions({ name: 'CredentialInfo' });
 
-const props = defineProps({
+defineProps({
   certificateList: {
-    type: Array as PropType<Key[]>,
+    type: Array as PropType<CertificateVO[]>,
     default: () => [],
   },
 });
-const emits = defineEmits(['gridClick']);
-const deviceStore = useDeviceStore();
-const cabinetList = computed(() => {
-  const cabinets = cloneDeep(deviceStore.getCurrentCabinet);
-  return map(cabinets, (cabinet) => {
-    return {
-      ...cabinet,
-      cabinetGrids: map(cabinet.cabinetGrids, (grid) => {
-        return {
-          ...grid,
-          enable: props.enableGridIndex.includes(String(grid.index)) ?? false,
-        };
-      }),
-    };
-  });
-});
 
-function handleClick(item: any) {
-  emits('gridClick', item);
+const emits = defineEmits(['infoSelected']);
+const message = useMessage();
+
+let curIndex = -1;
+
+function detailChange(index: number) {
+  curIndex = index;
+}
+
+function handleClick(item: CertificateVO) {
+  if (curIndex > 0) {
+    emits('infoSelected', item);
+  }
+  else {
+    message.error('请选择凭证申请信息');
+  }
 }
 </script>
 
@@ -72,10 +71,10 @@ function handleClick(item: any) {
     </n-list>
     <template #footer>
       <div class="flex flex-row items-center justify-center">
-        <n-button size="large" type="info" round style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:250px;" @click="modalCheck">
+        <n-button size="large" type="info" round style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:250px;" @click="handleClick(item)">
           下一步
         </n-button>
       </div>
     </template>
   </n-card>
-</template> -->
+</template>
