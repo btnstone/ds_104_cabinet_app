@@ -38,7 +38,7 @@ function onOk() {
   const [handoverCellNo] = auth?.gridIndex || [];
   postHandOverGoods({
     electagNoList: map(auth?.epcList, 'epc'),
-    receiveUserId: auth?.receiver,
+    receiveUserId: operator?.receiver,
     offerDeviceNo: unref(getDeviceNo),
     offerCellNo,
     offerUserId: operator?.userId,
@@ -47,6 +47,8 @@ function onOk() {
     supervisorId: auth?.userId,
     handoverCellNo,
     handoverMode: '02',
+    handoverStep: '01',
+    handoverDeviceNo: unref(getDeviceNo),
     serialNum,
   });
 }
