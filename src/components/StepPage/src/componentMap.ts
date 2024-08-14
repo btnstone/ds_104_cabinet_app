@@ -9,5 +9,6 @@ componentMap.set('InventoryCheckTwo', defineAsyncComponent(() => import('@/compo
 componentMap.set('InventoryCheckThree', defineAsyncComponent(() => import('@/components/Inventory/CheckThree.vue')));
 componentMap.set('Success', defineAsyncComponent(() => import('@/components/SuccessPage/index.vue')));
 componentMap.set('RevocationList', defineAsyncComponent(() => import('@/components/RevocationList/index.vue')));
+componentMap.set('TurnInUserSelect', defineAsyncComponent(() => import('@/components/TurnIn/UserSelect.vue')));
 
 export { componentMap };
