@@ -1,16 +1,23 @@
 <script setup lang="ts">
+import type { PropType } from 'vue';
 import CabinetGrid from '../Grid/index.vue';
 import StompService from '@/stomp/StompService';
 
-defineOptions({ name: 'Inventory' });
+defineOptions({ name: 'CabinetList' });
 
-// 1-柜员格，2-交接格，3-上缴格
-const props = defineProps(['gridType']);
+const props = defineProps<ICabinetListProps>();
+
 const emits = defineEmits(['next', 'prev', 'error', 'foo']);
-const user = defineModel<StepPageUserModel>('user', { default: {} });
 
+export interface ICabinetListProps {
+  // 1-柜员格，2-交接格，3-上缴格
+  gridType: number;
+}
+
+const user = defineModel<StepPageUserModel>('user', { default: {} });
+const gridSet = new Set<Key>();
 const getEnableGridIndex = computed(() => {
-  const { bindCell, handOverCell, turnOverCell } = unref(user);
+  const { bindCell = [], handOverCell = [], turnOverCell = [] } = unref(user);
   if (props.gridType === 1) {
     return bindCell;
   }
@@ -24,10 +31,11 @@ const getEnableGridIndex = computed(() => {
 });
 
 function onGridClick(item: any) {
-  if (!item.enable) {
+  if (!item.enable || item.isOpened) {
     return;
   }
-  user.value.gridIndex = [item.index];
+  gridSet.add(item.index);
+  user.value.gridIndex = Array.from(gridSet);
   StompService.openDoor({ cells: [item.index] });
   emits('next');
 }

@@ -31,7 +31,7 @@ class StompService {
 
   constructor(topics: string[]) {
     this.client = new Client({
-      brokerURL: 'ws://192.168.88.168:8900/stomp',
+      brokerURL: import.meta.env.VITE_STOMP_BROKEER_URL,
       // debug(str) {
       //   console.log(`STOMP: ${str}`);
       // },

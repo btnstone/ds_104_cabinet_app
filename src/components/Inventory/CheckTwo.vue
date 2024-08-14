@@ -7,7 +7,9 @@ import { getUserListByOrg } from '@/api';
 defineOptions({ name: 'InventoryCheckTwo' });
 
 const props = defineProps({
+  // 是否显示接收人
   isShowReceiver: Boolean as PropType<boolean>,
+  // 是否显示监交人
   isShowSupervisor: Boolean as PropType<boolean>,
 });
 const emits = defineEmits(['next', 'prev', 'error']);

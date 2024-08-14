@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { chain, map } from 'lodash-es';
-import type { PropType } from 'vue';
 import ComInventoryLayout from './src/components/ComInventoryLayout.vue';
 import ComInventoryList from './src/components/ComInventoryList.vue';
 import { getElectagInfo, getUserListByOrg } from '@/api';
@@ -10,14 +9,18 @@ import StompService from '@/stomp/StompService';
 
 defineOptions({ name: 'InventoryCheckOne' });
 
-// checkType: 1-放入，2-取出
-const props = defineProps({
-  checkType: Number as PropType<number>,
-  isShowReceiver: Boolean as PropType<boolean>,
-  isShowSupervisor: Boolean as PropType<boolean>,
-  tips: String as PropType<string>,
-});
+const props = withDefaults(defineProps<ICheckOneProps>(), { checkType: 1 });
+
 const emits = defineEmits(['next', 'prev', 'error']);
+
+export interface ICheckOneProps {
+  // 1-放入，2-取出
+  checkType?: number;
+  isShowReceiver?: boolean;
+  isShowSupervisor?: boolean;
+  tips?: string;
+}
+
 const model = defineModel<StepPageUserModel>('user', { default: {} });
 // 获取用户列表
 const getUserOptions = computedAsync(async () => {
@@ -41,9 +44,9 @@ function handleYes() {
 }
 
 onMounted(() => {
-  const { gridIndex: cells = [] } = unref(model);
   until(isClosed).toBe(true).then(() => {
-    console.log('开始盘点');
+    const { gridIndex: cells = [] } = unref(model);
+    console.log('开始盘点', cells);
     showLoading('盘点中...');
     return StompService.syncGetEpcData({ cells }).then((data) => {
       console.log(data);
@@ -71,6 +74,10 @@ onMounted(() => {
       hideLoading();
     });
   });
+});
+
+onUnmounted(() => {
+  console.log('--onUnmounted--');
 });
 
 watch(deviceStore.getCabinetGrids, () => {

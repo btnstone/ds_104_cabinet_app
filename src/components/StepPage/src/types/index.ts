@@ -22,6 +22,7 @@ interface _CustomComponents {
   CabinetList: ExtractPropTypes<(typeof import('@/components/Cabinet/List/index.vue')['default'])>;
   InventoryCheckOne: ExtractPropTypes<(typeof import('@/components/Inventory/CheckOne.vue')['default'])>;
   InventoryCheckTwo: ExtractPropTypes<(typeof import('@/components/Inventory/CheckTwo.vue')['default'])>;
+  InventoryCheckThree: ExtractPropTypes<(typeof import('@/components/Inventory/CheckThree.vue')['default'])>;
   Success: ExtractPropTypes<(typeof import('@/components/SuccessPage/index.vue')['default'])>;
 }
 
@@ -34,6 +35,7 @@ export interface ComponentProps {
   CabinetList: CustomComponents['CabinetList'];
   InventoryCheckOne: CustomComponents['InventoryCheckOne'];
   InventoryCheckTwo: CustomComponents['InventoryCheckTwo'];
+  InventoryCheckThree: CustomComponents['InventoryCheckThree'];
   Success: CustomComponents['Success'];
 }
 
