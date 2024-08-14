@@ -99,3 +99,12 @@ export function postTaskOutGoods(data: any) {
 export function getUserListByOrg(orgId: Key) {
   return request.get(`/userList/${orgId}`);
 }
+
+/**
+ * 重要实物交接
+ * @param data
+ * @returns
+ */
+export function postHandOverGoods(data: any) {
+  return request.post('/record/handoverGoods', data);
+}

@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { getGlobalSerialNumber } from '@/api';
+import { map } from 'lodash-es';
+import { getGlobalSerialNumber, postHandOverGoods } from '@/api';
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
+import { useDeviceStore } from '@/store';
 
 defineOptions({ name: 'ReservationOneHandover' });
 
@@ -13,9 +15,10 @@ definePage({
   },
 });
 
+const deviceStore = useDeviceStore();
+const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const current = ref(1);
 const data = reactive<StepPageModel>({ operator: {}, auth: {} });
-
 const stepItems: StepItem[] = [
   { title: '身份认证', component: 'Auth', params: () => ({ authType: 1, user: data.operator }) },
   { title: '开柜门', component: 'CabinetList', params: () => ({ gridType: 1, user: data.operator }) },
@@ -30,6 +33,22 @@ const stepItems: StepItem[] = [
 // 完成事件
 function onOk() {
   console.log('--onOk--');
+  const { serialNum, operator, auth } = unref(data);
+  const [offerCellNo] = operator?.gridIndex || [];
+  const [handoverCellNo] = auth?.gridIndex || [];
+  postHandOverGoods({
+    electagNoList: map(auth?.epcList, 'epc'),
+    receiveUserId: auth?.receiver,
+    offerDeviceNo: unref(getDeviceNo),
+    offerCellNo,
+    offerUserId: operator?.userId,
+    offerOrgId: operator?.orgId,
+    createBy: operator?.userId,
+    supervisorId: auth?.userId,
+    handoverCellNo,
+    handoverMode: '02',
+    serialNum,
+  });
 }
 
 // 错误事件
