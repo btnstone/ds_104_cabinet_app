@@ -49,7 +49,7 @@ function handleYes() {
     modalRef.value = window.$modal.create({
       style: {
         width: '80%',
-        height: '500px',
+        height: '700px',
       },
       preset: 'card',
       closable: false,
