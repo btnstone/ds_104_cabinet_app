@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { cloneDeep, map } from 'lodash-es';
-import { postHandOverGoods } from '@/api';
+import { getGlobalSerialNumber, postHandOverGoods } from '@/api';
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
@@ -52,8 +52,10 @@ function onOk() {
     offerUserId: operator?.userId,
     offerOrgId: operator?.orgId,
     createBy: operator?.userId,
+    handoverDeviceNo: unref(getDeviceNo),
     handoverCellNo,
     handoverMode: '03',
+    handoverStep: '01',
     serialNum,
   });
 }
@@ -64,6 +66,9 @@ function onError(step: number, data: any) {
 }
 
 onMounted(() => {
+  getGlobalSerialNumber().then((res) => {
+    data.serialNum = res.data;
+  });
 });
 </script>
 
