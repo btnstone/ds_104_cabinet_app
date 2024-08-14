@@ -59,7 +59,7 @@ onMounted(() => {
   <ContentContainer title="接收重要实物操作-预约（模式一）">
     <!-- {{ data.auth }} -->
     <!-- {{ data.auth?.goodsList }} -->
-    {{ data.auth?.gridIndex }}
+    <!-- {{ data.auth?.gridIndex }} -->
     <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
   </ContentContainer>
 </template>

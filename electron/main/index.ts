@@ -2,7 +2,7 @@
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import os from 'node:os';
-import { BrowserWindow, app, ipcMain, shell } from 'electron';
+import { BrowserWindow, Menu, app, ipcMain, shell } from 'electron';
 
 // const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -67,7 +67,7 @@ async function createWindow() {
   });
 
   // 软件工具栏为空
-  // Menu.setApplicationMenu(null);
+  Menu.setApplicationMenu(null);
 
   if (VITE_DEV_SERVER_URL) { // #298
     win.loadURL(VITE_DEV_SERVER_URL);
