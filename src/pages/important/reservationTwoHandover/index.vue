@@ -44,7 +44,7 @@ function onOk() {
   const [offerCellNo] = operator?.gridIndex || [];
   const [handoverCellNo] = receive?.gridIndex || [];
   postHandOverGoods({
-    electagNoList: map(operator?.epcList, 'epc'),
+    electagNoList: map(receive?.epcList, 'epc'),
     receiveUserId: operator?.receiver,
     supervisorId: operator?.supervisor,
     offerDeviceNo: unref(getDeviceNo),
