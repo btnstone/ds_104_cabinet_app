@@ -21,7 +21,7 @@ let todoInfo: DsTodoVo;
 const stepItems: StepItem[] = [
   { title: '监交人身份认证', component: 'Auth', params: () => ({ authType: 3, user: data.auth }) },
   { title: '监交人授权', component: 'InventoryCheckTwo', params: () => ({ user: data.receive }) },
-  { title: '开交接柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 1, user: data.operator }) },
+  { title: '开交接柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 2, user: data.operator }) },
   { title: '开柜盘点选择接收人', component: 'InventoryCheckThree', params: () => ({ gridType: 1, user: data.operator }) },
   { title: '交接完成', component: 'Success', params: { text: '交接成功' } },
 ];
