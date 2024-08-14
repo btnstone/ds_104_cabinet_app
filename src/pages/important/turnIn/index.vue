@@ -2,8 +2,10 @@
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
+import { getGlobalSerialNumber } from '@/api';
+import { useDeviceStore } from '@/store';
 
-defineOptions({ name: 'ImportantTurnInPage' });
+defineOptions({ name: 'ImportantOutboundPage' });
 
 definePage({
   name: 'page-important-turn-in',
@@ -12,27 +14,14 @@ definePage({
   },
 });
 
+const deviceStore = useDeviceStore();
+const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const current = ref(1);
-const data = ref<{ foo: string }>({
-  foo: 'bar',
-});
+const data = reactive<StepPageModel>({ operator: {}, admin: {} });
 
 const stepItems: StepItem[] = [
-  { title: '身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
-  {
-    title: '请选择强制上缴重要物品',
-    component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
-    params: { subTitle: '请选择被强制物品柜员：', btn2Text: '下一步', isShowReceiver: true },
-  },
-  { title: '主管身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
-  {
-    title: '主管授权',
-    component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
-    params: { title: '', btn1Text: '授权不通过', btn2Text: '授权通过' },
-  },
-  { title: '开上缴格门关柜盘点', component: defineAsyncComponent(() => import('@/components/Cabinet/Inventory/index.vue')) },
-  { title: '开柜门关柜盘点', component: defineAsyncComponent(() => import('@/components/Cabinet/Inventory/index.vue')) },
-  { title: '完成', component: defineAsyncComponent(() => import('@/components/SuccessPage/index.vue')) },
+  { title: '身份认证', component: 'Auth', params: () => ({ authType: 1, user: data.operator }) },
+  { title: '用户选择', component: 'TurnInUserSelect' },
 ];
 
 // 完成事件
@@ -46,11 +35,14 @@ function onError(step: number, data: any) {
 }
 
 onMounted(() => {
+  getGlobalSerialNumber().then((res) => {
+    data.serialNum = res.data;
+  });
 });
 </script>
 
 <template>
-  <ContentContainer title="重要物品强制上缴">
+  <ContentContainer title="重要实物出库">
     <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
   </ContentContainer>
 </template>

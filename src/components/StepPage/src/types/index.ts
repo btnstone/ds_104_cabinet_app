@@ -25,6 +25,7 @@ interface _CustomComponents {
   InventoryCheckThree: ExtractPropTypes<(typeof import('@/components/Inventory/CheckThree.vue')['default'])>;
   Success: ExtractPropTypes<(typeof import('@/components/SuccessPage/index.vue')['default'])>;
   RevocationList: ExtractPropTypes<(typeof import('@/components/RevocationList/index.vue')['default'])>;
+  TurnInUserSelect: ExtractPropTypes<(typeof import('@/components/TurnIn/UserSelect.vue')['default'])>;
 }
 
 type CustomComponents<T = _CustomComponents> = {
@@ -39,6 +40,7 @@ export interface ComponentProps {
   InventoryCheckThree: CustomComponents['InventoryCheckThree'];
   Success: CustomComponents['Success'];
   RevocationList: CustomComponents['RevocationList'];
+  TurnInUserSelect: CustomComponents['TurnInUserSelect'];
 }
 
 export interface ComponentFormSchema<T extends ComponentType = any> extends StepItemSchema<T> {
