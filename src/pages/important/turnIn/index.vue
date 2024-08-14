@@ -8,9 +8,9 @@ import { useDeviceStore } from '@/store';
 defineOptions({ name: 'ImportantOutboundPage' });
 
 definePage({
-  name: 'page-important-outbound',
+  name: 'page-important-turn-in',
   meta: {
-    title: '重要实物出库',
+    title: '重要物品强制上缴',
   },
 });
 
