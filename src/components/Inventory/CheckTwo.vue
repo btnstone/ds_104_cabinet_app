@@ -55,12 +55,14 @@ function handleYes() {
       <ComInventoryList :goods-list="model.goodsList" />
     </template>
     <template #footer>
-      <n-button size="large" type="info" round style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:300px;margin-right:50px;" color="#ededf1" text-color="#000" @click="handleNo">
-        授权不通过
-      </n-button>
-      <n-button size="large" type="info" round style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:300px;" @click="handleYes">
-        授权通过
-      </n-button>
+      <div class="flex items-center justify-between gap-50">
+        <n-button size="large" type="info" round style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:300px;margin-right:50px;" color="#ededf1" text-color="#000" @click="handleNo">
+          授权不通过
+        </n-button>
+        <n-button size="large" type="info" round style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:300px;" @click="handleYes">
+          授权通过
+        </n-button>
+      </div>
     </template>
   </ComInventoryLayout>
 </template>

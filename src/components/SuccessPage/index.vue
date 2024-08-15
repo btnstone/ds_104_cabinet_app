@@ -48,7 +48,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="w-full flex flex-col items-center justify-center pl-20 pr-20" style="height:600px">
+  <div class="wh-full flex-col items-center justify-center pl-20 pr-20">
     <img src="@/assets/images/components/successpage.png" alt="" class="border-none">
     <div class="mt-10 text-26">
       {{ text || '操作成功' }}

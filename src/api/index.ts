@@ -108,3 +108,21 @@ export function getUserListByOrg(orgId: Key) {
 export function postHandOverGoods(data: any) {
   return request.post('/record/handoverGoods', data);
 }
+
+/**
+ * 实物凭证尾箱交接
+ * @param data
+ * @returns
+ */
+export function postVouchersBoxHandover(data: any) {
+  return request.post('/record/vouchersBoxHandover', data);
+}
+
+/**
+ * 保管格交接
+ * @param data
+ * @returns
+ */
+export function postHandoverGrid(data: any) {
+  return request.post('/record/handoverGrid', data);
+}

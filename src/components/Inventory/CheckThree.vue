@@ -9,10 +9,18 @@ defineProps<ICheckOneProps & ICabinetListProps>();
 // 1-柜员格，2-交接格，3-上缴格
 defineEmits(['next', 'prev', 'error']);
 const model = defineModel<StepPageUserModel>('user', { default: {} });
+
+onMounted(() => {
+  console.log('--InventoryCheckThree:onMounted--');
+});
+
+onUnmounted(() => {
+  console.log('--InventoryCheckThree:onUnmounted');
+});
 </script>
 
 <template>
-  <div class="flex gap-15">
+  <div class="wh-full flex gap-15 px-15">
     <div class="flex-shrink-0">
       <CabinetList v-model:user="model" :grid-type="gridType" />
     </div>

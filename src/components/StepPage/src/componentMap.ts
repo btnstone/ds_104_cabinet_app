@@ -11,5 +11,6 @@ componentMap.set('Success', defineAsyncComponent(() => import('@/components/Succ
 componentMap.set('RevocationList', defineAsyncComponent(() => import('@/components/RevocationList/index.vue')));
 componentMap.set('TurnInUserSelect', defineAsyncComponent(() => import('@/components/TurnIn/UserSelect.vue')));
 componentMap.set('CompulsorySurrender', defineAsyncComponent(() => import('@/components/CompulsorySurrender/index.vue')));
+componentMap.set('ReceiptProcess', defineAsyncComponent(() => import('@/components/ReceiptProcess/index.vue')));
 
 export { componentMap };
