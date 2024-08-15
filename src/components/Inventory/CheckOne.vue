@@ -36,7 +36,7 @@ interface orgTreeItem {
 const model = defineModel<StepPageUserModel>('user', { default: {} });
 // 获取用户列表
 const getUserOptions = computedAsync(async () => {
-  if (props.isShowCredential && props.isShowSupervisor) {
+  if (props.isShowCredential && props.isShowReceiver) {
     const orgId = unref(model).callOrgId! || unref(model).orgId!;
     const res = await getUserListByOrg(orgId);
     return chain(res.data).map(v => ({ label: v.nickName, value: v.userId })).value();
@@ -159,9 +159,11 @@ watch(deviceStore.getCabinetGrids, () => {
           <div class="text-20">
             调入机构
           </div>
-          <n-tree-select v-model:value="model.callOrgId" :options="getOrgTreeOptions" class="ml-10 w-220" placeholder="请选择监交人" />
+          <n-tree-select
+            v-model:value="model.callOrgId" :options="getOrgTreeOptions" class="ml-10 w-220"
+            placeholder="请选择监交人"
+          />
         </div>
-
         <!--  -->
         <div v-if="isShowSupervisor" class="mt-15 flex flex-row items-center">
           <div class="text-20">
