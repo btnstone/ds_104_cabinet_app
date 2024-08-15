@@ -15,7 +15,7 @@ export interface ICheckOneProps {
   checkType?: number;
   isShowReceiver?: boolean;
   isShowSupervisor?: boolean;
-  // undefine 0 不展示 1展示，接收人展示，可选 2.展示，接收人展示，不可选
+  // undefine 0 不展示 1凭证出库入库 展示机构可选 弹信息表  2重要物品出库 展示机构可选 展示接收人可选 不弹窗 3重要物品入库 展示机构可选 展示接收人不可选 不弹窗
   credentialShowType?: number;
   tips?: string;
   width?: string;
@@ -39,7 +39,7 @@ const emits = defineEmits(['next', 'prev', 'error']);
 const model = defineModel<StepPageUserModel>('user', { default: {} });
 // 获取用户列表
 const getUserOptions = computedAsync(async () => {
-  if (props.credentialShowType && (props.credentialShowType === 1 || props.credentialShowType === 2) && props.isShowReceiver) {
+  if (props.credentialShowType && (props.credentialShowType === 1 || props.credentialShowType === 2 || props.credentialShowType === 3) && props.isShowReceiver) {
     const orgId = unref(model).callOrgId! || unref(model).orgId!;
     const res = await getUserListByOrg(orgId);
     return chain(res.data).map(v => ({ label: v.nickName, value: v.userId })).value();
@@ -51,7 +51,7 @@ const getUserOptions = computedAsync(async () => {
 }, []);
 
 const getOrgTreeOptions = computedAsync(async () => {
-  if (props.credentialShowType && (props.credentialShowType === 1 || props.credentialShowType === 2)) {
+  if (props.credentialShowType && (props.credentialShowType === 1 || props.credentialShowType === 2 || props.credentialShowType === 3)) {
     const res = await getOrgTree();
     const out = transformData(res.data);
     console.log(out);
@@ -81,7 +81,7 @@ function handleNo() {
 }
 
 function handleYes() {
-  if (props.credentialShowType && (props.credentialShowType === 1 || props.credentialShowType === 2)) {
+  if (props.credentialShowType && (props.credentialShowType === 1)) {
     modalRef.value = window.$modal.create({
       style: {
         width: '80%',
@@ -145,7 +145,7 @@ onMounted(() => {
     });
   });
 
-  if (props.credentialShowType && (props.credentialShowType === 1 || props.credentialShowType === 2)) {
+  if (props.credentialShowType && props.credentialShowType === 1) {
     model.value.credentialNo = buildShortUUID();
   }
 });
@@ -168,7 +168,7 @@ watch(deviceStore.getCabinetGrids, () => {
     <template #beforeContent>
       <div class="flex flex-row gap-15">
         <!--  -->
-        <div v-if="credentialShowType === 1 || credentialShowType === 2" class="mt-15 flex flex-row items-center">
+        <div v-if="credentialShowType === 1 || credentialShowType === 2 || credentialShowType === 3" class="mt-15 flex flex-row items-center">
           <div class="text-20">
             调入机构
           </div>
@@ -193,8 +193,8 @@ watch(deviceStore.getCabinetGrids, () => {
             接收人
           </div>
           <n-select
-            v-model:value="model.receiver" :options="getUserOptions"
-            class="ml-10 w-220" placeholder="请选择接收人" :disabled="credentialShowType === 2 ? true : false"
+            v-model:value="model.receiver" :options="getUserOptions" class="ml-10 w-220" placeholder="请选择接收人"
+            :disabled="credentialShowType === 3 ? true : false"
           />
         </div>
       </div>
@@ -204,10 +204,17 @@ watch(deviceStore.getCabinetGrids, () => {
     </template>
     <template #footer>
       <div class="flex items-center justify-between gap-50">
-        <n-button size="large" type="info" round style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:300px;" color="#ededf1" text-color="#000" @click="handleNo">
+        <n-button
+          size="large" type="info" round
+          style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:300px;" color="#ededf1"
+          text-color="#000" @click="handleNo"
+        >
           核对不一致
         </n-button>
-        <n-button size="large" type="info" round style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:300px;" @click="handleYes">
+        <n-button
+          size="large" type="info" round
+          style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:300px;" @click="handleYes"
+        >
           核对一致
         </n-button>
       </div>
