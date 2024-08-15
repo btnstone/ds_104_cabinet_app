@@ -48,6 +48,8 @@ interface StepPageUserModel {
   supervisor?: Key;
   // 调入机构
   callOrgId?: number;
+  // 凭证申请编号
+  credentialNo?: string;
 }
 
 interface StepPageModel {

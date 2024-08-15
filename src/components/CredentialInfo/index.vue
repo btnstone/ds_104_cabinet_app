@@ -4,20 +4,20 @@ import { buildShortUUID } from '@/utils/uuid';
 
 defineOptions({ name: 'CredentialInfo' });
 
-defineProps<{ certificateList?: Recordable[] }>();
+defineProps<{ certificateList?: Recordable[]; credentialNo?: string }>();
 
 const emits = defineEmits(['infoSelected']);
 
 const credentialNo = ref(buildShortUUID(''));
 
-let curIndex = -1;
+const curIndex = ref(-1);
 
 function detailChange(index: number) {
-  curIndex = index;
+  curIndex.value = index;
 }
 
 function handleClick(item: CertificateVO) {
-  if (curIndex > 0) {
+  if (curIndex.value > 0) {
     console.log(item);
     emits('infoSelected');
   }

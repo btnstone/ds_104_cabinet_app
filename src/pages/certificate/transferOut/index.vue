@@ -20,7 +20,7 @@ const data = reactive<StepPageModel>({ operator: {}, admin: {} });
 
 const stepItems: StepItem[] = [
   { title: '身份认证', component: 'Auth', params: () => ({ authType: 1, user: data.operator }) },
-  { title: '调拨内容关柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 1, user: data.operator, isShowCredential: true }) },
+  { title: '调拨内容关柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 1, user: data.operator, credentialShowType: 1 }) },
   { title: '主管身份认证', component: 'Auth', params: () => ({ authType: 2, user: data.admin }) },
   { title: '主管授权', component: 'InventoryCheckTwo', params: () => ({ user: data.operator }) },
   { title: '完成', component: 'Success', params: () => ({ text: '凭证调拨出库成功' }) },
@@ -28,9 +28,9 @@ const stepItems: StepItem[] = [
 
 // 完成事件
 function onOk() {
-  console.log('--onOk--', data);
+  // console.log('--onOk--', data);
   // const { serialNum, operator, admin } = unref(data);
-  // const { orgId, userId, gridIndex = [], epcList = [] } = operator ?? {};
+  // const { orgId, userId, gridIndex = [], epcList = [], callOrgId } = operator ?? {};
   // const [cellNo] = gridIndex;
   // const { userId: authUserId } = admin ?? {};
   // postInGoods({

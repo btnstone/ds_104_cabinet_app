@@ -8,15 +8,18 @@ import { getElectagInfo, getOrgTree, getUserListByOrg } from '@/api';
 import { useLoading } from '@/hooks/useLoading';
 import { useDeviceStore } from '@/store';
 import StompService from '@/stomp/StompService';
+import { buildShortUUID } from '@/utils/uuid';
 
 export interface ICheckOneProps {
   // 1-放入，2-取出
   checkType?: number;
   isShowReceiver?: boolean;
   isShowSupervisor?: boolean;
-  isShowCredential?: boolean;
+  // undefine 0 不展示 1展示，可选 2.展示，不可选
+  credentialShowType?: number;
   tips?: string;
   width?: string;
+
 }
 
 interface orgTreeItem {
@@ -37,7 +40,7 @@ const emits = defineEmits(['next', 'prev', 'error']);
 const model = defineModel<StepPageUserModel>('user', { default: {} });
 // 获取用户列表
 const getUserOptions = computedAsync(async () => {
-  if (props.isShowCredential && props.isShowReceiver) {
+  if (props.credentialShowType && (props.credentialShowType === 1 || props.credentialShowType === 2) && props.isShowReceiver) {
     const orgId = unref(model).callOrgId! || unref(model).orgId!;
     const res = await getUserListByOrg(orgId);
     return chain(res.data).map(v => ({ label: v.nickName, value: v.userId })).value();
@@ -49,7 +52,7 @@ const getUserOptions = computedAsync(async () => {
 }, []);
 
 const getOrgTreeOptions = computedAsync(async () => {
-  if (props.isShowCredential) {
+  if (props.credentialShowType && (props.credentialShowType === 1 || props.credentialShowType === 2)) {
     const res = await getOrgTree();
     const out = transformData(res.data);
     console.log(out);
@@ -79,7 +82,7 @@ function handleNo() {
 }
 
 function handleYes() {
-  if (props.isShowCredential) {
+  if (props.credentialShowType && (props.credentialShowType === 1 || props.credentialShowType === 2)) {
     // showModal.value = true;
     modalRef.value = window.$modal.create({
       style: {
@@ -92,6 +95,8 @@ function handleYes() {
         onInfoSelected: () => {
           handleNext();
         },
+        // certificateList:
+        credentialNo: unref(model).credentialNo,
       }),
     });
   }
@@ -136,6 +141,10 @@ onMounted(() => {
       hideLoading();
     });
   });
+
+  if (props.credentialShowType && (props.credentialShowType === 1 || props.credentialShowType === 2)) {
+    model.value.credentialNo = buildShortUUID();
+  }
 });
 
 onUnmounted(() => {
@@ -156,13 +165,13 @@ watch(deviceStore.getCabinetGrids, () => {
     <template #beforeContent>
       <div class="flex flex-row gap-15">
         <!--  -->
-        <div v-if="isShowCredential" class="mt-15 flex flex-row items-center">
+        <div v-if="credentialShowType === 1 || credentialShowType === 2" class="mt-15 flex flex-row items-center">
           <div class="text-20">
             调入机构
           </div>
           <n-tree-select
             v-model:value="model.callOrgId" :options="getOrgTreeOptions" class="ml-10 w-220"
-            placeholder="请选择监交人"
+            placeholder="请选择调入机构" :disabled="credentialShowType === 2 ? true : false"
           />
         </div>
         <!--  -->
@@ -180,7 +189,10 @@ watch(deviceStore.getCabinetGrids, () => {
           <div class="text-20">
             接收人
           </div>
-          <n-select v-model:value="model.receiver" :options="getUserOptions" class="ml-10 w-220" placeholder="请选择接收人" />
+          <n-select
+            v-model:value="model.receiver" :options="getUserOptions"
+            class="ml-10 w-220" placeholder="请选择接收人" :disabled="credentialShowType === 2 ? true : false"
+          />
         </div>
       </div>
     </template>
