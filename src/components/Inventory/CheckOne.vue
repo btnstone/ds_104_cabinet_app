@@ -8,14 +8,17 @@ import { getElectagInfo, getOrgTree, getUserListByOrg } from '@/api';
 import { useLoading } from '@/hooks/useLoading';
 import { useDeviceStore } from '@/store';
 import StompService from '@/stomp/StompService';
-import { buildShortUUID } from '@/utils/uuid';
 
 export interface ICheckOneProps {
   // 1-放入，2-取出
   checkType?: number;
   isShowReceiver?: boolean;
   isShowSupervisor?: boolean;
-  // undefine 0 不展示 1凭证出库入库 展示机构可选 弹信息表  2重要物品出库 展示机构可选 展示接收人可选 不弹窗 3重要物品入库 展示机构可选 展示接收人不可选 不弹窗
+  // undefine 0 不展示
+  // 1凭证出库 展示机构可选 弹信息表
+  // 2凭证入库 展示机构可选 弹信息表
+  // 3重要物品出库 展示机构可选 展示接收人可选 不弹窗
+  // 4重要物品入库 展示机构可选 展示接收人不可选 不弹窗
   credentialShowType?: number;
   tips?: string;
   width?: string;
@@ -32,14 +35,19 @@ interface orgTreeItem {
 
 defineOptions({ name: 'InventoryCheckOne' });
 
-const props = withDefaults(defineProps<ICheckOneProps>(), { checkType: 1, width: '900px' });
+const props = withDefaults(defineProps<ICheckOneProps>(), { width: '900px' });
 
 const emits = defineEmits(['next', 'prev', 'error']);
 
 const model = defineModel<StepPageUserModel>('user', { default: {} });
+
+const isShowCredential = computed(() => {
+  return props.credentialShowType && (props.credentialShowType === 1 || props.credentialShowType === 2 || props.credentialShowType === 3 || props.credentialShowType === 4);
+});
+
 // 获取用户列表
 const getUserOptions = computedAsync(async () => {
-  if (props.credentialShowType && (props.credentialShowType === 1 || props.credentialShowType === 2 || props.credentialShowType === 3) && props.isShowReceiver) {
+  if (isShowCredential.value && props.isShowReceiver) {
     const orgId = unref(model).callOrgId! || unref(model).orgId!;
     const res = await getUserListByOrg(orgId);
     return chain(res.data).map(v => ({ label: v.nickName, value: v.userId })).value();
@@ -51,7 +59,7 @@ const getUserOptions = computedAsync(async () => {
 }, []);
 
 const getOrgTreeOptions = computedAsync(async () => {
-  if (props.credentialShowType && (props.credentialShowType === 1 || props.credentialShowType === 2 || props.credentialShowType === 3)) {
+  if (isShowCredential.value) {
     const res = await getOrgTree();
     const out = transformData(res.data);
     console.log(out);
@@ -81,7 +89,19 @@ function handleNo() {
 }
 
 function handleYes() {
-  if (props.credentialShowType && (props.credentialShowType === 1)) {
+  if (props.credentialShowType && (props.credentialShowType === 1 || props.credentialShowType === 2)) {
+    let certificateList1;
+    if (props.credentialShowType === 1) {
+      certificateList1 = unref(model).goodsList?.map((v) => {
+        return {
+          ...v,
+          isShowDetail: false,
+        };
+      }, []);
+    }
+    else {
+      certificateList1 = [];
+    }
     modalRef.value = window.$modal.create({
       style: {
         width: '80%',
@@ -93,12 +113,7 @@ function handleYes() {
         onInfoSelected: () => {
           handleNext();
         },
-        certificateList: unref(model).goodsList?.map((v) => {
-          return {
-            ...v,
-            isShowDetail: false,
-          };
-        }, []),
+        certificateList: certificateList1,
         credentialNo: unref(model).credentialNo,
       }),
     });
@@ -114,11 +129,19 @@ function handleNext() {
 }
 
 onMounted(() => {
-  until(isClosed).toBe(true).then(() => {
-    const { gridIndex: cells = [] } = unref(model);
+});
+
+onUnmounted(() => {
+  console.log('--onUnmounted--');
+});
+
+watch(deviceStore.getCabinetGrids, () => {
+  const { gridIndex: cells = [] } = unref(model);
+  isClosed.value = deviceStore.getCabinetGrids.filter(v => cells.includes(v.cellIndex)).every(v => !v.isOpened);
+  if (isClosed.value) {
     console.log('开始盘点', cells);
     showLoading('盘点中...');
-    return StompService.syncGetEpcData({ cells }).then((data) => {
+    StompService.syncGetEpcData({ cells }).then((data) => {
       console.log(data);
       unref(model).epcList = data;
       return getElectagInfo({
@@ -126,7 +149,7 @@ onMounted(() => {
         // electagNoList: chain(data).groupBy('cellIndex').map((value, key) => ({ cellNo: String(key), electagNo: map(value, 'epc') })).value(),
         electagNoList: chain(cells).map(cell => ({ cellNo: String(cell), electagNo: chain(data).filter(v => v.cellIndex === cell).map('epc').value() })).value(),
       }).then((res) => {
-        const { inElectagList, outElectagList } = res.data;
+        const { inElectagList = [], outElectagList = [], originElectagList = [] } = res.data;
         const getGoodsList = () => {
           if (props.checkType === 1) {
             return chain(inElectagList).map(v => ({ ...v, _status: 1 })).concat(map(outElectagList, v => ({ ...v, _status: 2 }))).value();
@@ -134,7 +157,7 @@ onMounted(() => {
           else if (props.checkType === 2) {
             return chain(outElectagList).map(v => ({ ...v, _status: 1 })).concat(map(inElectagList, v => ({ ...v, _status: 2 }))).value();
           }
-          return [];
+          return chain(originElectagList).map(v => ({ ...v, _status: 1 })).concat(map(inElectagList, v => ({ ...v, _status: 2 }))).concat(map(outElectagList, v => ({ ...v, _status: 2 }))).value();
         };
         unref(model).goodsList = [...getGoodsList()];
       });
@@ -143,32 +166,19 @@ onMounted(() => {
     }).finally(() => {
       hideLoading();
     });
-  });
-
-  if (props.credentialShowType && props.credentialShowType === 1) {
-    model.value.credentialNo = buildShortUUID();
   }
-});
-
-onUnmounted(() => {
-  console.log('--onUnmounted--');
-});
-
-watch(deviceStore.getCabinetGrids, () => {
-  const { gridIndex = [] } = unref(model);
-  isClosed.value = deviceStore.getCabinetGrids.filter(v => gridIndex.includes(v.cellIndex)).every(v => !v.isOpened);
 }, { deep: true, flush: 'post' });
 </script>
 
 <template>
-  <ComInventoryLayout class="wh-full px-120">
+  <ComInventoryLayout class="px-120">
     <template #title>
       请核对物品是否一致
     </template>
     <template #beforeContent>
-      <div class="flex flex-row gap-15">
+      <div v-if="isShowSupervisor || isShowReceiver || isShowCredential" class="flex flex-row gap-15">
         <!--  -->
-        <div v-if="credentialShowType === 1 || credentialShowType === 2 || credentialShowType === 3" class="mt-15 flex flex-row items-center">
+        <div v-if="isShowCredential" class="flex flex-row items-center">
           <div class="text-20">
             调入机构
           </div>
@@ -178,7 +188,7 @@ watch(deviceStore.getCabinetGrids, () => {
           />
         </div>
         <!--  -->
-        <div v-if="isShowSupervisor" class="mt-15 flex flex-row items-center">
+        <div v-if="isShowSupervisor" class="flex flex-row items-center">
           <div class="text-20">
             监交人
           </div>
@@ -188,13 +198,13 @@ watch(deviceStore.getCabinetGrids, () => {
           />
         </div>
         <!--  -->
-        <div v-if="isShowReceiver" class="mt-15 flex flex-row items-center">
+        <div v-if="isShowReceiver" class="flex flex-row items-center">
           <div class="text-20">
             接收人
           </div>
           <n-select
             v-model:value="model.receiver" :options="getUserOptions" class="ml-10 w-220" placeholder="请选择接收人"
-            :disabled="credentialShowType === 3 ? true : false"
+            :disabled="credentialShowType === 4 ? true : false"
           />
         </div>
       </div>

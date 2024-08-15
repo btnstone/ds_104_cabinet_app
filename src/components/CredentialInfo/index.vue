@@ -37,8 +37,12 @@ function handleClick(item: CertificateVO) {
         <n-list-item v-for="(item, index) in certificateList" :key="index">
           <div>
             <div class="w-full flex flex-row justify-between" @click="detailChange(index)">
-              <div>
-                凭证申请编号：{{ credentialNo }}
+              <div class="flex">
+                <img v-if="curIndex === index" class="mr-10 h-40 w-40 border-none" src="@/assets/images/components/success.png" alt="">
+                <div v-else class="mr-10 h-40 w-40 border-black rounded-30" />
+                <div class="ml-10">
+                  凭证申请编号：{{ credentialNo }}
+                </div>
               </div>
               <div :class="item.isShowDetail ? 'up-arrow' : 'down-arrow'" />
             </div>

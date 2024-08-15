@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { map } from 'lodash-es';
+import { chain } from 'lodash-es';
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
 import type { DsTodoVo } from '@/api/todo/types';
-import { getGlobalSerialNumber, postHandOverGoods } from '@/api';
+import { getGlobalSerialNumber, postVouchersBoxHandover } from '@/api';
 import { useDeviceStore } from '@/store';
 
 defineOptions({ name: 'CertificateReceiverTwoHandover' });
@@ -24,8 +24,8 @@ const data = reactive<StepPageModel>({ operator: {}, auth: {}, receive: {} });
 let todoInfo: DsTodoVo;
 
 const stepItems: StepItem[] = [
-  { title: '开交接柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 2, user: data.receive }) },
-  { title: '开柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 1, user: data.receive }) },
+  { title: '开交接柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 2, checkType: 2, user: data.receive }) },
+  { title: '开柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 1, checkType: 1, user: data.receive }) },
   { title: '完成', component: 'Success', params: { text: '交接成功' } },
 ];
 
@@ -34,8 +34,8 @@ function onOk() {
   console.log('--onOk--');
   const { serialNum, receive } = unref(data);
   const [receiveCellNo] = receive?.gridIndex || [];
-  postHandOverGoods({
-    electagNoList: map(receive?.epcList, 'epc'),
+  postVouchersBoxHandover({
+    electagNoList: chain(data.receive?.gridIndex).map(cell => ({ cellNo: String(cell), electagNo: chain(data.receive?.epcList).filter(v => v.cellIndex === cell).map('epc').value() })).value(),
     receiveDeviceNo: unref(getDeviceNo),
     receiveCellNo,
     receiveUserId: receive?.userId,
@@ -50,6 +50,10 @@ function onOk() {
 
 // 错误事件
 function onError(step: number, data: any) {
+  console.log(step, data);
+}
+
+onMounted(() => {
   getGlobalSerialNumber().then((res) => {
     data.serialNum = res.data;
   });
@@ -60,10 +64,8 @@ function onError(step: number, data: any) {
     gridIndex: [todoInfo.recvCellNo],
     handOverCell: [todoInfo.recvCellNo],
   });
+  console.log('sadasdsa');
   console.log(data.receive);
-}
-
-onMounted(() => {
 });
 </script>
 

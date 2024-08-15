@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { chain } from 'lodash-es';
+import { getGlobalSerialNumber, postHandoverGrid } from '@/api';
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
+import { useDeviceStore } from '@/store';
 
 defineOptions({ name: 'StorageReservationTwoHandover' });
 
@@ -12,6 +15,8 @@ definePage({
   },
 });
 
+const deviceStore = useDeviceStore();
+const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const current = ref(1);
 const data = reactive<StepPageModel>({ operator: {} });
 const stepItems: StepItem[] = [
@@ -23,6 +28,20 @@ const stepItems: StepItem[] = [
 // 完成事件
 function onOk() {
   console.log('--onOk--');
+  postHandoverGrid({
+    receiveDeviceNo: unref(getDeviceNo),
+    offerDeviceNo: unref(getDeviceNo),
+    // receiveOrgId: data.receive?.orgId,
+    offerOrgId: data.operator?.orgId,
+    createBy: data.operator?.userId,
+    handoverStep: '01',
+    handoverMode: '03',
+    receiveUserId: data.operator?.receiver,
+    offerUserId: data.operator?.userId,
+    serialNum: data.serialNum,
+    supervisorId: data.operator?.supervisor,
+    electagNoList: chain(data.operator?.gridIndex).map(cell => ({ cellNo: String(cell), electagNo: chain(data.operator?.epcList).filter(v => v.cellIndex === cell).map('epc').value() })).value(),
+  });
 }
 
 // 错误事件
@@ -31,6 +50,9 @@ function onError(step: number, data: any) {
 }
 
 onMounted(() => {
+  getGlobalSerialNumber().then((res) => {
+    data.serialNum = res.data;
+  });
 });
 </script>
 

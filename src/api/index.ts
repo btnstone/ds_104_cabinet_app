@@ -18,7 +18,7 @@ export function getGlobalSerialNumber() {
  * @param data
  * @returns
  */
-export function getEnableCabinetGrid(data: { deviceNo?: string;userId?: Key }) {
+export function getEnableCabinetGrid(data: { deviceNo?: string; userId?: Key }) {
   return request.post('/cell/available', data);
 }
 
@@ -116,4 +116,56 @@ export function postHandOverGoods(data: any) {
  */
 export function getElectagList(userId: string) {
   return request.get(`/electag/list/${userId}`);
+}
+
+/**
+ * 实物凭证尾箱交接
+ * @param data
+ * @returns
+ */
+export function postVouchersBoxHandover(data: any) {
+  return request.post('/record/vouchersBoxHandover', data);
+}
+
+/**
+ * 保管格交接
+ * @param data
+ * @returns
+ */
+export function postHandoverGrid(data: any) {
+  return request.post('/record/handoverGrid', data);
+}
+
+/**
+ * 实物凭证尾箱强制上缴
+ * @param data
+ */
+export function postVouchersBoxTransfer(data: any) {
+  return request.post('/record/vouchersBoxTransfer', data);
+}
+
+/**
+ * 实物凭证尾箱领用
+ * @param data
+ */
+export function postVouchersBoxApply(data: any) {
+  return request.post('/record/vouchersBoxApply', data);
+}
+
+/**
+ * 查询待领取实物凭证
+ * @param userId
+ * @returns
+ */
+export function getVouchersApplyListByUserId(userId: Key): Promise<AxiosResponse<{ ascsSerialNum: string; transferCellNoList: string; transferUserName: string }>> {
+  return request.get(`/record/vouchersApplyList/${userId}`);
+}
+
+/**
+ * 凭证和重要物品调拨
+ * @param data
+ * @returns
+ */
+export function postGoodsAllot(data: any) {
+  return request.post('/record/goodsAllot', data);
 }
