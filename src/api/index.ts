@@ -45,7 +45,7 @@ export function postOutGoods(data: any) {
  * @param data
  * @returns
  */
-export function getElectagInfo(data: { deviceNo?: string; electagNoList?: { cellNo?: string; electagNo?: string[] }[] }): Promise<AxiosResponse<{ inElectagList: IElectagInfo[]; outElectagList: IElectagInfo[]; originElectagList: IElectagInfo[] }>> {
+export function getElectagInfo(data: { deviceNo?: string;electagNoList?: { cellNo?: string;electagNo?: string[] }[] }): Promise<AxiosResponse<{ inElectagList: IElectagInfo[];outElectagList: IElectagInfo[] }>> {
   return request.post('/electag/info', data);
 }
 
@@ -107,6 +107,15 @@ export function getUserListByOrg(orgId: Key) {
  */
 export function postHandOverGoods(data: any) {
   return request.post('/record/handoverGoods', data);
+}
+
+/**
+ * 获取柜员资产
+ * @param userId
+ * @returns
+ */
+export function getElectagList(userId: string) {
+  return request.get(`/electag/list/${userId}`);
 }
 
 /**

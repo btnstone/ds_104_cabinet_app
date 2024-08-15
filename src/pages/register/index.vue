@@ -84,6 +84,7 @@ async function getOrgInfo() {
     const res = await getOrgTree();
     const orgTree = res.data;
     orgOptions.value = transformData(orgTree);
+    await getDeviceInfoServer(orgTree);
   }
   catch (e) {
     console.error(e);
@@ -93,13 +94,34 @@ async function getOrgInfo() {
   }
 }
 
-async function getDeviceInfoServer() {
+// 递归函数来查找label
+function findLabelById(orgs: orgTreeItem[], id: string): string {
+  for (const org of orgs) {
+    console.log(org);
+    if (org.id.toString() === id.toString()) {
+      return org.label;
+    }
+    if (org.children && org.children.length) {
+      const found = findLabelById(org.children, id);
+      if (found) {
+        return found;
+      }
+    }
+  }
+  return '未知机构'; // 如果没有找到，返回undefined
+}
+
+async function getDeviceInfoServer(orgTree: orgTreeItem[]) {
   try {
     if (deviceNumber.value.length === 0) {
       message.error('无法获取柜格编号');
       return;
     }
     const deviceInfo = await getDeviceInfo(deviceNumber.value);
+    if (deviceInfo.data.orgId) {
+      selectOrgVal.value = deviceInfo.data.orgId.toString();
+      orgName.value = findLabelById(orgTree, selectOrgVal.value);
+    }
   }
   catch (e) {
     console.error(e);
