@@ -36,7 +36,6 @@ function onOk() {
     vouchersApplyNo: operator?.credentialNo,
     offerDeviceNo: unref(getDeviceNo),
     offerOrgId: operator?.orgId,
-    // receiveDeviceNo:
     receiveOrgId: operator?.callOrgId,
     allotType: 1,
     goodsType: 1,

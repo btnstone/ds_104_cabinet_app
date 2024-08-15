@@ -34,15 +34,12 @@ function onOk() {
   const { serialNum, operator, admin } = unref(data);
   postGoodsAllot({
     vouchersApplyNo: operator?.credentialNo,
-    // offerDeviceNo: unref(getDeviceNo), // 接口获得
-    // offerOrgId: operator?.orgId, // 接口获取
     receiveDeviceNo: unref(getDeviceNo),
     receiveOrgId: operator?.orgId,
     allotType: 0,
     goodsType: 1,
-    // createBy: operator?.userId,// 接口获取
+    createBy: operator?.userId,
     authUserId: admin?.userId,
-    // operUserId: operator?.userId,// 接口获取
     allotUserId: operator?.userId,
     serialNum,
     electagNoList: chain(data.receive?.gridIndex).map(cell => ({ cellNo: String(cell), electagNo: chain(data.receive?.epcList).filter(v => v.cellIndex === cell).map('epc').value() })).value(),

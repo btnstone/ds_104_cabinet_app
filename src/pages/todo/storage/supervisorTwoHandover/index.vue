@@ -4,7 +4,7 @@ import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
 import type { DsTodoVo } from '@/api/todo/types';
-import { getGlobalSerialNumber, postHandOverGoods } from '@/api';
+import { getGlobalSerialNumber, postHandoverGrid } from '@/api';
 import { useDeviceStore } from '@/store';
 
 defineOptions({ name: 'StorageSupervisorTwoHandover' });
@@ -32,7 +32,7 @@ const stepItems: StepItem[] = [
 function onOk() {
   console.log('--onOk--');
   const { serialNum, auth } = unref(data);
-  postHandOverGoods({
+  postHandoverGrid({
     electagNoList: chain(data.auth?.gridIndex).map(cell => ({ cellNo: String(cell), electagNo: chain(data.auth?.goodsList).filter(v => v.cellNo === cell).map('electagNo').value() })).value(),
     createBy: auth?.userId,
     supervisorId: auth?.userId,
@@ -58,7 +58,7 @@ onMounted(() => {
   data.auth = Object.assign(JSON.parse(router.currentRoute.value.query.userInfo as string), {
     goodsList: todoInfo.electagList,
     gridIndex: [todoInfo.recvCellNo],
-    handOverCell: [todoInfo.recvCellNo],
+    bindCell: [...todoInfo.recvCellNo!.split(',')],
   });
   console.log(data.auth);
 });

@@ -4,7 +4,7 @@ import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
 import type { DsTodoVo } from '@/api/todo/types';
-import { getGlobalSerialNumber, postHandOverGoods } from '@/api';
+import { getGlobalSerialNumber, postHandoverGrid } from '@/api';
 import { useDeviceStore } from '@/store';
 
 defineOptions({ name: 'StorageReceiverTwoHandover' });
@@ -33,7 +33,7 @@ function onOk() {
   console.log('--onOk--');
   const { serialNum, receive } = unref(data);
   const [receiveCellNo] = receive?.gridIndex || [];
-  postHandOverGoods({
+  postHandoverGrid({
     electagNoList: chain(data.receive?.gridIndex).map(cell => ({ cellNo: String(cell), electagNo: chain(data.receive?.epcList).filter(v => v.cellIndex === cell).map('epc').value() })).value(),
     receiveDeviceNo: unref(getDeviceNo),
     receiveCellNo,
@@ -61,7 +61,7 @@ onMounted(() => {
   data.receive = Object.assign(JSON.parse(router.currentRoute.value.query.userInfo as string), {
     goodsList: todoInfo.electagList,
     gridIndex: [todoInfo.recvCellNo],
-    handOverCell: [todoInfo.recvCellNo],
+    bindCell: [...todoInfo.recvCellNo!.split(',')],
   });
   console.log(data.receive);
 });

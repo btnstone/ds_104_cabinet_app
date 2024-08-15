@@ -4,7 +4,7 @@ import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
 import type { DsTodoVo } from '@/api/todo/types';
-import { getGlobalSerialNumber, postHandOverGoods } from '@/api';
+import { getGlobalSerialNumber, postHandoverGrid } from '@/api';
 import { useDeviceStore } from '@/store';
 
 defineOptions({ name: 'StorageReceiverOneHandover' });
@@ -26,7 +26,7 @@ let todoInfo: DsTodoVo;
 const stepItems: StepItem[] = [
   { title: '监交人身份认证', component: 'Auth', params: () => ({ authType: 3, user: data.auth }) },
   { title: '监交人授权', component: 'InventoryCheckTwo', params: () => ({ user: data.receive }) },
-  { title: '开柜门', component: 'InventoryCheckThree', params: () => ({ gridType: 1, checkType: 1, user: data.receive }) },
+  { title: '开柜门', component: 'InventoryCheckThree', params: () => ({ gridType: 1, user: data.receive }) },
   { title: '完成', component: 'Success', params: { text: '交接成功' } },
 ];
 
@@ -34,11 +34,9 @@ const stepItems: StepItem[] = [
 function onOk() {
   console.log('--onOk--');
   const { serialNum, auth, receive } = unref(data);
-  const [receiveCellNo] = receive?.gridIndex || [];
-  postHandOverGoods({
+  postHandoverGrid({
     electagNoList: chain(data.receive?.gridIndex).map(cell => ({ cellNo: String(cell), electagNo: chain(data.receive?.epcList).filter(v => v.cellIndex === cell).map('epc').value() })).value(),
     receiveDeviceNo: unref(getDeviceNo),
-    receiveCellNo,
     receiveUserId: receive?.userId,
     receiveOrgId: receive?.orgId,
     createBy: receive?.userId,
@@ -64,7 +62,7 @@ onMounted(() => {
   data.receive = Object.assign(JSON.parse(router.currentRoute.value.query.userInfo as string), {
     goodsList: todoInfo.electagList,
     gridIndex: [todoInfo.recvCellNo],
-    handOverCell: [todoInfo.recvCellNo],
+    bindCell: [...todoInfo.recvCellNo!.split(',')],
   });
   console.log(data.receive);
 });
