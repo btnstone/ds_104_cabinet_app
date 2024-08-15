@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { map } from 'lodash-es';
+import { chain } from 'lodash-es';
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
 import type { DsTodoVo } from '@/api/todo/types';
-import { getGlobalSerialNumber, postHandOverGoods } from '@/api';
+import { getGlobalSerialNumber, postVouchersBoxHandover } from '@/api';
 import { useDeviceStore } from '@/store';
 
 defineOptions({ name: 'CertificateSupervisorTwoHandover' });
@@ -32,16 +32,15 @@ const stepItems: StepItem[] = [
 function onOk() {
   console.log('--onOk--');
   const { serialNum, auth } = unref(data);
-  postHandOverGoods({
-    electagNoList: map(auth?.goodsList, 'electagNo'),
+  postVouchersBoxHandover({
+    electagNoList: chain(data.auth?.gridIndex).map(cell => ({ cellNo: String(cell), electagNo: chain(data.auth?.goodsList).filter(v => v.cellNo === cell).map('electagNo').value() })).value(),
     createBy: auth?.userId,
     supervisorId: auth?.userId,
     serialNum,
     handoverMode: '03',
     handoverStep: '02',
     todoId: todoInfo.id,
-    handoverDeviceNo: unref(getDeviceNo),
-    handoverCellNo: todoInfo.recvCellNo,
+    receiveDeviceNo: unref(getDeviceNo),
   });
 }
 
@@ -61,6 +60,7 @@ onMounted(() => {
     gridIndex: [todoInfo.recvCellNo],
     handOverCell: [todoInfo.recvCellNo],
   });
+  console.log('data.auth');
   console.log(data.auth);
 });
 </script>

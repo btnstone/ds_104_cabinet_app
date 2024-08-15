@@ -31,14 +31,14 @@ const pathMap: PathMap = {
   5: '', // 重要实物预约交接2(退回)
 
   6: '', // 保管格预约交接1(退回)
-  7: '/todo/certificate/receiverOneHandover', // 保管格预约交接1(接收)
-  8: '/todo/certificate/supervisorTwoHandover', // 保管格预约交接1(接收)
-  9: '/todo/certificate/receiverTwoHandover', // 保管格预约交接2(接收)
+  7: '/todo/storage/receiverOneHandover', // 保管格预约交接1(接收)
+  8: '/todo/storage/supervisorTwoHandover', // 保管格预约交接1(接收)
+  9: '/todo/storage/receiverTwoHandover', // 保管格预约交接2(接收)
   10: '', // 保管格预约交接2(退回)
   11: '', // 实物凭证尾箱预约交接1(退回)
-  12: '/todo/storage/receiverOneHandover', // 实物凭证尾箱预约交接1(接受)
-  13: '/todo/storage/supervisorTwoHandover', // 实物凭证尾箱预约交接2(授权)
-  14: '/todo/storage/receiverTwoHandover', // 实物凭证尾箱预约交接2(接收)
+  12: '/todo/certificate/receiverOneHandover', // 实物凭证尾箱预约交接1(接受)
+  13: '/todo/certificate/supervisorTwoHandover', // 实物凭证尾箱预约交接2(授权)
+  14: '/todo/certificate/receiverTwoHandover', // 实物凭证尾箱预约交接2(接收)
   15: '', // 实物凭证尾箱预约交接2(退回)
 };
 

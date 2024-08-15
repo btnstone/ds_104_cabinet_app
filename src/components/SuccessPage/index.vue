@@ -17,7 +17,7 @@ const time = ref(10);
 let timer: NodeJS.Timeout;
 
 function gotoHome() {
-  router.back();
+  router.push('/');
 }
 
 function close() {
