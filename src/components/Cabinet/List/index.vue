@@ -39,14 +39,18 @@ function onGridClick(item: any) {
   StompService.openDoor({ cells: [item.index] });
   emits('next');
 }
+
+watch(() => props.gridType, () => {
+  gridSet.clear();
+}, { flush: 'post' });
 </script>
 
 <template>
-  <div class="mt-15 h-full w-full flex flex-col items-center justify-center">
-    <div class="text-26 font-bold line-height-none">
+  <div class="wh-full flex-col items-center justify-start gap-15 py-15">
+    <div class="flex-shrink-0 text-26 font-bold line-height-none">
       请选择要打开的柜门
     </div>
-    <div class="mt-15 flex flex-1 gap-10">
+    <div class="h-0 flex-1 flex-shrink-0">
       <CabinetGrid :enable-grid-index="getEnableGridIndex" @grid-click="onGridClick" />
     </div>
   </div>

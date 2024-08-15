@@ -106,11 +106,22 @@ function handleNext() {
 }
 
 onMounted(() => {
-  until(isClosed).toBe(true).then(() => {
-    const { gridIndex: cells = [] } = unref(model);
+  // until(isClosed).toBe(true).then(() => {
+  //   const { gridIndex: cells = [] } = unref(model);
+  // });
+});
+
+onUnmounted(() => {
+  console.log('--onUnmounted--');
+});
+
+watch(deviceStore.getCabinetGrids, () => {
+  const { gridIndex: cells = [] } = unref(model);
+  isClosed.value = deviceStore.getCabinetGrids.filter(v => cells.includes(v.cellIndex)).every(v => !v.isOpened);
+  if (isClosed.value) {
     console.log('开始盘点', cells);
     showLoading('盘点中...');
-    return StompService.syncGetEpcData({ cells }).then((data) => {
+    StompService.syncGetEpcData({ cells }).then((data) => {
       console.log(data);
       unref(model).epcList = data;
       return getElectagInfo({
@@ -135,28 +146,19 @@ onMounted(() => {
     }).finally(() => {
       hideLoading();
     });
-  });
-});
-
-onUnmounted(() => {
-  console.log('--onUnmounted--');
-});
-
-watch(deviceStore.getCabinetGrids, () => {
-  const { gridIndex = [] } = unref(model);
-  isClosed.value = deviceStore.getCabinetGrids.filter(v => gridIndex.includes(v.cellIndex)).every(v => !v.isOpened);
+  }
 }, { deep: true, flush: 'post' });
 </script>
 
 <template>
-  <ComInventoryLayout class="wh-full px-120">
+  <ComInventoryLayout class="px-120">
     <template #title>
       请核对物品是否一致
     </template>
     <template #beforeContent>
-      <div class="flex flex-row gap-15">
+      <div v-if="isShowCredential || isShowSupervisor || isShowReceiver" class="flex flex-row gap-15">
         <!--  -->
-        <div v-if="isShowCredential" class="mt-15 flex flex-row items-center">
+        <div v-if="isShowCredential" class="flex flex-row items-center">
           <div class="text-20">
             调入机构
           </div>
@@ -164,7 +166,7 @@ watch(deviceStore.getCabinetGrids, () => {
         </div>
 
         <!--  -->
-        <div v-if="isShowSupervisor" class="mt-15 flex flex-row items-center">
+        <div v-if="isShowSupervisor" class="flex flex-row items-center">
           <div class="text-20">
             监交人
           </div>
@@ -174,7 +176,7 @@ watch(deviceStore.getCabinetGrids, () => {
           />
         </div>
         <!--  -->
-        <div v-if="isShowReceiver" class="mt-15 flex flex-row items-center">
+        <div v-if="isShowReceiver" class="flex flex-row items-center">
           <div class="text-20">
             接收人
           </div>

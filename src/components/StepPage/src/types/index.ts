@@ -27,6 +27,7 @@ interface _CustomComponents {
   RevocationList: ExtractPropTypes<(typeof import('@/components/RevocationList/index.vue')['default'])>;
   TurnInUserSelect: ExtractPropTypes<(typeof import('@/components/TurnIn/UserSelect.vue')['default'])>;
   CompulsorySurrender: ExtractPropTypes<(typeof import('@/components/CompulsorySurrender/index.vue')['default'])>;
+  ReceiptProcess: ExtractPropTypes<(typeof import('@/components/ReceiptProcess/index.vue')['default'])>;
 }
 
 type CustomComponents<T = _CustomComponents> = {
@@ -43,6 +44,7 @@ export interface ComponentProps {
   RevocationList: CustomComponents['RevocationList'];
   TurnInUserSelect: CustomComponents['TurnInUserSelect'];
   CompulsorySurrender: CustomComponents['CompulsorySurrender'];
+  ReceiptProcess: CustomComponents['ReceiptProcess'];
 }
 
 export interface ComponentFormSchema<T extends ComponentType = any> extends StepItemSchema<T> {

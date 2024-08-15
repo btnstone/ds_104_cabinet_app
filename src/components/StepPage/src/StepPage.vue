@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T">
 import { omit } from 'lodash-es';
-import type { PropType } from 'vue';
+import type { ComponentInternalInstance, PropType } from 'vue';
 import type { StepItem } from './types';
 import { componentMap } from './componentMap';
 import { isFunction } from '@/utils';
@@ -66,7 +66,7 @@ function handleError(...args: any) {
 <template>
   <div class="wh-full flex flex-col items-center justify-center">
     <!--  -->
-    <div class="w-90% flex">
+    <div class="w-90% flex flex-shrink-0">
       <div
         v-for="(step, index) in stepItems" :key="step.key" class="flex flex-col"
         :class="[index > 0 ? 'flex-1' : '']"
@@ -104,7 +104,7 @@ function handleError(...args: any) {
       </div>
     </div>
     <!--  -->
-    <div class="component-container">
+    <div class="h-0 w-full flex-1 flex-shrink-0">
       <component :is="componentMaps.get(vCurrent)" v-bind="omit(paramAttributes, ['data'])" @next="handleNext" @prev="handlePrev" @error="handleError" />
     </div>
   </div>
