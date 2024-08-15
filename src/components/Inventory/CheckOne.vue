@@ -14,7 +14,11 @@ export interface ICheckOneProps {
   checkType?: number;
   isShowReceiver?: boolean;
   isShowSupervisor?: boolean;
-  // undefine 0 不展示 1凭证出库入库 展示机构可选 弹信息表  2重要物品出库 展示机构可选 展示接收人可选 不弹窗 3重要物品入库 展示机构可选 展示接收人不可选 不弹窗
+  // undefine 0 不展示
+  // 1凭证出库 展示机构可选 弹信息表
+  // 2凭证入库 展示机构可选 弹信息表
+  // 3重要物品出库 展示机构可选 展示接收人可选 不弹窗
+  // 4重要物品入库 展示机构可选 展示接收人不可选 不弹窗
   credentialShowType?: number;
   tips?: string;
   width?: string;
@@ -38,7 +42,7 @@ const emits = defineEmits(['next', 'prev', 'error']);
 const model = defineModel<StepPageUserModel>('user', { default: {} });
 
 const isShowCredential = computed(() => {
-  return props.credentialShowType && (props.credentialShowType === 1 || props.credentialShowType === 2 || props.credentialShowType === 3);
+  return props.credentialShowType && (props.credentialShowType === 1 || props.credentialShowType === 2 || props.credentialShowType === 3 || props.credentialShowType === 4);
 });
 
 // 获取用户列表
@@ -85,7 +89,19 @@ function handleNo() {
 }
 
 function handleYes() {
-  if (props.credentialShowType && props.credentialShowType === 1) {
+  if (props.credentialShowType && (props.credentialShowType === 1 || props.credentialShowType === 2)) {
+    let certificateList1;
+    if (props.credentialShowType === 1) {
+      certificateList1 = unref(model).goodsList?.map((v) => {
+        return {
+          ...v,
+          isShowDetail: false,
+        };
+      }, []);
+    }
+    else {
+      certificateList1 = [];
+    }
     modalRef.value = window.$modal.create({
       style: {
         width: '80%',
@@ -97,12 +113,7 @@ function handleYes() {
         onInfoSelected: () => {
           handleNext();
         },
-        certificateList: unref(model).goodsList?.map((v) => {
-          return {
-            ...v,
-            isShowDetail: false,
-          };
-        }, []),
+        certificateList: certificateList1,
         credentialNo: unref(model).credentialNo,
       }),
     });
@@ -193,7 +204,7 @@ watch(deviceStore.getCabinetGrids, () => {
           </div>
           <n-select
             v-model:value="model.receiver" :options="getUserOptions" class="ml-10 w-220" placeholder="请选择接收人"
-            :disabled="credentialShowType === 3 ? true : false"
+            :disabled="credentialShowType === 4 ? true : false"
           />
         </div>
       </div>
