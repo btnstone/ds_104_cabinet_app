@@ -24,7 +24,7 @@ const data = reactive<StepPageModel>({ operator: {}, auth: {}, receive: {} });
 let todoInfo: DsTodoVo;
 
 const stepItems: StepItem[] = [
-  { title: '接收人开柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 1, user: data.operator }) },
+  { title: '接收人开柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 1, user: data.receive }) },
   { title: '完成', component: 'Success', params: { text: '交接成功' } },
 ];
 
