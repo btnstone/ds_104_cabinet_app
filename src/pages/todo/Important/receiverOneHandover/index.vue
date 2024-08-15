@@ -1,8 +1,11 @@
 <script setup lang="ts">
+import { map } from 'lodash-es';
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
 import type { DsTodoVo } from '@/api/todo/types';
+import { getGlobalSerialNumber, postHandOverGoods } from '@/api';
+import { useDeviceStore } from '@/store';
 
 defineOptions({ name: 'ImportantReceiverOneHandover' });
 
@@ -15,14 +18,23 @@ definePage({
 
 const current = ref(1);
 const router = useRouter();
+const deviceStore = useDeviceStore();
+const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const data = reactive<StepPageModel>({ operator: {}, auth: {}, receive: {} });
 let todoInfo: DsTodoVo;
 
 const stepItems: StepItem[] = [
   { title: '监交人身份认证', component: 'Auth', params: () => ({ authType: 3, user: data.auth }) },
   { title: '监交人授权', component: 'InventoryCheckTwo', params: () => ({ user: data.receive }) },
-  { title: '开交接格', component: 'CabinetList', params: () => ({ gridType: 2, user: data.auth }) },
-  { title: '关柜盘点', component: 'InventoryCheckOne', params: () => ({ checkType: 2, user: data.receive }) },
+  {
+    title: '开交接格',
+    component: 'CabinetList',
+    params: () => {
+      data.auth!.handOverCell = data.receive?.handOverCell;
+      return { gridType: 2, user: data.auth };
+    },
+  },
+  { title: '关柜盘点', component: 'InventoryCheckOne', params: () => ({ checkType: 2, user: data.auth }) },
   { title: '开柜门', component: 'CabinetList', params: () => ({ gridType: 1, user: data.receive }) },
   { title: '关柜盘点', component: 'InventoryCheckOne', params: () => ({ checkType: 1, user: data.receive }) },
   { title: '完成', component: 'Success', params: { text: '交接成功' } },
@@ -31,15 +43,29 @@ const stepItems: StepItem[] = [
 // 完成事件
 function onOk() {
   console.log('--onOk--');
-  // postInGoods({
-  //   electagNoList: map(epcList, 'epc'),
-  //   deviceNo: unref(getDeviceNo),
-  //   cellNo,
-  //   updateOrgId: orgId,
-  //   updateBy: userId,
-  //   authUserId,
-  //   serialNum,
-  // });
+  const { serialNum, operator, auth, receive } = unref(data);
+  const [offerCellNo] = operator?.gridIndex || [];
+  const [receiveCellNo] = receive?.gridIndex || [];
+  // const [handoverCellNo] = auth?.gridIndex || [];
+  postHandOverGoods({
+    electagNoList: map(receive?.epcList, 'epc'),
+    receiveDeviceNo: unref(getDeviceNo),
+    receiveCellNo,
+    receiveUserId: receive?.userId,
+    receiveOrgId: receive?.orgId,
+    offerDeviceNo: unref(getDeviceNo),
+    offerCellNo,
+    offerUserId: operator?.userId,
+    offerOrgId: operator?.orgId,
+    createBy: operator?.userId,
+    supervisorId: auth?.userId,
+    serialNum,
+    handoverMode: '02',
+    handoverStep: '03',
+    todoId: todoInfo.id,
+    // handoverDeviceNo:
+    // handoverCellNo:
+  });
 }
 
 // 错误事件
@@ -48,18 +74,22 @@ function onError(step: number, data: any) {
 }
 
 onMounted(() => {
-  data.auth = JSON.parse(router.currentRoute.value.query.userInfo as string);
+  getGlobalSerialNumber().then((res) => {
+    data.serialNum = res.data;
+  });
+
   todoInfo = JSON.parse(router.currentRoute.value.query.todoInfo as string);
-  data.auth!.goodsList = todoInfo.electagList;
-  data.auth!.gridIndex = [todoInfo.recvCellNo!];
+  data.receive = Object.assign(JSON.parse(router.currentRoute.value.query.userInfo as string), {
+    goodsList: todoInfo.electagList,
+    gridIndex: [todoInfo.recvCellNo],
+    handOverCell: [todoInfo.recvCellNo],
+  });
+  console.log(data.receive);
 });
 </script>
 
 <template>
   <ContentContainer title="接收重要实物操作-预约（模式一）">
-    <!-- {{ data.auth }} -->
-    <!-- {{ data.auth?.goodsList }} -->
-    <!-- {{ data.auth?.gridIndex }} -->
     <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
   </ContentContainer>
 </template>

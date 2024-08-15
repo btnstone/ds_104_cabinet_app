@@ -20,7 +20,7 @@ const data = reactive<StepPageModel>({ operator: {}, admin: {} });
 
 const stepItems: StepItem[] = [
   { title: '身份认证', component: 'Auth', params: () => ({ authType: 1, user: data.operator }) },
-  { title: '调拨内容关柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 1, user: data.operator }) },
+  { title: '调拨内容关柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 1, user: data.operator, isShowCredential: true, isShowReceiver: true }) },
   { title: '主管身份认证', component: 'Auth', params: () => ({ authType: 2, user: data.admin }) },
   { title: '主管授权', component: 'InventoryCheckTwo', params: () => ({ user: data.operator }) },
   { title: '完成', component: 'Success', params: () => ({ text: '重要物品调拨出库成功' }) },

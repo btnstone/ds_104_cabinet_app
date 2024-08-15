@@ -1,8 +1,11 @@
 <script setup lang="ts">
+import { map } from 'lodash-es';
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
 import type { DsTodoVo } from '@/api/todo/types';
+import { getGlobalSerialNumber, postHandOverGoods } from '@/api';
+import { useDeviceStore } from '@/store';
 
 defineOptions({ name: 'CertificateReceiverOneHandover' });
 
@@ -15,6 +18,8 @@ definePage({
 
 const current = ref(1);
 const router = useRouter();
+const deviceStore = useDeviceStore();
+const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const data = reactive<StepPageModel>({ operator: {}, auth: {}, receive: {} });
 let todoInfo: DsTodoVo;
 
@@ -29,6 +34,29 @@ const stepItems: StepItem[] = [
 // 完成事件
 function onOk() {
   console.log('--onOk--');
+  const { serialNum, operator, auth, receive } = unref(data);
+  const [offerCellNo] = operator?.gridIndex || [];
+  const [receiveCellNo] = receive?.gridIndex || [];
+  // const [handoverCellNo] = auth?.gridIndex || [];
+  postHandOverGoods({
+    electagNoList: map(receive?.epcList, 'epc'),
+    receiveDeviceNo: unref(getDeviceNo),
+    receiveCellNo,
+    receiveUserId: receive?.userId,
+    receiveOrgId: receive?.orgId,
+    offerDeviceNo: unref(getDeviceNo),
+    offerCellNo,
+    offerUserId: operator?.userId,
+    offerOrgId: operator?.orgId,
+    createBy: operator?.userId,
+    supervisorId: auth?.userId,
+    serialNum,
+    handoverMode: '02',
+    handoverStep: '03',
+    todoId: todoInfo.id,
+    // handoverDeviceNo:
+    // handoverCellNo:
+  });
 }
 
 // 错误事件
@@ -37,10 +65,17 @@ function onError(step: number, data: any) {
 }
 
 onMounted(() => {
-  data.auth = JSON.parse(router.currentRoute.value.query.userInfo as string);
+  getGlobalSerialNumber().then((res) => {
+    data.serialNum = res.data;
+  });
+
   todoInfo = JSON.parse(router.currentRoute.value.query.todoInfo as string);
-  data.auth!.goodsList = todoInfo.electagList;
-  data.auth!.gridIndex = [todoInfo.recvCellNo!];
+  data.receive = Object.assign(JSON.parse(router.currentRoute.value.query.userInfo as string), {
+    goodsList: todoInfo.electagList,
+    gridIndex: [todoInfo.recvCellNo],
+    handOverCell: [todoInfo.recvCellNo],
+  });
+  console.log(data.receive);
 });
 </script>
 

@@ -13,22 +13,15 @@ definePage({
 });
 
 const current = ref(1);
-const data = ref<{ foo: string }>({
-  foo: 'bar',
-});
-
+const data = reactive<StepPageModel>({ operator: {}, auth: {}, receive: {} });
 const stepItems: StepItem[] = [
-  { title: '身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
-  { title: '开柜门盘点', component: defineAsyncComponent(() => import('@/components/Cabinet/Inventory/index.vue')) },
-  { title: '监交人身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
-  {
-    title: '监交人授权',
-    component: defineAsyncComponent(() => import('@/components/Inventory/index.vue')),
-    params: { title: '', btn1Text: '授权不通过', btn2Text: '授权通过' },
-  },
-  { title: '接收人身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
-  { title: '开柜门盘点', component: defineAsyncComponent(() => import('@/components/Cabinet/Inventory/index.vue')) },
-  { title: '完成', component: defineAsyncComponent(() => import('@/components/SuccessPage/index.vue')) },
+  { title: '身份认证', component: 'Auth', params: () => ({ authType: 1, user: data.operator }) },
+  { title: '开柜门盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 1, checkType: 2, user: data.operator }) },
+  { title: '监交人身份认证', component: 'Auth', params: () => ({ authType: 3, user: data.auth }) },
+  { title: '监交人授权', component: 'InventoryCheckTwo', params: () => ({ user: data.operator }) },
+  { title: '接收人身份认证', component: 'Auth', params: () => ({ authType: 1, user: data.receive }) },
+  { title: '开柜门盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 1, checkType: 1, user: data.receive }) },
+  { title: '完成', component: 'Success', params: { text: '交接成功' } },
 ];
 
 // 完成事件

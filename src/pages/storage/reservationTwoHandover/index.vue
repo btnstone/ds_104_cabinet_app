@@ -13,14 +13,11 @@ definePage({
 });
 
 const current = ref(1);
-const data = ref<{ foo: string }>({
-  foo: 'bar',
-});
-
+const data = reactive<StepPageModel>({ operator: {} });
 const stepItems: StepItem[] = [
-  { title: '身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
-  { title: '开柜门盘点选择接收人', component: defineAsyncComponent(() => import('@/components/Cabinet/Inventory/index.vue')), params: { isShowReceiver: true } },
-  { title: '完成', component: defineAsyncComponent(() => import('@/components/SuccessPage/index.vue')) },
+  { title: '身份认证', component: 'Auth', params: () => ({ authType: 1, user: data.operator }) },
+  { title: '开柜门盘点选择接收人', component: 'InventoryCheckThree', params: () => ({ gridType: 1, user: data.operator, isShowReceiver: true, isShowSupervisor: true }) },
+  { title: '完成', component: 'Success', params: { text: '交接成功' } },
 ];
 
 // 完成事件

@@ -46,6 +46,8 @@ interface StepPageUserModel {
   receiver?: Key;
   // 监交人
   supervisor?: Key;
+  // 调入机构
+  callOrgId?: number;
 }
 
 interface StepPageModel {
