@@ -3,12 +3,14 @@ import { Client } from '@stomp/stompjs';
 import { forEach } from 'lodash-es';
 
 class StompMessageHandler {
+  isRun: boolean;
   resolve: ((...args: any) => void) | undefined;
   reject: ((...args: any) => void) | undefined;
   timer: any;
 
   constructor() {
     this.timer = null;
+    this.isRun = false;
   }
 
   handle(data: any) {
@@ -58,6 +60,7 @@ class StompService {
       const key = `${this.topicPrefix}${topic}`;
       this.client.subscribe(key, (message) => {
         const messageHandler = this.handlers.get(key);
+        messageHandler!.isRun = false;
         const response = JSON.parse(message.body);
         const { code, data, msg } = response;
         try {
@@ -83,7 +86,10 @@ class StompService {
   private publish<T>(params: { destination: string; data: any }) {
     return new Promise<T>((resolve, reject) => {
       const key = `${this.topicPrefix}${params.destination}`;
-      const stompMessageHandler = new StompMessageHandler();
+      let stompMessageHandler = this.handlers.get(key);
+      if (!stompMessageHandler) {
+        stompMessageHandler = new StompMessageHandler();
+      }
 
       stompMessageHandler.resolve = resolve;
       stompMessageHandler.reject = reject;
@@ -94,6 +100,12 @@ class StompService {
       //   this.handlers.delete(key);
       // }, 5000);
 
+      if (stompMessageHandler.isRun) {
+        stompMessageHandler.reject?.(new Error(`don't send same destination: ${params.destination}`));
+        this.handlers.delete(key);
+        return;
+      }
+      stompMessageHandler.isRun = true;
       this.handlers.set(key, stompMessageHandler);
       this.client.publish({ destination: `${this.publishPrefix}${params.destination}`, body: JSON.stringify(params.data) });
     });

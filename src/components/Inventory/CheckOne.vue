@@ -35,7 +35,7 @@ interface orgTreeItem {
 
 defineOptions({ name: 'InventoryCheckOne' });
 
-const props = withDefaults(defineProps<ICheckOneProps>(), { checkType: 1, width: '900px' });
+const props = withDefaults(defineProps<ICheckOneProps>(), { width: '900px' });
 
 const emits = defineEmits(['next', 'prev', 'error']);
 
@@ -149,7 +149,7 @@ watch(deviceStore.getCabinetGrids, () => {
         // electagNoList: chain(data).groupBy('cellIndex').map((value, key) => ({ cellNo: String(key), electagNo: map(value, 'epc') })).value(),
         electagNoList: chain(cells).map(cell => ({ cellNo: String(cell), electagNo: chain(data).filter(v => v.cellIndex === cell).map('epc').value() })).value(),
       }).then((res) => {
-        const { inElectagList, outElectagList } = res.data;
+        const { inElectagList = [], outElectagList = [], originElectagList = [] } = res.data;
         const getGoodsList = () => {
           if (props.checkType === 1) {
             return chain(inElectagList).map(v => ({ ...v, _status: 1 })).concat(map(outElectagList, v => ({ ...v, _status: 2 }))).value();
@@ -157,7 +157,7 @@ watch(deviceStore.getCabinetGrids, () => {
           else if (props.checkType === 2) {
             return chain(outElectagList).map(v => ({ ...v, _status: 1 })).concat(map(inElectagList, v => ({ ...v, _status: 2 }))).value();
           }
-          return [];
+          return chain(originElectagList).map(v => ({ ...v, _status: 1 })).concat(map(inElectagList, v => ({ ...v, _status: 2 }))).concat(map(outElectagList, v => ({ ...v, _status: 2 }))).value();
         };
         unref(model).goodsList = [...getGoodsList()];
       });

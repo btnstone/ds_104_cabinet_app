@@ -32,7 +32,7 @@ function handleYes() {
 </script>
 
 <template>
-  <ComInventoryLayout>
+  <ComInventoryLayout class="px-120">
     <template #beforeContent>
       <div class="flex flex-row gap-15">
         <!--  -->
