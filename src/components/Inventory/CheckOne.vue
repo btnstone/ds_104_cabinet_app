@@ -15,7 +15,7 @@ export interface ICheckOneProps {
   checkType?: number;
   isShowReceiver?: boolean;
   isShowSupervisor?: boolean;
-  // undefine 0 不展示 1展示，可选 2.展示，不可选
+  // undefine 0 不展示 1展示，接收人展示，可选 2.展示，接收人展示，不可选
   credentialShowType?: number;
   tips?: string;
   width?: string;
@@ -174,7 +174,7 @@ watch(deviceStore.getCabinetGrids, () => {
           </div>
           <n-tree-select
             v-model:value="model.callOrgId" :options="getOrgTreeOptions" class="ml-10 w-220"
-            placeholder="请选择调入机构" :disabled="credentialShowType === 2 ? true : false"
+            placeholder="请选择调入机构"
           />
         </div>
         <!--  -->
