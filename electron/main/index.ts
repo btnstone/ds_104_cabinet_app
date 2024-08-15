@@ -2,8 +2,8 @@
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import os from 'node:os';
+import { exec } from 'node:child_process';
 import { BrowserWindow, Menu, app, ipcMain, shell } from 'electron';
-
 // const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -135,4 +135,18 @@ ipcMain.handle('open-win', (_, arg) => {
   else {
     childWindow.loadFile(indexHtml, { hash: arg });
   }
+});
+
+// 关机功能的IPC事件监听
+ipcMain.on('shutdown', (event) => {
+  exec('shutdown', (error, stdout, stderr) => {
+    if (error) {
+      console.error(`exec error: ${error}`);
+      event.reply('shutdown-response', `Error: ${error.message}`);
+      return;
+    }
+    console.log(`stdout: ${stdout}`);
+    console.error(`stderr: ${stderr}`);
+    event.reply('shutdown-response', `Success: ${stdout}`);
+  });
 });
