@@ -9,12 +9,6 @@ import { useLoading } from '@/hooks/useLoading';
 import { useDeviceStore } from '@/store';
 import StompService from '@/stomp/StompService';
 
-defineOptions({ name: 'InventoryCheckOne' });
-
-const props = withDefaults(defineProps<ICheckOneProps>(), { checkType: 1 });
-
-const emits = defineEmits(['next', 'prev', 'error']);
-
 export interface ICheckOneProps {
   // 1-放入，2-取出
   checkType?: number;
@@ -22,6 +16,7 @@ export interface ICheckOneProps {
   isShowSupervisor?: boolean;
   isShowCredential?: boolean;
   tips?: string;
+  width?: string;
 }
 
 interface orgTreeItem {
@@ -32,6 +27,12 @@ interface orgTreeItem {
   disabled: boolean;
   key: string;
 }
+
+defineOptions({ name: 'InventoryCheckOne' });
+
+const props = withDefaults(defineProps<ICheckOneProps>(), { checkType: 1, width: '900px' });
+
+const emits = defineEmits(['next', 'prev', 'error']);
 
 const model = defineModel<StepPageUserModel>('user', { default: {} });
 // 获取用户列表
@@ -148,7 +149,7 @@ watch(deviceStore.getCabinetGrids, () => {
 </script>
 
 <template>
-  <ComInventoryLayout>
+  <ComInventoryLayout class="wh-full px-120">
     <template #title>
       请核对物品是否一致
     </template>
@@ -187,19 +188,14 @@ watch(deviceStore.getCabinetGrids, () => {
       <ComInventoryList :goods-list="model.goodsList" />
     </template>
     <template #footer>
-      <n-button
-        size="large" type="info" round
-        style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:300px;margin-right:50px;" color="#ededf1"
-        text-color="#000" @click="handleNo"
-      >
-        核对不一致
-      </n-button>
-      <n-button
-        size="large" type="info" round
-        style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:300px;" @click="handleYes"
-      >
-        核对一致
-      </n-button>
+      <div class="flex items-center justify-between gap-50">
+        <n-button size="large" type="info" round style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:300px;" color="#ededf1" text-color="#000" @click="handleNo">
+          核对不一致
+        </n-button>
+        <n-button size="large" type="info" round style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:300px;" @click="handleYes">
+          核对一致
+        </n-button>
+      </div>
     </template>
   </ComInventoryLayout>
 </template>

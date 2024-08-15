@@ -12,16 +12,12 @@ const model = defineModel<StepPageUserModel>('user', { default: {} });
 </script>
 
 <template>
-  <div class="flex gap-14">
+  <div class="flex gap-15">
     <div class="flex-shrink-0">
       <CabinetList v-model:user="model" :grid-type="gridType" />
     </div>
     <div class="flex-1">
-      <CheckOne
-        v-model:user="model" :check-type="checkType" :tips="tips" :is-show-receiver="isShowReceiver"
-        :is-show-supervisor="isShowSupervisor" :is-show-credential="isShowCredential" @prev="$emit('prev')"
-        @next="$emit('next')"
-      />
+      <CheckOne v-model:user="model" class="px-0!" :check-type="checkType" :tips="tips" :is-show-receiver="isShowReceiver" :is-show-supervisor="isShowSupervisor" :is-show-credential="isShowCredential" @prev="$emit('prev')" @next="$emit('next')" />
     </div>
   </div>
 </template>

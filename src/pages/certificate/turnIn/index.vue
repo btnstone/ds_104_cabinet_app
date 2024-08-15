@@ -13,37 +13,23 @@ definePage({
 });
 
 const current = ref(1);
-const data = ref<{ foo: string }>({
-  foo: 'bar',
-});
+const data = reactive<StepPageModel>({ operator: {}, admin: {}, receive: {} });
 
 const stepItems: StepItem[] = [
-  { title: '身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
-  {
-    title: '选择上缴柜员',
-    component: defineAsyncComponent(() => import('@/components/CompulsorySurrender/index.vue')),
-    params:
-    {
-      title: '请选择被强制上缴尾箱柜员：',
-      btn2Text: '下一步',
-      isShowReceiver: true,
-    },
-  },
-  { title: '另一位主管身份认证', component: defineAsyncComponent(() => import('@/components/Authentication/index.vue')) },
+  { title: '身份认证', component: 'Auth', params: () => ({ authType: 1, user: data.operator }) },
+  { title: '选择上缴柜员', component: 'CompulsorySurrender', params: () => ({ user: data.operator, tips: '选择被强制上缴尾箱柜员', showCancel: false, okText: '下一步' }) },
+  { title: '另一位主管身份认证', component: 'Auth', params: () => ({ authType: 2, user: data.admin }) },
   {
     title: '另一位主管授权',
-    component: defineAsyncComponent(() => import('@/components/CompulsorySurrender/index.vue')),
-    params:
-    {
-      title: '请选择被强制上缴尾箱柜员：',
-      btn1Text: '授权不通过',
-      btn2Text: '授权通过',
-      isShowReceiver: true,
+    component: 'CompulsorySurrender',
+    params: () => {
+      data.admin!.receiver = data.operator?.receiver;
+      return { user: data.admin, tips: '选择被强制上缴尾箱柜员', okText: '授权通过', cancelText: '授权不通过' };
     },
   },
-  { title: '开柜门关柜盘点', component: defineAsyncComponent(() => import('@/components/Cabinet/Inventory/index.vue')) },
-  { title: '开上缴格门关柜盘点', component: defineAsyncComponent(() => import('@/components/Cabinet/Inventory/index.vue')) },
-  { title: '完成', component: defineAsyncComponent(() => import('@/components/SuccessPage/index.vue')) },
+  { title: '开柜门关柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 1, checkType: 2, user: data.operator }) },
+  { title: '开上缴格门关柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 3, checkType: 1, user: data.receive }) },
+  { title: '完成', component: 'InventoryCheckThree' },
 ];
 
 // 完成事件

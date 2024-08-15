@@ -4,7 +4,7 @@ defineProps<{ goodsList: Recordable[] | undefined }>();
 </script>
 
 <template>
-  <n-list clickable :show-divider="false" class="w-full" style="height: 400px;overflow: auto">
+  <n-list clickable :show-divider="false" style="height: 400px;overflow: auto">
     <n-scrollbar>
       <template v-for="(item, index) in goodsList" :key="item.electagNo">
         <n-list-item>

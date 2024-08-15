@@ -1,75 +1,68 @@
 <script setup lang="ts">
-import type { StepItemParams } from '@/components/StepPage';
+import { chain, size } from 'lodash-es';
+import type { VNode } from 'vue';
+import type { ButtonProps } from 'naive-ui';
+import { getUserListByOrg } from '@/api';
+
+export interface IPropsType {
+  okButtonProps?: ButtonProps;
+  cancelButtonProps?: ButtonProps;
+  okText?: string;
+  cancelText?: string;
+  showOk?: boolean;
+  showCancel?: boolean;
+  tips?: string;
+}
 
 defineOptions({ name: 'CompulsorySurrender' });
 
-const props = defineProps<{
-  param: StepItemParams;
-}>();
+withDefaults(defineProps<IPropsType>(), {
+  okButtonProps: () => ({ size: 'large', round: true, block: true, type: 'info' }),
+  cancelButtonProps: () => ({ size: 'large', round: true, block: true, type: 'default' }),
+  cancelText: '取消',
+  okText: '确定',
+  showOk: true,
+  showCancel: true,
+});
 const emits = defineEmits(['next', 'prev', 'error']);
-const model = defineModel({ default: { foo2: 0 } });
-const receiver = ref();
-const receiverOptions = [
-  {
-    label: 'Except Me and My Monkey',
-    value: 'song0',
-  },
-  {
-    label: 'Drive My Car',
-    value: 'song1',
-  },
-];
+const model = defineModel<StepPageUserModel>('user', { default: {} });
+// 获取用户列表
+const getUserOptions = computedAsync(async () => {
+  const res = await getUserListByOrg(unref(model).orgId!);
+  return chain(res.data).map(v => ({ label: v.nickName, value: v.userId })).value();
+}, []);
 
-onMounted(() => {
-  console.log(props);
-});
-
-onUnmounted(() => {
-});
-
-function handleNext() {
-  model.value.foo2 = Math.random();
-  emits('next', 'haha');
+function handleOk() {
+  emits('next');
 }
 
-function successCheck() {
-  handleNext();
-  // todo 数据校验
-  // if (showModalType.value === 1) {
-
-  // }
-  // else {
-
-  // }
-}
-
-function failCheck() {
-
+function handleCancel() {
+  emits('prev');
 }
 </script>
 
 <template>
-  <div class="w-full flex flex-col items-center justify-center pl-20 pr-20" style="height:600px">
-    <div class="mt-15 flex flex-row items-center">
-      <div class="w-260 text-20">
-        {{ param.title }}
+  <div class="wh-full flex-col items-center justify-center">
+    <!--  -->
+    <div class="mt-15 flex flex-row items-center pb-100">
+      <div class="text-right text-20">
+        {{ tips }}
       </div>
-      <n-select v-model:value="receiver" :options="receiverOptions" class="ml-10 w-220" />
+      <!--  -->
+      <n-select v-model:value="model.receiver" :options="getUserOptions" class="ml-10 w-220" size="large" />
     </div>
-    <div class="mt-100">
-      <template v-if="param.btn1Text">
-        <n-button size="large" type="info" round style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:300px;margin-right:50px;" color="#ededf1" text-color="#000" @click="failCheck">
-          {{ param.btn1Text }}
+    <!--  -->
+    <div class="w-70% flex gap-20">
+      <div v-if="showCancel" class="flex flex-1 items-center justify-center">
+        <n-button style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;" v-bind="cancelButtonProps" @click="handleCancel">
+          {{ cancelText }}
         </n-button>
-        <n-button size="large" type="info" round style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:300px;" @click="successCheck">
-          {{ param.btn2Text }}
+      </div>
+      <div v-if="showOk" class="flex flex-1 items-center justify-center">
+        <n-button style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;" v-bind="okButtonProps" @click="handleOk">
+          {{ okText }}
         </n-button>
-      </template>
-      <template v-else>
-        <n-button size="large" type="info" round style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:600px;" @click="successCheck">
-          {{ param.btn2Text }}
-        </n-button>
-      </template>
+      </div>
     </div>
   </div>
 </template>
