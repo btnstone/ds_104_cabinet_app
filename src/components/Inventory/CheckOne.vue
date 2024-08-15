@@ -37,9 +37,14 @@ const props = withDefaults(defineProps<ICheckOneProps>(), { checkType: 1, width:
 const emits = defineEmits(['next', 'prev', 'error']);
 
 const model = defineModel<StepPageUserModel>('user', { default: {} });
+
+const isShowCredential = computed(() => {
+  return props.credentialShowType && (props.credentialShowType === 1 || props.credentialShowType === 2 || props.credentialShowType === 3);
+});
+
 // 获取用户列表
 const getUserOptions = computedAsync(async () => {
-  if (props.credentialShowType && (props.credentialShowType === 1 || props.credentialShowType === 2 || props.credentialShowType === 3) && props.isShowReceiver) {
+  if (isShowCredential.value && props.isShowReceiver) {
     const orgId = unref(model).callOrgId! || unref(model).orgId!;
     const res = await getUserListByOrg(orgId);
     return chain(res.data).map(v => ({ label: v.nickName, value: v.userId })).value();
@@ -51,7 +56,7 @@ const getUserOptions = computedAsync(async () => {
 }, []);
 
 const getOrgTreeOptions = computedAsync(async () => {
-  if (props.credentialShowType && (props.credentialShowType === 1 || props.credentialShowType === 2 || props.credentialShowType === 3)) {
+  if (isShowCredential.value) {
     const res = await getOrgTree();
     const out = transformData(res.data);
     console.log(out);
@@ -164,9 +169,9 @@ watch(deviceStore.getCabinetGrids, () => {
       请核对物品是否一致
     </template>
     <template #beforeContent>
-      <div v-if="isShowSupervisor || isShowReceiver" class="flex flex-row gap-15">
+      <div v-if="isShowSupervisor || isShowReceiver || isShowCredential" class="flex flex-row gap-15">
         <!--  -->
-        <div v-if="credentialShowType === 1 || credentialShowType === 2 || credentialShowType === 3" class="flex flex-row items-center">
+        <div v-if="isShowCredential" class="flex flex-row items-center">
           <div class="text-20">
             调入机构
           </div>

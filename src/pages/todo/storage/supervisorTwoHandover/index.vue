@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { map } from 'lodash-es';
+import { chain } from 'lodash-es';
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
@@ -24,7 +24,7 @@ const data = reactive<StepPageModel>({ operator: {}, auth: {}, receive: {} });
 let todoInfo: DsTodoVo;
 
 const stepItems: StepItem[] = [
-  { title: '监交人开柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 1, user: data.auth }) },
+  { title: '监交人开柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 1, checkType: 1, user: data.auth }) },
   { title: '完成', component: 'Success', params: { text: '交接成功' } },
 ];
 
@@ -33,15 +33,14 @@ function onOk() {
   console.log('--onOk--');
   const { serialNum, auth } = unref(data);
   postHandOverGoods({
-    electagNoList: map(auth?.goodsList, 'electagNo'),
+    electagNoList: chain(data.auth?.gridIndex).map(cell => ({ cellNo: String(cell), electagNo: chain(data.auth?.goodsList).filter(v => v.cellNo === cell).map('electagNo').value() })).value(),
     createBy: auth?.userId,
     supervisorId: auth?.userId,
     serialNum,
     handoverMode: '03',
     handoverStep: '02',
     todoId: todoInfo.id,
-    handoverDeviceNo: unref(getDeviceNo),
-    handoverCellNo: todoInfo.recvCellNo,
+    receiveDeviceNo: unref(getDeviceNo),
   });
 }
 

@@ -36,7 +36,6 @@ function onOk() {
   console.log('--onOk--');
   const { serialNum, auth, receive } = unref(data);
   const [receiveCellNo] = receive?.gridIndex || [];
-
   postVouchersBoxHandover({
     electagNoList: chain(data.receive?.gridIndex).map(cell => ({ cellNo: String(cell), electagNo: chain(data.receive?.epcList).filter(v => v.cellIndex === cell).map('epc').value() })).value(),
     receiveDeviceNo: unref(getDeviceNo),

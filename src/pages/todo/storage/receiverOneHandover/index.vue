@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { map } from 'lodash-es';
+import { chain } from 'lodash-es';
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
@@ -26,27 +26,22 @@ let todoInfo: DsTodoVo;
 const stepItems: StepItem[] = [
   { title: '监交人身份认证', component: 'Auth', params: () => ({ authType: 3, user: data.auth }) },
   { title: '监交人授权', component: 'InventoryCheckTwo', params: () => ({ user: data.receive }) },
-  { title: '开柜门', component: 'InventoryCheckThree', params: () => ({ gridType: 1, user: data.receive }) },
+  { title: '开柜门', component: 'InventoryCheckThree', params: () => ({ gridType: 1, checkType: 1, user: data.receive }) },
   { title: '完成', component: 'Success', params: { text: '交接成功' } },
 ];
 
 // 完成事件
 function onOk() {
   console.log('--onOk--');
-  const { serialNum, operator, auth, receive } = unref(data);
-  const [offerCellNo] = operator?.gridIndex || [];
+  const { serialNum, auth, receive } = unref(data);
   const [receiveCellNo] = receive?.gridIndex || [];
   postHandOverGoods({
-    electagNoList: map(receive?.epcList, 'epc'),
+    electagNoList: chain(data.receive?.gridIndex).map(cell => ({ cellNo: String(cell), electagNo: chain(data.receive?.epcList).filter(v => v.cellIndex === cell).map('epc').value() })).value(),
     receiveDeviceNo: unref(getDeviceNo),
     receiveCellNo,
     receiveUserId: receive?.userId,
     receiveOrgId: receive?.orgId,
-    offerDeviceNo: unref(getDeviceNo),
-    offerCellNo,
-    offerUserId: operator?.userId,
-    offerOrgId: operator?.orgId,
-    createBy: operator?.userId,
+    createBy: receive?.userId,
     supervisorId: auth?.userId,
     serialNum,
     handoverMode: '02',
