@@ -45,7 +45,7 @@ export function postOutGoods(data: any) {
  * @param data
  * @returns
  */
-export function getElectagInfo(data: { deviceNo?: string;electagNoList?: { cellNo?: string;electagNo?: string[] }[] }): Promise<AxiosResponse<{ inElectagList: IElectagInfo[];outElectagList: IElectagInfo[] }>> {
+export function getElectagInfo(data: { deviceNo?: string;electagNoList?: { cellNo?: string;electagNo?: string[] }[] }): Promise<AxiosResponse<{ inElectagList: IElectagInfo[];outElectagList: IElectagInfo[];originElectagList: IElectagInfo[] }>> {
   return request.post('/electag/info', data);
 }
 
@@ -125,4 +125,29 @@ export function postVouchersBoxHandover(data: any) {
  */
 export function postHandoverGrid(data: any) {
   return request.post('/record/handoverGrid', data);
+}
+
+/**
+ * 实物凭证尾箱强制上缴
+ * @param data
+ */
+export function postVouchersBoxTransfer(data: any) {
+  return request.post('/record/vouchersBoxTransfer', data);
+}
+
+/**
+ * 实物凭证尾箱领用
+ * @param data
+ */
+export function postVouchersBoxApply(data: any) {
+  return request.post('/record/vouchersBoxApply', data);
+}
+
+/**
+ * 查询待领取实物凭证
+ * @param userId
+ * @returns
+ */
+export function getVouchersApplyListByUserId(userId: Key): Promise<AxiosResponse<{ ascsSerialNum: string;transferCellNoList: string;transferUserName: string }>> {
+  return request.get(`/record/vouchersApplyList/${userId}`);
 }
