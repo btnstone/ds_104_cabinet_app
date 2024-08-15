@@ -19,7 +19,6 @@ export interface ICheckOneProps {
   credentialShowType?: number;
   tips?: string;
   width?: string;
-
 }
 
 interface orgTreeItem {
@@ -83,7 +82,6 @@ function handleNo() {
 
 function handleYes() {
   if (props.credentialShowType && (props.credentialShowType === 1 || props.credentialShowType === 2)) {
-    // showModal.value = true;
     modalRef.value = window.$modal.create({
       style: {
         width: '80%',
@@ -95,7 +93,12 @@ function handleYes() {
         onInfoSelected: () => {
           handleNext();
         },
-        // certificateList:
+        certificateList: unref(model).goodsList?.map((v) => {
+          return {
+            ...v,
+            isShowDetail: false,
+          };
+        }, []),
         credentialNo: unref(model).credentialNo,
       }),
     });
