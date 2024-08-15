@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { NButton } from 'naive-ui';
 import { useLoading } from '@/hooks/useLoading';
 import { useUserStore } from '@/store';
 import Authentication from '@/components/Authentication/index.vue';
@@ -125,10 +126,37 @@ function close() {
   clearInterval(timer);
 }
 
+function shutdown() {
+  loading.showLoading('正在关机，请稍后。。。');
+}
+
 function menuClick(index: number) {
   if (index === 0) {
     router.push({
       path: '/register',
+    });
+  }
+  if (index === 1) {
+    window.$modal.create({
+      title: '已是最新版本',
+      preset: 'dialog',
+      content: '当前版本为最新版本，暂无可回退版本',
+    });
+  }
+  if (index === 2) {
+    window.$modal.create({
+      title: '关机确认',
+      preset: 'card',
+      style: {
+        width: '400px',
+      },
+      content: '是否确认关机',
+      footer: () =>
+        h(
+          NButton,
+          { type: 'error', onClick: () => shutdown() },
+          () => '关机',
+        ),
     });
   }
 }
@@ -191,20 +219,20 @@ onUnmounted(() => {
 
         <n-popover trigger="click">
           <template #trigger>
-            <n-button color="#ffffffba" text-color="#000" round size="large" style="--n-font-size: 26px;font-weight: bold;--n-height: 60px;--n-icon-size: 28px">
+            <NButton color="#ffffffba" text-color="#000" round size="large" style="--n-font-size: 26px;font-weight: bold;--n-height: 60px;--n-icon-size: 28px">
               <template #icon>
                 <div class="text-0">
                   <img src="@/assets/images/shouye/icon-setting.png" alt="">
                 </div>
               </template>
               设置
-            </n-button>
+            </NButton>
           </template>
           <div class="flex flex-col">
             <template v-for="(item, index) in menuMap" :key="index">
-              <n-button color="#ffffffba" text-color="#000" size="large" style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px" @click="menuClick(index)">
+              <NButton color="#ffffffba" text-color="#000" size="large" style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px" @click="menuClick(index)">
                 {{ item.title }}
-              </n-button>
+              </NButton>
             </template>
           </div>
         </n-popover>

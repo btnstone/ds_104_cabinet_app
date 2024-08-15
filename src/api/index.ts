@@ -108,3 +108,12 @@ export function getUserListByOrg(orgId: Key) {
 export function postHandOverGoods(data: any) {
   return request.post('/record/handoverGoods', data);
 }
+
+/**
+ * 获取柜员资产
+ * @param userId
+ * @returns
+ */
+export function getElectagList(userId: string) {
+  return request.get(`/electag/list/${userId}`);
+}
