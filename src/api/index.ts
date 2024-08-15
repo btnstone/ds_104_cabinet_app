@@ -126,3 +126,12 @@ export function postVouchersBoxHandover(data: any) {
 export function postHandoverGrid(data: any) {
   return request.post('/record/handoverGrid', data);
 }
+
+/**
+ * 凭证和重要物品调拨
+ * @param data
+ * @returns
+ */
+export function postGoodsAllot(data: any) {
+  return request.post('/record/goodsAllot', data);
+}

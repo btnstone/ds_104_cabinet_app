@@ -8,7 +8,6 @@ import { getElectagInfo, getOrgTree, getUserListByOrg } from '@/api';
 import { useLoading } from '@/hooks/useLoading';
 import { useDeviceStore } from '@/store';
 import StompService from '@/stomp/StompService';
-import { buildShortUUID } from '@/utils/uuid';
 
 export interface ICheckOneProps {
   // 1-放入，2-取出
@@ -86,7 +85,7 @@ function handleNo() {
 }
 
 function handleYes() {
-  if (props.credentialShowType && (props.credentialShowType === 1)) {
+  if (props.credentialShowType && props.credentialShowType === 1) {
     modalRef.value = window.$modal.create({
       style: {
         width: '80%',
@@ -119,9 +118,6 @@ function handleNext() {
 }
 
 onMounted(() => {
-  if (props.credentialShowType && props.credentialShowType === 1) {
-    model.value.credentialNo = buildShortUUID();
-  }
 });
 
 onUnmounted(() => {

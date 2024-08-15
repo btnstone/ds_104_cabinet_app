@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
+import { chain } from 'lodash-es';
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
+import { getGlobalSerialNumber, postGoodsAllot } from '@/api';
+import { useDeviceStore } from '@/store';
 
 defineOptions({ name: 'CertificateTransferInPage' });
 
@@ -13,9 +15,9 @@ definePage({
   },
 });
 
-const route = useRoute();
+const deviceStore = useDeviceStore();
+const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const current = ref(1);
-const type = ref(1);
 const data = reactive<StepPageModel>({ operator: {}, admin: {} });
 
 const stepItems: StepItem[] = [
@@ -29,6 +31,22 @@ const stepItems: StepItem[] = [
 // 完成事件
 function onOk() {
   console.log('--onOk--');
+  const { serialNum, operator, admin } = unref(data);
+  postGoodsAllot({
+    vouchersApplyNo: operator?.credentialNo,
+    // offerDeviceNo: unref(getDeviceNo), // 接口获得
+    // offerOrgId: operator?.orgId, // 接口获取
+    receiveDeviceNo: unref(getDeviceNo),
+    receiveOrgId: operator?.orgId,
+    allotType: 0,
+    goodsType: 1,
+    // createBy: operator?.userId,// 接口获取
+    authUserId: admin?.userId,
+    // operUserId: operator?.userId,// 接口获取
+    allotUserId: operator?.userId,
+    serialNum,
+    electagNoList: chain(data.receive?.gridIndex).map(cell => ({ cellNo: String(cell), electagNo: chain(data.receive?.epcList).filter(v => v.cellIndex === cell).map('epc').value() })).value(),
+  });
 }
 
 // 错误事件
@@ -37,7 +55,9 @@ function onError(step: number, data: any) {
 }
 
 onMounted(() => {
-  type.value = Number(route.query.type) || 1;
+  getGlobalSerialNumber().then((res) => {
+    data.serialNum = res.data;
+  });
 });
 </script>
 
