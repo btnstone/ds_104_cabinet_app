@@ -14,7 +14,7 @@ export interface ICabinetListProps {
 }
 
 const user = defineModel<StepPageUserModel>('user', { default: {} });
-const gridSet = new Set<Key>();
+// const gridSet = new Set<Key>();
 const getEnableGridIndex = computed(() => {
   const { bindCell = [], handOverCell = [], turnOverCell = [] } = unref(user);
   if (props.gridType === 1) {
@@ -33,15 +33,18 @@ function onGridClick(item: any) {
   if (!item.enable || item.isOpened) {
     return;
   }
-  gridSet.add(item.index);
-  user.value.gridIndex = Array.from(gridSet);
+  if (unref(user).gridIndex) {
+    const gridSet = new Set<Key>(unref(user).gridIndex);
+    gridSet.add(item.index);
+    user.value.gridIndex = Array.from(gridSet);
+  }
   StompService.openDoor({ cells: [item.index] });
   emits('next');
 }
 
-watch(() => props.gridType, () => {
-  gridSet.clear();
-}, { flush: 'post' });
+// watch(() => props.gridType, () => {
+//   gridSet.clear();
+// }, { flush: 'post' });
 </script>
 
 <template>
