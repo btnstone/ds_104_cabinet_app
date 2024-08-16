@@ -33,11 +33,9 @@ function onGridClick(item: any) {
   if (!item.enable || item.isOpened) {
     return;
   }
-  if (unref(user).gridIndex) {
-    const gridSet = new Set<Key>(unref(user).gridIndex);
-    gridSet.add(item.index);
-    user.value.gridIndex = Array.from(gridSet);
-  }
+  const gridSet = new Set<Key>(unref(user).gridIndex ?? []);
+  gridSet.add(item.index);
+  user.value.gridIndex = Array.from(gridSet);
   StompService.openDoor({ cells: [item.index] });
   emits('next');
 }

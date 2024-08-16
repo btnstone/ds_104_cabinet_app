@@ -2,14 +2,17 @@
 import { map } from 'lodash-es';
 import ComInventoryLayout from '@/components/Inventory/src/components/ComInventoryLayout.vue';
 // import { useLoading } from '@/hooks/useLoading';
-import { getElectagList, getUserListByOrg } from '@/api';
+import { getElectagList, getEnableCabinetGrid, getUserListByOrg } from '@/api';
 import ComInventoryList from '@/components/Inventory/src/components/ComInventoryList.vue';
+import { useDeviceStore } from '@/store';
 
 defineOptions({ name: 'TurnInUserSelect' });
 const emits = defineEmits(['next', 'prev', 'error']);
 const user = defineModel<StepPageUserModel>('user', { default: {} });
 const selectReciver = ref<string | null>(null);
 const message = window.$message;
+const deviceStore = useDeviceStore();
+const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 
 // const { showLoading, hideLoading } = useLoading();
 // 获取用户列表
@@ -25,7 +28,7 @@ function handleNo() {
 }
 
 function handleYes() {
-  if (!user.value.receiver || !user.value.goodsList) {
+  if (!user.value.userId || !user.value.goodsList) {
     message.error('请选择被强制上缴物品柜员');
     return;
   }
@@ -33,7 +36,15 @@ function handleYes() {
     message.error('当前柜员没有需要上缴的物品');
     return;
   }
-  emits('next');
+  getEnableCabinetGrid({ deviceNo: unref(getDeviceNo), userId: unref(user).userId }).then((res) => {
+    const { bindCell = [], handOverCell = [], turnOverCell = [] } = res.data;
+    Object.assign(user.value, {
+      bindCell,
+      handOverCell,
+      turnOverCell,
+    });
+    emits('next');
+  });
 }
 
 watch(selectReciver, async () => {
@@ -41,9 +52,9 @@ watch(selectReciver, async () => {
   if (!selectReciver.value) {
     return;
   }
-  user.value.receiver = selectReciver.value;
-  if (user.value.receiver) {
-    const res = await getElectagList(user.value.receiver.toString());
+  user.value.userId = selectReciver.value;
+  if (user.value.userId) {
+    const res = await getElectagList(user.value.userId.toString());
     user.value.goodsList = res.data;
   }
 });
