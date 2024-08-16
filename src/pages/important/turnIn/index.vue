@@ -31,7 +31,7 @@ const stepItems: StepItem[] = [
 
 // 完成事件
 function onOk() {
-  console.log('--onOk--');
+  console.log('--onOk--', getDeviceNo.value);
 }
 
 // 错误事件

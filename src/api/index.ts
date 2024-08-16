@@ -157,7 +157,7 @@ export function postVouchersBoxApply(data: any) {
  * @param userId
  * @returns
  */
-export function getVouchersApplyListByUserId(userId: Key): Promise<AxiosResponse<{ ascsSerialNum: string; transferCellNoList: string; transferUserName: string }>> {
+export function getVouchersApplyListByUserId(userId: Key): Promise<AxiosResponse<{ ascsSerialNum: string;transferCellNoList: string;transferUserName: string }[]>> {
   return request.get(`/record/vouchersApplyList/${userId}`);
 }
 

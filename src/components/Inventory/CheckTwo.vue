@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { chain } from 'lodash-es';
+import { map } from 'lodash-es';
 import ComInventoryLayout from './src/components/ComInventoryLayout.vue';
 import ComInventoryList from './src/components/ComInventoryList.vue';
 import { getUserListByOrg } from '@/api';
@@ -18,7 +18,7 @@ const model = defineModel<StepPageUserModel>('user', { default: {} });
 const getUserOptions = computedAsync(async () => {
   if (props.isShowReceiver || props.isShowSupervisor) {
     const res = await getUserListByOrg(unref(model).orgId!);
-    return chain(res.data).map(v => ({ label: v.nickName, value: v.userId })).value();
+    return map(res.data, v => ({ label: v.nickName, value: v.userId }));
   }
 }, []);
 

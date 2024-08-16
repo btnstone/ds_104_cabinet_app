@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { chain, cloneDeep } from 'lodash-es';
+import { cloneDeep, filter, map } from 'lodash-es';
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
@@ -57,7 +57,7 @@ function onOk() {
     offerUserId: data.operator?.userId,
     serialNum: data.serialNum,
     supervisorId: data.auth?.userId,
-    electagNoList: chain(data.receive?.gridIndex).map(cell => ({ cellNo: String(cell), electagNo: chain(data.receive?.epcList).filter(v => v.cellIndex === cell).map('epc').value() })).value(),
+    electagNoList: map(data.receive?.gridIndex, cell => ({ cellNo: String(cell), electagNo: map(filter(data.receive?.epcList, v => v.cellIndex === cell), 'epc') })),
   });
 }
 
