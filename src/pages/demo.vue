@@ -1,38 +1,77 @@
-<script setup lang="ts">
-import type { StepItem } from '@/components/StepPage';
-import { StepPage } from '@/components/StepPage';
-
-defineOptions({ name: 'DemoPage' });
-
-definePage({
-  name: 'page-demo',
-  meta: {
-    title: '测试',
-  },
-});
-
-const current = ref(1);
-const data = ref<{ foo: string }>({ foo: 'bar' });
-const stepItems: StepItem[] = [
-  { title: '身份验证', component: defineAsyncComponent(() => import('@/components/HelloWord.vue')) },
-  { title: '开柜门', component: defineAsyncComponent(() => import('@/components/HelloWord.vue')) },
-  // { title: '关柜盘点', component: defineAsyncComponent(() => import('@/components/HelloWord.vue')) },
-  // { title: '主管身份验证', component: defineAsyncComponent(() => import('@/components/HelloWord.vue')) },
-  // { title: '主管授权', component: defineAsyncComponent(() => import('@/components/HelloWord.vue')) },
-  // { title: '完成', component: defineAsyncComponent(() => import('@/components/HelloWord.vue')) },
-];
-
-// 完成事件
-function onOk() {
-  console.log('--onOk--');
-}
-
-// 错误事件
-function onError(step: number, data: any) {
-  console.log(step, data);
-}
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
+  <div class="wh-full flex-col">
+    <div class="flex-shrink-0 bg-black py-50 color-white">
+      6666
+    </div>
+    <div class="h-0 flex-1 flex-shrink-0 bg-green">
+      <div class="wh-full flex-col">
+        <div class="flex-shrink-0 bg-red py-10">
+          header
+        </div>
+        <div class="h-0 flex-1 flex-shrink-0">
+          <div class="h-full flex">
+            <div class="w-200 flex-shrink-0 bg-blue">
+              left
+            </div>
+            <div class="flex-1 flex-shrink-0 overflow-auto">
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+              <n-h1>哈哈哈</n-h1>
+            </div>
+          </div>
+        </div>
+        <div class="flex-shrink-0 bg-yellow py-10">
+          footer
+        </div>
+      </div>
+    </div>
+  </div>
 </template>

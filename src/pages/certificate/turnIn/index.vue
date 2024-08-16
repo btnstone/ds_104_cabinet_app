@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { filter, map } from 'lodash-es';
+import { postVouchersBoxTransfer } from '@/api';
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
+import { useDeviceStore } from '@/store';
 
 defineOptions({ name: 'CertificateTurnInPage' });
 
@@ -12,9 +15,10 @@ definePage({
   },
 });
 
+const deviceStore = useDeviceStore();
+const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const current = ref(1);
 const data = reactive<StepPageModel>({ operator: {}, admin: {}, receive: {} });
-
 const stepItems: StepItem[] = [
   { title: '身份认证', component: 'Auth', params: () => ({ authType: 1, user: data.operator }) },
   { title: '选择上缴柜员', component: 'CompulsorySurrender', params: () => ({ user: data.operator, tips: '选择被强制上缴尾箱柜员', showCancel: false, okText: '下一步' }) },
@@ -35,6 +39,16 @@ const stepItems: StepItem[] = [
 // 完成事件
 function onOk() {
   console.log('--onOk--');
+  postVouchersBoxTransfer({
+    transferDeviceNo: unref(getDeviceNo),
+    transferOrgId: data.operator?.orgId,
+    createBy: data.operator?.userId,
+    authUserId: data.admin?.userId,
+    operUserId: data.operator?.userId,
+    transferUserId: data.operator?.receiver,
+    serialNum: data.serialNum,
+    electagNoList: map(data.receive?.gridIndex, cell => ({ cellNo: String(cell), electagNo: map(filter(data.receive?.epcList, v => v.cellIndex === cell), 'epc') })),
+  });
 }
 
 // 错误事件

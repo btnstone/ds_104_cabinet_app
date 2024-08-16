@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { chain } from 'lodash-es';
+import { map } from 'lodash-es';
 import ComInventoryLayout from '@/components/Inventory/src/components/ComInventoryLayout.vue';
-import { useLoading } from '@/hooks/useLoading';
+// import { useLoading } from '@/hooks/useLoading';
 import { getElectagList, getUserListByOrg } from '@/api';
 import ComInventoryList from '@/components/Inventory/src/components/ComInventoryList.vue';
 
@@ -11,12 +11,12 @@ const user = defineModel<StepPageUserModel>('user', { default: {} });
 const selectReciver = ref<string | null>(null);
 const message = window.$message;
 
-const { showLoading, hideLoading } = useLoading();
+// const { showLoading, hideLoading } = useLoading();
 // 获取用户列表
 const getUserOptions = computedAsync(async () => {
   const orgId = unref(user).callOrgId! || unref(user).orgId!;
   const res = await getUserListByOrg(orgId);
-  return chain(res.data).map(v => ({ label: v.nickName, value: v.userId })).value();
+  return map(res.data, v => ({ label: v.nickName, value: v.userId }));
 }, []);
 
 function handleNo() {

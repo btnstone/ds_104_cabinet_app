@@ -100,11 +100,11 @@ class StompService {
       //   this.handlers.delete(key);
       // }, 5000);
 
-      if (stompMessageHandler.isRun) {
-        stompMessageHandler.reject?.(new Error(`don't send same destination: ${params.destination}`));
-        this.handlers.delete(key);
-        return;
-      }
+      // if (stompMessageHandler.isRun) {
+      //   stompMessageHandler.reject?.(new Error(`don't send same destination: ${params.destination}`));
+      //   this.handlers.delete(key);
+      //   return;
+      // }
       stompMessageHandler.isRun = true;
       this.handlers.set(key, stompMessageHandler);
       this.client.publish({ destination: `${this.publishPrefix}${params.destination}`, body: JSON.stringify(params.data) });

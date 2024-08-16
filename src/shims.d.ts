@@ -31,7 +31,7 @@ declare interface PromiseFn<T = any, R = T> {
 }
 
 interface StepPageUserModel {
-  userId?: Key[];
+  userId?: Key;
   nickName?: string;
   orgId?: number;
   userCode?: number;
@@ -50,6 +50,8 @@ interface StepPageUserModel {
   callOrgId?: number;
   // 凭证申请编号
   credentialNo?: string;
+  // 领用流程
+  applyItem?: Recordable;
 }
 
 interface StepPageModel {

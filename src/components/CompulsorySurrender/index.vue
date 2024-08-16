@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { chain, size } from 'lodash-es';
-import type { VNode } from 'vue';
+import { map } from 'lodash-es';
 import type { ButtonProps } from 'naive-ui';
 import { getUserListByOrg } from '@/api';
 
@@ -29,7 +28,7 @@ const model = defineModel<StepPageUserModel>('user', { default: {} });
 // 获取用户列表
 const getUserOptions = computedAsync(async () => {
   const res = await getUserListByOrg(unref(model).orgId!);
-  return chain(res.data).map(v => ({ label: v.nickName, value: v.userId })).value();
+  return map(res.data, v => ({ label: v.nickName, value: v.userId }));
 }, []);
 
 function handleOk() {

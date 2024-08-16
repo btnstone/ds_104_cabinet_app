@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { chain } from 'lodash-es';
+import { filter, map } from 'lodash-es';
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
@@ -33,7 +33,7 @@ function onOk() {
   console.log('--onOk--');
   const { serialNum, auth } = unref(data);
   postHandoverGrid({
-    electagNoList: chain(data.auth?.gridIndex).map(cell => ({ cellNo: String(cell), electagNo: chain(data.auth?.goodsList).filter(v => v.cellNo === cell).map('electagNo').value() })).value(),
+    electagNoList: map(data.auth?.gridIndex, cell => ({ cellNo: String(cell), electagNo: map(filter(data.auth?.goodsList, v => v.cellNo === cell), 'electagNo') })),
     createBy: auth?.userId,
     supervisorId: auth?.userId,
     serialNum,

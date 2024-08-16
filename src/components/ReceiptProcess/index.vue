@@ -1,47 +1,49 @@
 <script setup lang="ts">
-import type { TodoItem } from '@/api/todo/types';
+import { getVouchersApplyListByUserId } from '@/api';
 
-defineOptions({ name: 'SuccessPage' });
+defineOptions({ name: 'ComReceiptProcess' });
 
-// defineProps<{
-//   param: StepItemParams;
-// }>();
 const emits = defineEmits(['next', 'prev', 'error']);
-const todoList = ref<TodoItem[]>([]);
-const model = defineModel({ default: { foo2: 0 } });
+const itemList = ref<Recordable[]>([]);
+const model = defineModel<StepPageUserModel>('user', { default: {} });
 
-function handleNext() {
-  model.value.foo2 = Math.random();
-  emits('next', 'haha');
-}
-
-function cellClick(index) {
-  console.log(index);
-  handleNext();
+function handleClickItem(item: any) {
+  model.value.applyItem = { ...item };
+  emits('next');
 }
 
 onMounted(() => {
-  todoList.value.push({
-    rspId: 'adjkhdhjk1',
-    reqUser: 'asdasdasd111',
-    reqCellNo: 16,
-  });
-});
-
-onUnmounted(() => {
-
+  const { userId } = unref(model);
+  if (userId) {
+    getVouchersApplyListByUserId(userId).then((res) => {
+      itemList.value = [...res.data];
+    });
+  }
 });
 </script>
 
 <template>
-  <div class="mt-50 w-full flex flex-col items-center justify-start pl-20 pr-20" style="height:600px">
-    <div v-for="(item, index) in todoList" :key="item.rspId" class="clickable-div content-container" @click="cellClick(index)">
-      <div>
-        <span>{{ item.reqUser }}</span>
-        <span>{{ item.reqCellNo }}</span>
+  <div class="wh-full">
+    <n-scrollbar>
+      <n-list :show-divider="false" class="mx-auto my-0 w-90%">
+        <n-list-item v-for="item in itemList" :key="item.ascsSerialNum">
+          <div class="clickable-div content-container" @click="handleClickItem(item)">
+            <div>
+              <div class="text-20 font-bold line-height-none">
+                上缴格：{{ item.transferCellNoList }}，上缴柜员：{{ item.transferUserName }}
+              </div>
+              <div class="mt-15 text-16 color-gray:80 line-height-none">
+                上缴时间：2024-08-15 14:37:00
+              </div>
+            </div>
+            <div class="right-arrow" />
+          </div>
+        </n-list-item>
+      </n-list>
+      <div class="my-20 text-center text-18 c-coolgray">
+        没有更多了
       </div>
-      <div class="right-arrow" />
-    </div>
+    </n-scrollbar>
   </div>
 </template>
 
@@ -51,10 +53,10 @@ onUnmounted(() => {
   justify-content: space-between;
   align-items: center;
   background-color: #fcfbfd;
-  width: 95%;
-  height: 60px;
+  // width: 95%;
+  // height: 60px;
   border-radius: 10px;
   border: 1px solid #e8e7e8;
-  padding: 0px 20px;
+  padding: 8px 20px;
 }
 </style>
