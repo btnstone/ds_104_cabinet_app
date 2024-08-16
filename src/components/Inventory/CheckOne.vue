@@ -176,7 +176,7 @@ watch(deviceStore.getCabinetGrids, () => {
           </div>
           <n-tree-select
             v-model:value="model.callOrgId" :options="getOrgTreeOptions" class="ml-10 w-220"
-            placeholder="请选择调入机构" :disabled="credentialShowType === 4 ? true : false"
+            placeholder="请选择调入机构" :disabled="credentialShowType === 4 || credentialShowType === 2 ? true : false"
           />
         </div>
         <!--  -->

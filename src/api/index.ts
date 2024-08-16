@@ -187,3 +187,12 @@ export function postGoodsTransfer(data: any) {
 export function getVoucherList(orgId: Key) {
   return request.get(`/voucher/list/${orgId}`);
 }
+
+/**
+ * 凭证调拨撤销
+ * @param data
+ * @returns
+ */
+export function postCancelVouchersAllot(data: any) {
+  return request.post('/record/cancelVouchersAllot/', data);
+}
