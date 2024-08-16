@@ -98,8 +98,8 @@ async function handleYes() {
       preset: 'card',
       closable: false,
       content: () => h(CredentialInfo, {
-        onInfoSelected: (strinasdas: string) => {
-          model.value.credentialNo = strinasdas;
+        onInfoSelected: (vouchersApplyNo: string) => {
+          model.value.credentialNo = vouchersApplyNo;
           handleNext();
         },
         goodsList: unref(model).goodsList,
@@ -176,7 +176,7 @@ watch(deviceStore.getCabinetGrids, () => {
           </div>
           <n-tree-select
             v-model:value="model.callOrgId" :options="getOrgTreeOptions" class="ml-10 w-220"
-            placeholder="请选择调入机构"
+            placeholder="请选择调入机构" :disabled="credentialShowType === 4 ? true : false"
           />
         </div>
         <!--  -->

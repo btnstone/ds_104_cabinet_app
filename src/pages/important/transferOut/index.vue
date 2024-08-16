@@ -19,11 +19,11 @@ definePage({
 const deviceStore = useDeviceStore();
 const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const current = ref(1);
-const data = reactive<StepPageModel>({ operator: { credentialNo: buildShortUUID() }, admin: {}, receive: {} });
+const data = reactive<StepPageModel>({ operator: { credentialNo: buildShortUUID() }, admin: {} });
 
 const stepItems: StepItem[] = [
   { title: '身份认证', component: 'Auth', params: () => ({ authType: 1, user: data.operator }) },
-  { title: '调拨内容关柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 1, checkType: 2, user: data.operator, credentialShowType: 2, isShowReceiver: true }) },
+  { title: '调拨内容关柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 1, checkType: 2, user: data.operator, credentialShowType: 3, isShowReceiver: true }) },
   { title: '主管身份认证', component: 'Auth', params: () => ({ authType: 2, user: data.admin }) },
   { title: '主管授权', component: 'InventoryCheckTwo', params: () => ({ user: data.operator }) },
   { title: '完成', component: 'Success', params: () => ({ text: '重要物品调拨出库成功' }) },
@@ -31,21 +31,22 @@ const stepItems: StepItem[] = [
 
 // 完成事件
 function onOk() {
-  const { serialNum, operator, admin, receive } = unref(data);
-  postGoodsAllot({
-    // vouchersApplyNo: operator?.credentialNo,
+  const { serialNum, operator, admin } = unref(data);
+  const result = {
     offerDeviceNo: unref(getDeviceNo),
     offerOrgId: operator?.orgId,
     receiveOrgId: operator?.callOrgId,
     allotType: 1,
-    goodsType: 1,
+    goodsType: 2,
     createBy: operator?.userId,
     authUserId: admin?.userId,
     operUserId: operator?.userId,
-    allotUserId: receive?.userId,
+    allotUserId: operator?.receiver,
     serialNum,
-    electagNoList: map(data.receive?.gridIndex, cell => ({ cellNo: String(cell), electagNo: map(filter(data.receive?.epcList, v => v.cellIndex === cell), 'epc') })),
-  });
+    electagNoList: map(data.operator?.gridIndex, cell => ({ cellNo: String(cell), electagNo: map(filter(data.operator?.epcList, v => v.cellIndex === cell), 'epc') })),
+  };
+  console.log(result);
+  postGoodsAllot(result);
 }
 
 // 错误事件

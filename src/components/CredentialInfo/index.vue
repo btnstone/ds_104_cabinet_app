@@ -27,8 +27,9 @@ function selectClick(index: number) {
 
 function handleClick() {
   if (curIndex.value > -1) {
-    const strinasdas = certificateList.value[curIndex.value].vouchersApplyNo;
-    emits('infoSelected', strinasdas);
+    const vouchersApplyNo = certificateList.value[curIndex.value].vouchersApplyNo;
+    console.log(vouchersApplyNo);
+    emits('infoSelected', vouchersApplyNo);
   }
   else {
     window.$message.error('请选择凭证申请信息');

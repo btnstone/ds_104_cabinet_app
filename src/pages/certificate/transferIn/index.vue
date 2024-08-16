@@ -22,7 +22,7 @@ const data = reactive<StepPageModel>({ operator: {}, admin: {} });
 
 const stepItems: StepItem[] = [
   { title: '身份认证', component: 'Auth', params: () => ({ authType: 1, user: data.operator }) },
-  { title: '调拨内容关柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 1, checkType: 1, user: data.operator, credentialShowType: 1 }) },
+  { title: '调拨内容关柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 1, checkType: 1, user: data.operator, credentialShowType: 2 }) },
   { title: '主管身份认证', component: 'Auth', params: () => ({ authType: 2, user: data.admin }) },
   { title: '主管授权', component: 'InventoryCheckTwo', params: () => ({ user: data.operator }) },
   { title: '完成', component: 'Success', params: () => ({ text: '凭证调拨入库成功' }) },
@@ -42,7 +42,7 @@ function onOk() {
     authUserId: admin?.userId,
     allotUserId: operator?.userId,
     serialNum,
-    electagNoList: map(data.receive?.gridIndex, cell => ({ cellNo: String(cell), electagNo: map(filter(data.receive?.epcList, v => v.cellIndex === cell), 'epc') })),
+    electagNoList: map(data.operator?.gridIndex, cell => ({ cellNo: String(cell), electagNo: map(filter(data.operator?.epcList, v => v.cellIndex === cell), 'epc') })),
   });
 }
 

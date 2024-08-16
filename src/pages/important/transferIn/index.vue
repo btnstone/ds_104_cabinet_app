@@ -22,7 +22,15 @@ const data = reactive<StepPageModel>({ operator: {}, admin: {} });
 
 const stepItems: StepItem[] = [
   { title: '身份认证', component: 'Auth', params: () => ({ authType: 1, user: data.operator }) },
-  { title: '调拨内容关柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 1, checkType: 1, user: data.operator, credentialShowType: 3, isShowReceiver: true }) },
+  {
+    title: '调拨内容关柜盘点',
+    component: 'InventoryCheckThree',
+    params: () => {
+      data.operator!.callOrgId = data.operator?.orgId?.toString();
+      data.operator!.receiver = data.operator?.userId;
+      return { gridType: 1, checkType: 1, user: data.operator, credentialShowType: 4, isShowReceiver: true };
+    },
+  },
   { title: '主管身份认证', component: 'Auth', params: () => ({ authType: 2, user: data.admin }) },
   { title: '主管授权', component: 'InventoryCheckTwo', params: () => ({ user: data.operator }) },
   { title: '完成', component: 'Success', params: () => ({ text: '重要物品调拨入库成功' }) },
@@ -33,16 +41,15 @@ function onOk() {
   console.log('--onOk--');
   const { serialNum, operator, admin } = unref(data);
   postGoodsAllot({
-    // vouchersApplyNo: operator?.credentialNo,
     receiveDeviceNo: unref(getDeviceNo),
     receiveOrgId: operator?.orgId,
     allotType: 0,
-    goodsType: 1,
+    goodsType: 2,
     createBy: operator?.userId, // 接口获取
     authUserId: admin?.userId,
     allotUserId: operator?.userId,
     serialNum,
-    electagNoList: map(data.receive?.gridIndex, cell => ({ cellNo: String(cell), electagNo: map(filter(data.receive?.epcList, v => v.cellIndex === cell), 'epc') })),
+    electagNoList: map(data.operator?.gridIndex, cell => ({ cellNo: String(cell), electagNo: map(filter(data.operator?.epcList, v => v.cellIndex === cell), 'epc') })),
   });
 }
 

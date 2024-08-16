@@ -47,7 +47,7 @@ interface StepPageUserModel {
   // 监交人
   supervisor?: Key;
   // 调入机构
-  callOrgId?: number;
+  callOrgId?: number | string;
   // 凭证申请编号
   credentialNo?: string;
   // 领用流程
