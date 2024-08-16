@@ -65,7 +65,6 @@ onMounted(() => {
 
 <template>
   <ContentContainer title="实物凭证尾箱领用">
-    {{ data }}
     <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
   </ContentContainer>
 </template>
