@@ -89,8 +89,8 @@ function showDetail(index1: number, index2: number) {
         <n-list-item v-for="(item, index) in certificateList" :key="index" style="border-top: 1px solid #000000;">
           <div v-for="(item2, index2) in item.list" :key="index2">
             <div class="w-full flex flex-col items-center justify-between">
-              <div class="h-50 w-full flex items-center justify-between" @click="selectClick(index2)">
-                <div class="flex items-center">
+              <div class="h-50 w-full flex items-center justify-between">
+                <div class="flex items-center" @click="selectClick(index2)">
                   <img
                     v-if="curIndex === index" class="mr-10 h-40 w-40 border-none"
                     src="@/assets/images/components/success.png" alt=""
