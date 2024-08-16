@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { chain } from 'lodash-es';
+import { filter, map } from 'lodash-es';
 import { getGlobalSerialNumber, postHandoverGrid } from '@/api';
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
@@ -40,7 +40,7 @@ function onOk() {
     offerUserId: data.operator?.userId,
     serialNum: data.serialNum,
     supervisorId: data.operator?.supervisor,
-    electagNoList: chain(data.operator?.gridIndex).map(cell => ({ cellNo: String(cell), electagNo: chain(data.operator?.epcList).filter(v => v.cellIndex === cell).map('epc').value() })).value(),
+    electagNoList: map(data.operator?.gridIndex, cell => ({ cellNo: String(cell), electagNo: map(filter(data.operator?.epcList, v => v.cellIndex === cell), 'epc') })),
   });
 }
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ModalReactive } from 'naive-ui';
-import { chain, map } from 'lodash-es';
+import { filter, map } from 'lodash-es';
 import CredentialInfo from '../CredentialInfo/index.vue';
 import ComInventoryLayout from './src/components/ComInventoryLayout.vue';
 import ComInventoryList from './src/components/ComInventoryList.vue';
@@ -42,11 +42,11 @@ const getUserOptions = computedAsync(async () => {
   if (props.credentialShowType && (props.credentialShowType === 1 || props.credentialShowType === 2 || props.credentialShowType === 3) && props.isShowReceiver) {
     const orgId = unref(model).callOrgId! || unref(model).orgId!;
     const res = await getUserListByOrg(orgId);
-    return chain(res.data).map(v => ({ label: v.nickName, value: v.userId })).value();
+    return map(res.data, v => ({ label: v.nickName, value: v.userId }));
   }
   else if (props.isShowReceiver || props.isShowSupervisor) {
     const res = await getUserListByOrg(unref(model).orgId!);
-    return chain(res.data).map(v => ({ label: v.nickName, value: v.userId })).value();
+    return map(res.data, v => ({ label: v.nickName, value: v.userId }));
   }
 }, []);
 
@@ -134,18 +134,19 @@ watch(deviceStore.getCabinetGrids, () => {
       unref(model).epcList = data;
       return getElectagInfo({
         deviceNo: unref(getDeviceNo),
-        // electagNoList: chain(data).groupBy('cellIndex').map((value, key) => ({ cellNo: String(key), electagNo: map(value, 'epc') })).value(),
-        electagNoList: chain(cells).map(cell => ({ cellNo: String(cell), electagNo: chain(data).filter(v => v.cellIndex === cell).map('epc').value() })).value(),
+        // electagNoList: chain(data).groupBy('cellIndex').map((value, key) => ({ cellNo: String(key), electagNo: map(value, 'epc') })).value(), chain(cells).map(cell => ({ cellNo: String(cell), electagNo: chain(data).filter(v => v.cellIndex === cell).map('epc').value() })).value(),
+        electagNoList: map(cells, cell => ({ cellNo: String(cell), electagNo: map(filter(data, v => v.cellIndex === cell), 'epc') })),
       }).then((res) => {
+        console.log('--getElectagInfo:', res);
         const { inElectagList = [], outElectagList = [], originElectagList = [] } = res.data;
         const getGoodsList = () => {
           if (props.checkType === 1) {
-            return chain(inElectagList).map(v => ({ ...v, _status: 1 })).concat(map(outElectagList, v => ({ ...v, _status: 2 }))).value();
+            return map(inElectagList, v => ({ ...v, _status: 1 })).concat(map(outElectagList, v => ({ ...v, _status: 2 })));
           }
           else if (props.checkType === 2) {
-            return chain(outElectagList).map(v => ({ ...v, _status: 1 })).concat(map(inElectagList, v => ({ ...v, _status: 2 }))).value();
+            return map(outElectagList, v => ({ ...v, _status: 1 })).concat(map(inElectagList, v => ({ ...v, _status: 2 })));
           }
-          return chain(originElectagList).map(v => ({ ...v, _status: 1 })).concat(map(inElectagList, v => ({ ...v, _status: 2 }))).concat(map(outElectagList, v => ({ ...v, _status: 2 }))).value();
+          return map(originElectagList, v => ({ ...v, _status: 1 })).concat(map(inElectagList, v => ({ ...v, _status: 2 }))).concat(map(outElectagList, v => ({ ...v, _status: 2 })));
         };
         unref(model).goodsList = [...getGoodsList()];
       });
