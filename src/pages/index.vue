@@ -127,8 +127,11 @@ function close() {
 }
 
 function shutdown() {
+  loading.showLoading('正在关机');
   // 发送 shutdown 事件到主进程
-  window.ipcRenderer.send('shutdown');
+  setTimeout(() => {
+    window.ipcRenderer.send('shutdown');
+  }, 2000);
 }
 
 function menuClick(index: number) {

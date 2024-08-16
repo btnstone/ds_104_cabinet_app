@@ -169,3 +169,12 @@ export function getVouchersApplyListByUserId(userId: Key): Promise<AxiosResponse
 export function postGoodsAllot(data: any) {
   return request.post('/record/goodsAllot', data);
 }
+
+/**
+ * 重要实物交接
+ * @param data
+ * @returns
+ */
+export function postGoodsTransfer(data: any) {
+  return request.post('/record/goodsTransfer', data);
+}

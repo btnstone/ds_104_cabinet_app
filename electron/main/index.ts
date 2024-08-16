@@ -139,7 +139,7 @@ ipcMain.handle('open-win', (_, arg) => {
 
 // 关机功能的IPC事件监听
 ipcMain.on('shutdown', (event) => {
-  exec('shutdown', (error, stdout, stderr) => {
+  exec('shutdown now', (error, stdout, stderr) => {
     if (error) {
       console.error(`exec error: ${error}`);
       event.reply('shutdown-response', `Error: ${error.message}`);
