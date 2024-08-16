@@ -3,7 +3,7 @@ import { filter, map } from 'lodash-es';
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
-import { getGlobalSerialNumber, postGoodsTransfer } from '@/api';
+import { postGoodsTransfer } from '@/api';
 import { useDeviceStore } from '@/store';
 
 defineOptions({ name: 'ImportantTurnInPage' });
@@ -12,9 +12,12 @@ definePage({
   name: 'page-important-turn-in',
   meta: {
     title: '重要物品强制上缴',
+    hasSerialNum: true,
   },
 });
 
+const router = useRouter();
+const serialNum = router.currentRoute.value.query.no;
 const deviceStore = useDeviceStore();
 const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const current = ref(1);
@@ -36,7 +39,7 @@ const stepItems: StepItem[] = [
 // 完成事件
 function onOk() {
   console.log('--onOk--');
-  const { serialNum, operator, receive, admin } = unref(data);
+  const { operator, receive, admin } = unref(data);
   const { userId: authUserId } = admin ?? {};
   const postData = {
     electagNoList: map(data.operator?.gridIndex, cell => ({ cellNo: String(cell), electagNo: map(filter(data.operator?.epcList, v => v.cellIndex === cell), 'epc') })),
@@ -56,12 +59,6 @@ function onOk() {
 function onError(step: number, data: any) {
   console.log(step, data);
 }
-
-onMounted(() => {
-  getGlobalSerialNumber().then((res) => {
-    data.serialNum = res.data;
-  });
-});
 </script>
 
 <template>

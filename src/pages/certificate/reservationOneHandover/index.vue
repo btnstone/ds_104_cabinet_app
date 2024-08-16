@@ -3,7 +3,7 @@ import { cloneDeep, filter, map } from 'lodash-es';
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
-import { getGlobalSerialNumber, postVouchersBoxHandover } from '@/api';
+import { postVouchersBoxHandover } from '@/api';
 import { useDeviceStore } from '@/store';
 
 defineOptions({ name: 'CertificateReservationOneHandover' });
@@ -12,9 +12,12 @@ definePage({
   name: 'page-certificate-one-handover',
   meta: {
     title: '实物凭证尾箱预约交接（模式一）',
+    hasSerialNum: true,
   },
 });
 
+const router = useRouter();
+const serialNum = router.currentRoute.value.query.no;
 const deviceStore = useDeviceStore();
 const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const current = ref(1);
@@ -55,7 +58,7 @@ function onOk() {
     handoverMode: '02',
     receiveUserId: data.operator?.receiver,
     offerUserId: data.operator?.userId,
-    serialNum: data.serialNum,
+    serialNum,
     supervisorId: data.auth?.userId,
     electagNoList: map(data.receive?.gridIndex, cell => ({ cellNo: String(cell), electagNo: map(filter(data.receive?.epcList, v => v.cellIndex === cell), 'epc') })),
   });
@@ -65,18 +68,12 @@ function onOk() {
 function onError(step: number, data: any) {
   console.log(step, data);
 }
-
-onMounted(() => {
-  getGlobalSerialNumber().then((res) => {
-    data.serialNum = res.data;
-  });
-});
 </script>
 
 <template>
   <ContentContainer title="实物凭证尾箱预约交接（模式一）">
     <div class="h-full w-full flex flex-col items-center p-20">
-      <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
+      <StepPage v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
     </div>
   </ContentContainer>
 </template>

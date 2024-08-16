@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { map } from 'lodash-es';
-import { getGlobalSerialNumber, postTaskOutGoods } from '@/api';
+import { postTaskOutGoods } from '@/api';
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
@@ -12,9 +12,12 @@ definePage({
   name: 'page-important-takeOut',
   meta: {
     title: '重要实物取出',
+    hasSerialNum: true,
   },
 });
 
+const router = useRouter();
+const serialNum = router.currentRoute.value.query.no;
 const deviceStore = useDeviceStore();
 const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const current = ref(1);
@@ -29,7 +32,7 @@ const stepItems: StepItem[] = [
 // 完成事件
 function onOk() {
   console.log('--onOk--');
-  const { serialNum, operator } = unref(data);
+  const { operator } = unref(data);
   const { orgId, userId, gridIndex = [], epcList = [] } = operator ?? {};
   const [cellNo] = gridIndex;
   postTaskOutGoods({
@@ -46,12 +49,6 @@ function onOk() {
 function onError(step: number, data: any) {
   console.log(step, data);
 }
-
-onMounted(() => {
-  getGlobalSerialNumber().then((res) => {
-    data.serialNum = res.data;
-  });
-});
 </script>
 
 <template>

@@ -3,14 +3,14 @@ import { Client } from '@stomp/stompjs';
 import { forEach } from 'lodash-es';
 
 class StompMessageHandler {
-  isRun: boolean;
+  // isRun: boolean;
   resolve: ((...args: any) => void) | undefined;
   reject: ((...args: any) => void) | undefined;
   timer: any;
 
   constructor() {
     this.timer = null;
-    this.isRun = false;
+    // this.isRun = false;
   }
 
   handle(data: any) {
@@ -60,7 +60,7 @@ class StompService {
       const key = `${this.topicPrefix}${topic}`;
       this.client.subscribe(key, (message) => {
         const messageHandler = this.handlers.get(key);
-        messageHandler!.isRun = false;
+        // messageHandler!.isRun = false;
         const response = JSON.parse(message.body);
         const { code, data, msg } = response;
         try {
@@ -105,7 +105,7 @@ class StompService {
       //   this.handlers.delete(key);
       //   return;
       // }
-      stompMessageHandler.isRun = true;
+      // stompMessageHandler.isRun = true;
       this.handlers.set(key, stompMessageHandler);
       this.client.publish({ destination: `${this.publishPrefix}${params.destination}`, body: JSON.stringify(params.data) });
     });

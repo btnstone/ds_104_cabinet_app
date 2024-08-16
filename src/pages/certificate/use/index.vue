@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { filter, map } from 'lodash-es';
-import { getGlobalSerialNumber, postVouchersBoxApply } from '@/api';
+import { postVouchersBoxApply } from '@/api';
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
@@ -12,9 +12,12 @@ definePage({
   name: 'page-certificate-use',
   meta: {
     title: '实物凭证尾箱领用',
+    hasSerialNum: true,
   },
 });
 
+const router = useRouter();
+const serialNum = router.currentRoute.value.query.no;
 const deviceStore = useDeviceStore();
 const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const current = ref(1);
@@ -46,7 +49,7 @@ function onOk() {
     operUserId: data.admin?.userId,
     ascsSerialNum: data.admin?.applyItem?.ascsSerialNum,
     applyUserId: data.operator?.userId,
-    serialNum: data.serialNum,
+    serialNum,
     electagNoList: map(data.operator?.gridIndex, cell => ({ cellNo: String(cell), electagNo: map(filter(data.operator?.epcList, v => v.cellIndex === cell), 'epc') })),
   });
 }
@@ -55,12 +58,6 @@ function onOk() {
 function onError(step: number, data: any) {
   console.log(step, data);
 }
-
-onMounted(() => {
-  getGlobalSerialNumber().then((res) => {
-    data.serialNum = res.data;
-  });
-});
 </script>
 
 <template>

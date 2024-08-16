@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { map } from 'lodash-es';
-import { getGlobalSerialNumber, postHandOverGoods } from '@/api';
+import { postHandOverGoods } from '@/api';
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
@@ -12,9 +12,12 @@ definePage({
   name: 'page-site-handover',
   meta: {
     title: '重要实物现场交接',
+    hasSerialNum: true,
   },
 });
 
+const router = useRouter();
+const serialNum = router.currentRoute.value.query.no;
 const deviceStore = useDeviceStore();
 const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const current = ref(1);
@@ -34,7 +37,7 @@ const stepItems: StepItem[] = [
 // 完成事件
 function onOk() {
   console.log('--onOk--', data);
-  const { serialNum, operator, auth, receive } = unref(data);
+  const { operator, auth, receive } = unref(data);
   const [offerCellNo] = operator?.gridIndex || [];
   const [receiveCellNo] = receive?.gridIndex || [];
   postHandOverGoods({
@@ -58,12 +61,6 @@ function onOk() {
 function onError(step: number, data: any) {
   console.log(step, data);
 }
-
-onMounted(() => {
-  getGlobalSerialNumber().then((res) => {
-    data.serialNum = res.data;
-  });
-});
 </script>
 
 <template>

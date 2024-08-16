@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { filter, map } from 'lodash-es';
-import { getGlobalSerialNumber, postVouchersBoxHandover } from '@/api';
+import { postVouchersBoxHandover } from '@/api';
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
@@ -12,9 +12,12 @@ definePage({
   name: 'page-certificate-site-handover',
   meta: {
     title: '实物凭证尾箱现场交接',
+    hasSerialNum: true,
   },
 });
 
+const router = useRouter();
+const serialNum = router.currentRoute.value.query.no;
 const deviceStore = useDeviceStore();
 const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const current = ref(1);
@@ -41,7 +44,7 @@ function onOk() {
     handoverMode: '01',
     receiveUserId: data.receive?.userId,
     offerUserId: data.operator?.userId,
-    serialNum: data.serialNum,
+    serialNum,
     supervisorId: data.auth?.userId,
     electagNoList: map(data.receive?.gridIndex, cell => ({ cellNo: String(cell), electagNo: map(filter(data.receive?.epcList, v => v.cellIndex === cell), 'epc') })),
   });
@@ -51,18 +54,10 @@ function onOk() {
 function onError(step: number, data: any) {
   console.log(step, data);
 }
-
-onMounted(() => {
-  getGlobalSerialNumber().then((res) => {
-    data.serialNum = res.data;
-  });
-});
 </script>
 
 <template>
   <ContentContainer title="实物凭证尾箱现场交接">
-    <div class="mt-20 h-full w-full flex flex-col items-center">
-      <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
-    </div>
+    <StepPage v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
   </ContentContainer>
 </template>

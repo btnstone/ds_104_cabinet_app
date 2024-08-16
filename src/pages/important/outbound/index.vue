@@ -3,7 +3,7 @@ import { map } from 'lodash-es';
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
-import { getGlobalSerialNumber, postOutGoods } from '@/api/index';
+import { postOutGoods } from '@/api/index';
 import { useDeviceStore } from '@/store';
 
 defineOptions({ name: 'ImportantOutboundPage' });
@@ -12,9 +12,12 @@ definePage({
   name: 'page-important-outbound',
   meta: {
     title: '重要实物出库',
+    hasSerialNum: true,
   },
 });
 
+const router = useRouter();
+const serialNum = router.currentRoute.value.query.no;
 const deviceStore = useDeviceStore();
 const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const current = ref(1);
@@ -32,7 +35,7 @@ const stepItems: StepItem[] = [
 // 完成事件
 function onOk() {
   console.log('--onOk--');
-  const { serialNum, operator, admin } = unref(data);
+  const { operator, admin } = unref(data);
   const { orgId, userId, gridIndex = [], epcList = [] } = operator ?? {};
   const [cellNo] = gridIndex;
   const { userId: authUserId } = admin ?? {};
@@ -51,16 +54,10 @@ function onOk() {
 function onError(step: number, data: any) {
   console.log(step, data);
 }
-
-onMounted(() => {
-  getGlobalSerialNumber().then((res) => {
-    data.serialNum = res.data;
-  });
-});
 </script>
 
 <template>
   <ContentContainer title="重要实物出库">
-    <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
+    <StepPage v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
   </ContentContainer>
 </template>

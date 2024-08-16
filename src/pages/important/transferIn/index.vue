@@ -3,7 +3,7 @@ import { filter, map } from 'lodash-es';
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
-import { getGlobalSerialNumber, postGoodsAllot } from '@/api';
+import { postGoodsAllot } from '@/api';
 import { useDeviceStore } from '@/store';
 
 defineOptions({ name: 'ImportantTransferInPage' });
@@ -12,9 +12,12 @@ definePage({
   name: 'page-important-transfer-in',
   meta: {
     title: '重要物品调拨入库',
+    hasSerialNum: true,
   },
 });
 
+const router = useRouter();
+const serialNum = router.currentRoute.value.query.no;
 const deviceStore = useDeviceStore();
 const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const current = ref(1);
@@ -39,7 +42,7 @@ const stepItems: StepItem[] = [
 // 完成事件
 function onOk() {
   console.log('--onOk--');
-  const { serialNum, operator, admin } = unref(data);
+  const { operator, admin } = unref(data);
   postGoodsAllot({
     receiveDeviceNo: unref(getDeviceNo),
     receiveOrgId: operator?.orgId,
@@ -57,12 +60,6 @@ function onOk() {
 function onError(step: number, data: any) {
   console.log(step, data);
 }
-
-onMounted(() => {
-  getGlobalSerialNumber().then((res) => {
-    data.serialNum = res.data;
-  });
-});
 </script>
 
 <template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { filter, map } from 'lodash-es';
-import { getGlobalSerialNumber, postHandoverGrid } from '@/api';
+import { postHandoverGrid } from '@/api';
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
@@ -12,9 +12,12 @@ definePage({
   name: 'page-storage-one-handover',
   meta: {
     title: '保管格预约交接（模式一）',
+    hasSerialNum: true,
   },
 });
 
+const router = useRouter();
+const serialNum = router.currentRoute.value.query.no;
 const deviceStore = useDeviceStore();
 const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const current = ref(1);
@@ -40,7 +43,7 @@ function onOk() {
     handoverMode: '02',
     receiveUserId: data.operator?.receiver,
     offerUserId: data.operator?.userId,
-    serialNum: data.serialNum,
+    serialNum,
     supervisorId: data.auth?.userId,
     electagNoList: map(data.operator?.gridIndex, cell => ({ cellNo: String(cell), electagNo: map(filter(data.operator?.epcList, v => v.cellIndex === cell), 'epc') })),
   });
@@ -50,16 +53,10 @@ function onOk() {
 function onError(step: number, data: any) {
   console.log(step, data);
 }
-
-onMounted(() => {
-  getGlobalSerialNumber().then((res) => {
-    data.serialNum = res.data;
-  });
-});
 </script>
 
 <template>
   <ContentContainer title="保管格预约交接（模式一）">
-    <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
+    <StepPage v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
   </ContentContainer>
 </template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { cloneDeep, filter, map } from 'lodash-es';
-import { getGlobalSerialNumber, postVouchersBoxTransfer } from '@/api';
+import { filter, map } from 'lodash-es';
+import { postVouchersBoxTransfer } from '@/api';
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
@@ -12,9 +12,12 @@ definePage({
   name: 'page-certificate-turn-in',
   meta: {
     title: '实物凭证尾箱强制上缴',
+    hasSerialNum: true,
   },
 });
 
+const router = useRouter();
+const serialNum = router.currentRoute.value.query.no;
 const deviceStore = useDeviceStore();
 const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const current = ref(1);
@@ -46,7 +49,7 @@ function onOk() {
     authUserId: data.admin?.userId,
     operUserId: data.operator?.userId,
     transferUserId: data.receive?.userId,
-    serialNum: data.serialNum,
+    serialNum,
     electagNoList: map(data.operator?.gridIndex, cell => ({ cellNo: String(cell), electagNo: map(filter(data.operator?.epcList, v => v.cellIndex === cell), 'epc') })),
   });
 }
@@ -55,18 +58,10 @@ function onOk() {
 function onError(step: number, data: any) {
   console.log(step, data);
 }
-
-onMounted(() => {
-  getGlobalSerialNumber().then((res) => {
-    data.serialNum = res.data;
-  });
-});
 </script>
 
 <template>
   <ContentContainer title="实物凭证尾箱强制上缴">
-    <div class="m-20 h-full w-full flex flex-col items-center">
-      <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
-    </div>
+    <StepPage v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
   </ContentContainer>
 </template>

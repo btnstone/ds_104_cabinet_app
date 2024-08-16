@@ -3,7 +3,7 @@ import { filter, map } from 'lodash-es';
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
-import { getGlobalSerialNumber, postCancelVouchersAllot } from '@/api';
+import { postCancelVouchersAllot } from '@/api';
 import { useDeviceStore } from '@/store';
 
 defineOptions({ name: 'CertificateRevocationPage' });
@@ -12,9 +12,12 @@ definePage({
   name: 'page-certificate-revocation',
   meta: {
     title: '凭证调拨撤销',
+    hasSerialNum: true,
   },
 });
 
+const router = useRouter();
+const serialNum = router.currentRoute.value.query.no;
 const deviceStore = useDeviceStore();
 const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const current = ref(1);
@@ -32,7 +35,7 @@ const stepItems: StepItem[] = [
 // 完成事件
 function onOk() {
   console.log('--onOk--');
-  const { serialNum, operator, admin } = unref(data);
+  const { operator, admin } = unref(data);
   postCancelVouchersAllot({
     vouchersApplyNo: operator?.credentialNo,
     offerDeviceNo: unref(getDeviceNo),
@@ -49,18 +52,10 @@ function onOk() {
 function onError(step: number, data: any) {
   console.log(step, data);
 }
-
-onMounted(() => {
-  getGlobalSerialNumber().then((res) => {
-    data.serialNum = res.data;
-  });
-});
 </script>
 
 <template>
   <ContentContainer title="凭证调拨撤销">
-    <div class="m-20 h-full w-full flex flex-col items-center">
-      <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
-    </div>
+    <StepPage v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
   </ContentContainer>
 </template>
