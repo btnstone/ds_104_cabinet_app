@@ -93,8 +93,8 @@ const showModal = ref(false);
 const currentItem = ref<ContentItem>();
 const userObj = ref({});
 
-let formatted = useDateFormat(useNow(), 'HH:mm');
-let timer: NodeJS.Timeout;
+const formatted = useDateFormat(useNow(), 'HH:mm');
+// let timer: NodeJS.Timeout;
 
 function contentItemClick(item: ContentItem) {
   currentType.value = item.type;
@@ -116,21 +116,24 @@ function contentItemClick(item: ContentItem) {
   }
 }
 
-function start() {
-  timer = setInterval(() => {
-    formatted = useDateFormat(useNow(), 'HH:mm');
-  }, 60 * 1000);
-}
+// function start() {
+//   timer = setInterval(() => {
+//     formatted = useDateFormat(useNow(), 'HH:mm');
+//   }, 60 * 1000);
+// }
 
-function close() {
-  clearInterval(timer);
-}
+// function close() {
+//   clearInterval(timer);
+// }
 
 function shutdown() {
   loading.showLoading('正在关机');
   // 发送 shutdown 事件到主进程
   setTimeout(() => {
-    window.ipcRenderer.send('shutdown');
+    window.ipcRenderer.invoke('shutdown').finally(() => {
+      window.$message.warning('操作失败！');
+      loading.hideLoading();
+    });
   }, 2000);
 }
 
@@ -181,7 +184,7 @@ function gotoTodoList() {
 }
 
 onMounted(() => {
-  start();
+  // start();
   console.log('index onMounted');
   loading.showLoading('加载中，请稍后。。。');
 
@@ -193,7 +196,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  close();
+  // close();
   console.log('index onUnmounted');
 });
 </script>

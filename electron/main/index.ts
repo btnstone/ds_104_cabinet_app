@@ -139,14 +139,18 @@ ipcMain.handle('open-win', (_, arg) => {
 
 // 关机功能的IPC事件监听
 ipcMain.on('shutdown', (event) => {
-  exec('shutdown now', (error, stdout, stderr) => {
-    if (error) {
-      console.error(`exec error: ${error}`);
-      event.reply('shutdown-response', `Error: ${error.message}`);
-      return;
-    }
-    console.log(`stdout: ${stdout}`);
-    console.error(`stderr: ${stderr}`);
-    event.reply('shutdown-response', `Success: ${stdout}`);
+  return new Promise((resolve, reject) => {
+    exec('shutdown now', (error, stdout, stderr) => {
+      if (error) {
+        console.error(`exec error: ${error}`);
+        event.reply('shutdown-response', `Error: ${error.message}`);
+        reject(error);
+        return;
+      }
+      console.log(`stdout: ${stdout}`);
+      console.error(`stderr: ${stderr}`);
+      event.reply('shutdown-response', `Success: ${stdout}`);
+      resolve(true);
+    });
   });
 });
