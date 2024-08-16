@@ -44,7 +44,7 @@ function onOk() {
     authUserId: admin?.userId,
     operUserId: operator?.userId,
     serialNum,
-    electagNoList: chain(data.receive?.gridIndex).map(cell => ({ cellNo: String(cell), electagNo: chain(data.receive?.epcList).filter(v => v.cellIndex === cell).map('epc').value() })).value(),
+    electagNoList: chain(data.operator?.gridIndex).map(cell => ({ cellNo: String(cell), electagNo: chain(data.operator?.epcList).filter(v => v.cellIndex === cell).map('epc').value() })).value(),
   });
 }
 

@@ -169,3 +169,12 @@ export function getVouchersApplyListByUserId(userId: Key): Promise<AxiosResponse
 export function postGoodsAllot(data: any) {
   return request.post('/record/goodsAllot', data);
 }
+
+/**
+ * 查询申请凭证
+ * @param data
+ * @returns
+ */
+export function getVoucherList(orgId: Key) {
+  return request.get(`/voucher/list/${orgId}`);
+}

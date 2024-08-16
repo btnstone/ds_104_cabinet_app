@@ -19,7 +19,7 @@ definePage({
 const deviceStore = useDeviceStore();
 const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const current = ref(1);
-const data = reactive<StepPageModel>({ operator: { credentialNo: buildShortUUID() }, admin: {} });
+const data = reactive<StepPageModel>({ operator: { credentialNo: buildShortUUID() }, admin: {}, receive: {} });
 
 const stepItems: StepItem[] = [
   { title: '身份认证', component: 'Auth', params: () => ({ authType: 1, user: data.operator }) },
@@ -31,9 +31,9 @@ const stepItems: StepItem[] = [
 
 // 完成事件
 function onOk() {
-  const { serialNum, operator, admin } = unref(data);
+  const { serialNum, operator, admin, receive } = unref(data);
   postGoodsAllot({
-    vouchersApplyNo: operator?.credentialNo,
+    // vouchersApplyNo: operator?.credentialNo,
     offerDeviceNo: unref(getDeviceNo),
     offerOrgId: operator?.orgId,
     receiveOrgId: operator?.callOrgId,
@@ -42,7 +42,7 @@ function onOk() {
     createBy: operator?.userId,
     authUserId: admin?.userId,
     operUserId: operator?.userId,
-    // allotUserId:
+    allotUserId: receive?.userId,
     serialNum,
     electagNoList: chain(data.receive?.gridIndex).map(cell => ({ cellNo: String(cell), electagNo: chain(data.receive?.epcList).filter(v => v.cellIndex === cell).map('epc').value() })).value(),
   });

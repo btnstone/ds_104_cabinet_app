@@ -88,20 +88,8 @@ function handleNo() {
   emits('prev');
 }
 
-function handleYes() {
+async function handleYes() {
   if (props.credentialShowType && (props.credentialShowType === 1 || props.credentialShowType === 2)) {
-    let certificateList1;
-    if (props.credentialShowType === 1) {
-      certificateList1 = unref(model).goodsList?.map((v) => {
-        return {
-          ...v,
-          isShowDetail: false,
-        };
-      }, []);
-    }
-    else {
-      certificateList1 = [];
-    }
     modalRef.value = window.$modal.create({
       style: {
         width: '80%',
@@ -110,11 +98,14 @@ function handleYes() {
       preset: 'card',
       closable: false,
       content: () => h(CredentialInfo, {
-        onInfoSelected: () => {
+        onInfoSelected: (strinasdas: string) => {
+          model.value.credentialNo = strinasdas;
           handleNext();
         },
-        certificateList: certificateList1,
+        goodsList: unref(model).goodsList,
         credentialNo: unref(model).credentialNo,
+        credentialShowType: props.credentialShowType,
+        orgId: unref(model).orgId,
       }),
     });
   }
