@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { map } from 'lodash-es';
 import type { ButtonProps } from 'naive-ui';
-import { getUserListByOrg } from '@/api';
+import { getEnableCabinetGrid, getUserListByOrg } from '@/api';
+import { useDeviceStore } from '@/store';
 
 export interface IPropsType {
   okButtonProps?: ButtonProps;
@@ -11,11 +12,12 @@ export interface IPropsType {
   showOk?: boolean;
   showCancel?: boolean;
   tips?: string;
+  isConfirm?: boolean;
 }
 
 defineOptions({ name: 'CompulsorySurrender' });
 
-withDefaults(defineProps<IPropsType>(), {
+const props = withDefaults(defineProps<IPropsType>(), {
   okButtonProps: () => ({ size: 'large', round: true, block: true, type: 'info' }),
   cancelButtonProps: () => ({ size: 'large', round: true, block: true, type: 'default' }),
   cancelText: '取消',
@@ -24,6 +26,8 @@ withDefaults(defineProps<IPropsType>(), {
   showCancel: true,
 });
 const emits = defineEmits(['next', 'prev', 'error']);
+const deviceStore = useDeviceStore();
+const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const model = defineModel<StepPageUserModel>('user', { default: {} });
 // 获取用户列表
 const getUserOptions = computedAsync(async () => {
@@ -32,7 +36,20 @@ const getUserOptions = computedAsync(async () => {
 }, []);
 
 function handleOk() {
-  emits('next');
+  if (props.isConfirm) {
+    getEnableCabinetGrid({ deviceNo: unref(getDeviceNo), userId: unref(model).userId }).then((res) => {
+      const { bindCell = [], handOverCell = [], turnOverCell = [] } = res.data;
+      Object.assign(model.value, {
+        bindCell,
+        handOverCell,
+        turnOverCell,
+      });
+      emits('next');
+    });
+  }
+  else {
+    emits('next');
+  }
 }
 
 function handleCancel() {
@@ -48,7 +65,7 @@ function handleCancel() {
         {{ tips }}
       </div>
       <!--  -->
-      <n-select v-model:value="model.receiver" :options="getUserOptions" class="ml-10 w-220" size="large" />
+      <n-select v-model:value="model.userId" :options="getUserOptions" class="ml-10 w-220" size="large" />
     </div>
     <!--  -->
     <div class="w-70% flex gap-20">

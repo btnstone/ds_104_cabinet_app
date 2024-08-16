@@ -22,13 +22,13 @@ const data = reactive<StepPageModel>({ operator: {}, admin: {} });
 const stepItems: StepItem[] = [
   { title: '主管身份认证', component: 'Auth', params: () => ({ authType: 2, user: data.admin }) },
   { title: '领用人身份认证', component: 'Auth', params: () => ({ authType: 1, user: data.operator }) },
-  { title: '选择领用流程', component: 'ReceiptProcess', params: () => ({ user: data.operator }) },
+  { title: '选择领用流程', component: 'ReceiptProcess', params: () => ({ user: data.admin }) },
   {
     title: '开领用格门关柜盘点',
     component: 'InventoryCheckThree',
     params: () => {
-      data.operator!.turnOverCell = [data.operator?.applyItem?.transferCellNoList];
-      return { gridType: 3, checkType: 2, user: data.operator };
+      data.admin!.turnOverCell = data.admin?.applyItem?.transferCellNoList.split(',');
+      return { gridType: 3, checkType: 2, user: data.admin };
     },
   },
   { title: '开柜门关柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 1, checkType: 1, user: data.operator }) },
@@ -41,10 +41,10 @@ function onOk() {
   postVouchersBoxApply({
     applyDeviceNo: unref(getDeviceNo),
     applyOrgId: data.operator?.orgId,
-    createBy: data.operator?.userId,
+    createBy: data.admin?.userId,
     authUserId: data.admin?.userId,
-    operUserId: data.operator?.userId,
-    ascsSerialNum: data.operator?.applyItem?.ascsSerialNum,
+    operUserId: data.admin?.userId,
+    ascsSerialNum: data.admin?.applyItem?.ascsSerialNum,
     applyUserId: data.operator?.userId,
     serialNum: data.serialNum,
     electagNoList: map(data.operator?.gridIndex, cell => ({ cellNo: String(cell), electagNo: map(filter(data.operator?.epcList, v => v.cellIndex === cell), 'epc') })),
@@ -65,6 +65,7 @@ onMounted(() => {
 
 <template>
   <ContentContainer title="实物凭证尾箱领用">
+    {{ data }}
     <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
   </ContentContainer>
 </template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { filter, map } from 'lodash-es';
-import { postVouchersBoxTransfer } from '@/api';
+import { cloneDeep, filter, map } from 'lodash-es';
+import { getGlobalSerialNumber, postVouchersBoxTransfer } from '@/api';
 import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
@@ -20,20 +20,20 @@ const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const current = ref(1);
 const data = reactive<StepPageModel>({ operator: {}, admin: {}, receive: {} });
 const stepItems: StepItem[] = [
-  { title: '身份认证', component: 'Auth', params: () => ({ authType: 1, user: data.operator }) },
-  { title: '选择上缴柜员', component: 'CompulsorySurrender', params: () => ({ user: data.operator, tips: '选择被强制上缴尾箱柜员', showCancel: false, okText: '下一步' }) },
-  { title: '另一位主管身份认证', component: 'Auth', params: () => ({ authType: 2, user: data.admin }) },
+  { title: '身份认证', component: 'Auth', params: () => ({ authType: 2, user: data.operator }) },
   {
-    title: '另一位主管授权',
+    title: '选择上缴柜员',
     component: 'CompulsorySurrender',
     params: () => {
-      data.admin!.receiver = data.operator?.receiver;
-      return { user: data.admin, tips: '选择被强制上缴尾箱柜员', okText: '授权通过', cancelText: '授权不通过' };
+      data.receive!.orgId = data.operator?.orgId;
+      return { user: data.receive, tips: '选择被强制上缴尾箱柜员', showCancel: false, okText: '下一步' };
     },
   },
-  { title: '开柜门关柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 1, checkType: 2, user: data.operator }) },
-  { title: '开上缴格门关柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 3, checkType: 1, user: data.receive }) },
-  { title: '完成', component: 'InventoryCheckThree' },
+  { title: '另一位主管身份认证', component: 'Auth', params: () => ({ authType: 2, user: data.admin }) },
+  { title: '另一位主管授权', component: 'CompulsorySurrender', params: () => ({ user: data.receive, tips: '选择被强制上缴尾箱柜员', okText: '授权通过', cancelText: '授权不通过', isConfirm: true }) },
+  { title: '开柜门关柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 1, checkType: 2, user: data.receive }) },
+  { title: '开上缴格门关柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 3, checkType: 1, user: data.operator }) },
+  { title: '完成', component: 'Success', params: { text: '强制上缴成功' } },
 ];
 
 // 完成事件
@@ -45,9 +45,9 @@ function onOk() {
     createBy: data.operator?.userId,
     authUserId: data.admin?.userId,
     operUserId: data.operator?.userId,
-    transferUserId: data.operator?.receiver,
+    transferUserId: data.receive?.userId,
     serialNum: data.serialNum,
-    electagNoList: map(data.receive?.gridIndex, cell => ({ cellNo: String(cell), electagNo: map(filter(data.receive?.epcList, v => v.cellIndex === cell), 'epc') })),
+    electagNoList: map(data.operator?.gridIndex, cell => ({ cellNo: String(cell), electagNo: map(filter(data.operator?.epcList, v => v.cellIndex === cell), 'epc') })),
   });
 }
 
@@ -57,6 +57,9 @@ function onError(step: number, data: any) {
 }
 
 onMounted(() => {
+  getGlobalSerialNumber().then((res) => {
+    data.serialNum = res.data;
+  });
 });
 </script>
 

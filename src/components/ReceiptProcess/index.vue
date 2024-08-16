@@ -7,7 +7,7 @@ const emits = defineEmits(['next', 'prev', 'error']);
 const itemList = ref<Recordable[]>([]);
 const model = defineModel<StepPageUserModel>('user', { default: {} });
 
-function handleClickItem(item: any) {
+function handleClickItem(item: Recordable) {
   model.value.applyItem = { ...item };
   emits('next');
 }
@@ -33,7 +33,7 @@ onMounted(() => {
                 上缴格：{{ item.transferCellNoList }}，上缴柜员：{{ item.transferUserName }}
               </div>
               <div class="mt-15 text-16 color-gray:80 line-height-none">
-                上缴时间：2024-08-15 14:37:00
+                上缴时间：{{ item.transferTime }}
               </div>
             </div>
             <div class="right-arrow" />
