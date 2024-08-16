@@ -1,11 +1,14 @@
 <script setup lang="ts">
+import { map } from 'lodash-es';
+
 defineOptions({ name: 'ComInventoryList' });
-defineProps<{ goodsList: Recordable[] | undefined }>();
+const props = defineProps<{ goodsList: Recordable[] | undefined }>();
+const getGoodsList = computed<Recordable[]>(() => map(props.goodsList, v => ({ ...v, _status: v._status ?? 1 })));
 </script>
 
 <template>
   <n-list clickable :show-divider="false">
-    <template v-for="(item, index) in goodsList" :key="item.electagNo">
+    <template v-for="(item, index) in getGoodsList" :key="item.electagNo">
       <n-list-item>
         <div class="flex flex-row items-center justify-start text-26 line-height-normal">
           <div class="mr-10">
