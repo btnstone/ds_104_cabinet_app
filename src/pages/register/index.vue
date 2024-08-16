@@ -78,6 +78,7 @@ const hoverTrigger = ref(true);
 const orgVal = ref<orgTreeItem | null>(null);
 const orgLabel = ref('');
 const selectOrgVal = ref<any>(null);
+const enabledGridIndex = ref<Key[]>([]);
 
 async function getOrgInfo() {
   try {
@@ -121,6 +122,7 @@ async function getDeviceInfoServer(orgTree: orgTreeItem[]) {
     if (deviceInfo.data.orgId) {
       selectOrgVal.value = deviceInfo.data.orgId.toString();
       orgName.value = findLabelById(orgTree, selectOrgVal.value);
+      enabledGridIndex.value = deviceInfo.data.cellList;
     }
   }
   catch (e) {
@@ -301,7 +303,7 @@ async function registerDevice() {
           </div>
         </div>
         <div class="mt-15 flex flex-1 gap-10">
-          <CabinetGrid />
+          <CabinetGrid :enable-grid-index="enabledGridIndex" />
         </div>
         <div class="w-full flex flex-row items-center justify-center text-align-center text-size-18">
           请点击对应规格切换带电状态
