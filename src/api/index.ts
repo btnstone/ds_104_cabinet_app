@@ -45,7 +45,7 @@ export function postOutGoods(data: any) {
  * @param data
  * @returns
  */
-export function getElectagInfo(data: { deviceNo?: string;electagNoList?: { cellNo?: string;electagNo?: string[] }[] }): Promise<AxiosResponse<{ inElectagList: IElectagInfo[];outElectagList: IElectagInfo[] }>> {
+export function getElectagInfo(data: { deviceNo?: string;electagNoList?: { cellNo?: string;electagNo?: string[] }[] }): Promise<AxiosResponse<{ inElectagList: IElectagInfo[];outElectagList: IElectagInfo[];originElectagList: IElectagInfo[] }>> {
   return request.post('/electag/info', data);
 }
 
