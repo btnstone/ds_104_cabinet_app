@@ -33,7 +33,7 @@ function onOk() {
   console.log('--onOk--');
   const { serialNum, operator, admin } = unref(data);
   postGoodsAllot({
-    vouchersApplyNo: operator?.credentialNo,
+    // vouchersApplyNo: operator?.credentialNo,
     receiveDeviceNo: unref(getDeviceNo),
     receiveOrgId: operator?.orgId,
     allotType: 0,

@@ -1,29 +1,80 @@
 <script setup lang="ts">
-import type { CertificateVO } from '@/api/goods/types';
-import { buildShortUUID } from '@/utils/uuid';
+import { getVoucherList } from '@/api';
 
 defineOptions({ name: 'CredentialInfo' });
 
-defineProps<{ certificateList?: Recordable[]; credentialNo?: string }>();
+const props = defineProps<{
+  goodsList?: Recordable[];
+  credentialNo?: string;
+  credentialShowType?: number;
+  orgId?: number;
+}>();
 
 const emits = defineEmits(['infoSelected']);
 
-const credentialNo = ref(buildShortUUID(''));
-
 const curIndex = ref(-1);
 
-function detailChange(index: number) {
-  curIndex.value = index;
+const certificateList = ref<Recordable[]>([]);
+
+function selectClick(index: number) {
+  if (curIndex.value === index) {
+    curIndex.value = -1;
+  }
+  else {
+    curIndex.value = index;
+  }
 }
 
-function handleClick(item: CertificateVO) {
-  if (curIndex.value > 0) {
-    console.log(item);
-    emits('infoSelected');
+function handleClick() {
+  if (curIndex.value > -1) {
+    const strinasdas = certificateList.value[curIndex.value].vouchersApplyNo;
+    emits('infoSelected', strinasdas);
   }
   else {
     window.$message.error('请选择凭证申请信息');
   }
+}
+
+onMounted(() => {
+  configCertificateList();
+});
+
+async function configCertificateList() {
+  if (props.credentialShowType && props.credentialShowType === 2) {
+    try {
+      const res = await getVoucherList(props.orgId!);
+      certificateList.value = res.data.map((item: any) => {
+        item.list.map((v: any) => {
+          return {
+            ...v,
+            isShowDetail: false,
+          };
+        });
+        return item;
+      });
+    }
+    catch (err) {
+      console.log(err);
+    }
+  }
+  else if (props.credentialShowType && props.credentialShowType === 1) {
+    const list = [{
+      vouchersApplyNo: props.credentialNo,
+      list: props.goodsList?.map((v) => {
+        return {
+          ...v,
+          isShowDetail: false,
+        };
+      }, []),
+    }];
+    certificateList.value = list;
+  }
+
+  console.log(certificateList.value);
+}
+
+function showDetail(index1: number, index2: number) {
+  certificateList.value[index1].list[index2].isShowDetail = !certificateList.value[index1].list[index2].isShowDetail;
 }
 </script>
 
@@ -33,71 +84,79 @@ function handleClick(item: CertificateVO) {
       <div class="w-full flex flex-col text-align-center text-20">
         凭证申请信息
       </div>
-      <n-list clickable hoverable>
-        <n-list-item v-for="(item, index) in certificateList" :key="index">
-          <div>
-            <div class="w-full flex flex-row justify-between" @click="detailChange(index)">
-              <div class="flex">
-                <img v-if="curIndex === index" class="mr-10 h-40 w-40 border-none" src="@/assets/images/components/success.png" alt="">
-                <div v-else class="mr-10 h-40 w-40 border-black rounded-30" />
-                <div class="ml-10">
-                  凭证申请编号：{{ credentialNo }}
+      <n-list clickable hoverable class="mt-20 flex-1">
+        <n-list-item v-for="(item, index) in certificateList" :key="index" style="border-top: 1px solid #000000;">
+          <div v-for="(item2, index2) in item.list" :key="index2">
+            <div class="w-full flex flex-col items-center justify-between">
+              <div class="h-50 w-full flex items-center justify-between" @click="selectClick(index2)">
+                <div class="flex items-center">
+                  <img
+                    v-if="curIndex === index" class="mr-10 h-40 w-40 border-none"
+                    src="@/assets/images/components/success.png" alt=""
+                  >
+                  <div v-else class="mr-10 h-40 w-40" style="border: 1px solid #000000; border-radius:30px;" />
+                  <div class="ml-10">
+                    凭证申请编号：{{ item.vouchersApplyNo }}
+                  </div>
+                </div>
+
+                <div class="h-full w-100 flex items-center justify-end" @click="showDetail(index, index2)">
+                  <div :class="item.isShowDetail ? 'up-arrow' : 'down-arrow'" />
                 </div>
               </div>
-              <div :class="item.isShowDetail ? 'up-arrow' : 'down-arrow'" />
+              <n-table v-if="item2.isShowDetail" :bordered="true" :single-line="false">
+                <thead>
+                  <tr>
+                    <th>凭证申请编号</th>
+                    <template v-if="item2.goodsType === '1' || item2.goodsType === '4'">
+                      <th>凭证种类</th>
+                      <th>凭证批号</th>
+                      <th>起始凭证序号</th>
+                      <th>终止凭证序号</th>
+                      <th>数量</th>
+                    </template>
+                    <template v-else-if="item2.goodsType === '2'">
+                      <th>重要物品种类</th>
+                      <th>起始物品号</th>
+                      <th>终止物品号</th>
+                      <th>数量</th>
+                    </template>
+                    <template v-else-if="item2.goodsType === '3'">
+                      <th>代保管品种类</th>
+                      <th>代保管品编号：</th>
+                      <th>数量</th>
+                    </template>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{{ item.vouchersApplyNo }}</td>
+                    <td>{{ item2.name }}</td>
+                    <template v-if="item2.goodsType === '1' || item2.goodsType === '4'">
+                      <td>{{ item2.importgoodsStartno }}</td>
+                      <td>{{ item2.voucherEndno }}</td>
+                      <td>{{ item2.voucherNumber }}</td>
+                    </template>
+                    <template v-else-if="item2.goodsType === '2'">
+                      <td>{{ item2.voucherStartno }}</td>
+                      <td>{{ item2.importgoodsEndno }}</td>
+                      <td>{{ item2.importgoodsNumber }}</td>
+                    </template>
+                    <template v-else-if="item2.goodsType === '3'">
+                      <td>{{ item2.custodygoodsId }}</td>
+                      <td>{{ item2.custodygoodsQuantity }}</td>
+                    </template>
+                  </tr>
+                </tbody>
+              </n-table>
             </div>
-            <n-table v-if="item.isShowDetail" :bordered="false" :single-line="false">
-              <thead>
-                <tr>
-                  <th>凭证申请编号</th>
-                  <template v-if="item.goodsType === '1' || item.goodsType === '4'">
-                    <th>凭证种类</th>
-                    <th>凭证批号</th>
-                    <th>起始凭证序号</th>
-                    <th>终止凭证序号</th>
-                    <th>数量</th>
-                  </template>
-                  <template v-else-if="item.goodsType === '2'">
-                    <th>重要物品种类</th>
-                    <th>起始物品号</th>
-                    <th>终止物品号</th>
-                    <th>数量</th>
-                  </template>
-                  <template v-else-if="item.goodsType === '3'">
-                    <th>代保管品种类</th>
-                    <th>代保管品编号：</th>
-                    <th>数量</th>
-                  </template>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{{ credentialNo }}</td>
-                  <td>{{ item.name }}</td>
-                  <template v-if="item.goodsType === '1' || item.goodsType === '4'">
-                    <td>{{ item.importgoodsStartno }}</td>
-                    <td>{{ item.voucherEndno }}</td>
-                    <td>{{ item.voucherNumber }}</td>
-                  </template>
-                  <template v-else-if="item.goodsType === '2'">
-                    <td>{{ item.voucherStartno }}</td>
-                    <td>{{ item.importgoodsEndno }}</td>
-                    <td>{{ item.importgoodsNumber }}</td>
-                  </template>
-                  <template v-else-if="item.goodsType === '3'">
-                    <td>{{ item.custodygoodsId }}</td>
-                    <td>{{ item.custodygoodsQuantity }}</td>
-                  </template>
-                </tr>
-              </tbody>
-            </n-table>
           </div>
         </n-list-item>
       </n-list>
       <div class="flex flex-row items-center justify-center">
         <n-button
           size="large" type="info" round
-          style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:250px;" @click="handleClick(item)"
+          style="--n-font-size: 26px;--n-height: 60px;--n-icon-size: 28px;width:250px;" @click="handleClick"
         >
           下一步
         </n-button>

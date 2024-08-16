@@ -27,7 +27,7 @@ declare module 'vue-router/auto-routes' {
     'page-certificate-transfer-out': RouteRecordInfo<'page-certificate-transfer-out', '/certificate/transferOut', Record<never, never>, Record<never, never>>,
     'page-certificate-turn-in': RouteRecordInfo<'page-certificate-turn-in', '/certificate/turnIn', Record<never, never>, Record<never, never>>,
     'page-certificate-use': RouteRecordInfo<'page-certificate-use', '/certificate/use', Record<never, never>, Record<never, never>>,
-    'page-demo': RouteRecordInfo<'page-demo', '/demo', Record<never, never>, Record<never, never>>,
+    '/demo': RouteRecordInfo<'/demo', '/demo', Record<never, never>, Record<never, never>>,
     'page-important-outbound': RouteRecordInfo<'page-important-outbound', '/important/outbound', Record<never, never>, Record<never, never>>,
     'page-important-putBack': RouteRecordInfo<'page-important-putBack', '/important/putBack', Record<never, never>, Record<never, never>>,
     'page-reservation-one-handover': RouteRecordInfo<'page-reservation-one-handover', '/important/reservationOneHandover', Record<never, never>, Record<never, never>>,

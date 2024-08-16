@@ -178,3 +178,12 @@ export function postGoodsAllot(data: any) {
 export function postGoodsTransfer(data: any) {
   return request.post('/record/goodsTransfer', data);
 }
+
+/**
+ * 查询申请凭证
+ * @param data
+ * @returns
+ */
+export function getVoucherList(orgId: Key) {
+  return request.get(`/voucher/list/${orgId}`);
+}
