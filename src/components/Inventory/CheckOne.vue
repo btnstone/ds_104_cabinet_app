@@ -116,6 +116,16 @@ async function handleYes() {
 
 function handleNext() {
   unref(modalRef)?.destroy();
+  const { goodsList = [] } = unref(model);
+  if (goodsList.length <= 0) {
+    if (props.checkType === 1) {
+      window.$message.warning('请放入物品');
+    }
+    else if (props.checkType === 2) {
+      window.$message.warning('请放入物品');
+    }
+    return;
+  }
   emits('next');
 }
 
@@ -134,11 +144,11 @@ watch(deviceStore.getCabinetGrids, () => {
     showLoading('盘点中...');
     StompService.syncGetEpcData({ cells }).then((data) => {
       console.log(data);
-      unref(model).epcList = data;
+      unref(model).epcList = map(data, v => ({ ...v, cellIndex: String(v.cellIndex) }));
       return getElectagInfo({
         deviceNo: unref(getDeviceNo),
         // electagNoList: chain(data).groupBy('cellIndex').map((value, key) => ({ cellNo: String(key), electagNo: map(value, 'epc') })).value(), chain(cells).map(cell => ({ cellNo: String(cell), electagNo: chain(data).filter(v => v.cellIndex === cell).map('epc').value() })).value(),
-        electagNoList: map(cells, cell => ({ cellNo: String(cell), electagNo: map(filter(data, v => v.cellIndex === cell), 'epc') })),
+        electagNoList: map(cells, cell => ({ cellNo: String(cell), electagNo: map(filter(data, v => v.cellIndex === +cell), 'epc') })),
       }).then((res) => {
         console.log('--getElectagInfo:', res);
         const { inElectagList = [], outElectagList = [], originElectagList = [] } = res.data;

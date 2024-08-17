@@ -22,14 +22,27 @@ const router = useRouter();
 const serialNum = router.currentRoute.value.query.no;
 const deviceStore = useDeviceStore();
 const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
-const data = reactive<StepPageModel>({ operator: {}, auth: {}, receive: {} });
+const data = reactive<StepPageModel>({ auth: {}, receive: {} });
 let todoInfo: DsTodoVo;
 
 const stepItems: StepItem[] = [
   { title: '监交人身份认证', component: 'Auth', params: () => ({ authType: 3, user: data.auth }) },
   { title: '监交人授权', component: 'InventoryCheckTwo', params: () => ({ user: data.receive }) },
-  { title: '开交接柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 2, checkType: 2, user: data.receive }) },
-  { title: '开柜盘点选择接收人', component: 'InventoryCheckThree', params: () => ({ gridType: 1, checkType: 1, user: data.receive }) },
+  {
+    title: '开交接柜盘点',
+    component: 'InventoryCheckThree',
+    params: () => {
+      data.auth!.handOverCell = data.receive?.handOverCell;
+      return { gridType: 2, checkType: 2, user: data.auth };
+    },
+  },
+  {
+    title: '开柜盘点选择接收人',
+    component: 'InventoryCheckThree',
+    params: () => {
+      return { gridType: 1, checkType: 1, user: data.receive };
+    },
+  },
   { title: '交接完成', component: 'Success', params: { text: '交接成功' } },
 ];
 
@@ -62,8 +75,8 @@ onMounted(() => {
   todoInfo = JSON.parse(router.currentRoute.value.query.todoInfo as string);
   data.receive = Object.assign(JSON.parse(router.currentRoute.value.query.userInfo as string), {
     goodsList: todoInfo.electagList,
-    gridIndex: [todoInfo.recvCellNo],
-    handOverCell: [todoInfo.recvCellNo],
+    // gridIndex: [...todoInfo.recvCellNo!.split(',')],
+    handOverCell: [...todoInfo.recvCellNo!.split(',')],
   });
   console.log(data.receive);
 });

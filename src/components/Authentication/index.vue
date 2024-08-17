@@ -12,9 +12,11 @@ import { useDeviceStore, useUserStore } from '@/store';
 
 defineOptions({ name: 'Authentication' });
 
-// authType: 1-柜员,2-主管,3-监交人
 const props = defineProps({
+  // authType: 1-柜员,2-主管,3-监交人
   authType: Number as PropType<number>,
+  // 登录用户id
+  authUserId: [Number, String] as PropType<Key>,
 });
 
 const emits = defineEmits(['next', 'prev', 'error']);
@@ -30,8 +32,8 @@ const { userId, userName, userCode } = storeToRefs(userStore);
 const model = defineModel<StepPageUserModel>('user', { default: {} });
 
 const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
-const username = ref('test');
-const password = ref('123456');
+const username = ref('');
+const password = ref('');
 const modalRef = ref<ModalReactive>();
 const { loading, runAsync: runLogin } = useRequest(handleLogin, { manual: true });
 
@@ -116,6 +118,9 @@ function handleLogin(data: any) {
         if (!res.data.roleList.includes('auth')) {
           throw new Error('当前登录身份不是监交人，请重新登录');
         }
+      }
+      if (props.authUserId && props.authUserId !== unref(userId)) {
+        throw new Error('当前登录身份不正确，请重新登录');
       }
       return getEnableCabinetGrid({ deviceNo: unref(getDeviceNo), userId: unref(userId) }).then((res) => {
         const { bindCell, handOverCell, turnOverCell } = res.data;

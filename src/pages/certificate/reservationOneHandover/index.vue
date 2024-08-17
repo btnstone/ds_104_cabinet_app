@@ -34,6 +34,7 @@ const stepItems: StepItem[] = [
       data.receive = cloneDeep(data.operator);
       data.receive!.goodsList = [];
       data.receive!.epcList = [];
+      data.receive!.gridIndex = [];
       return {
         gridType: 2,
         checkType: 1,
@@ -72,8 +73,6 @@ function onError(step: number, data: any) {
 
 <template>
   <ContentContainer title="实物凭证尾箱预约交接（模式一）">
-    <div class="h-full w-full flex flex-col items-center p-20">
-      <StepPage v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
-    </div>
+    <StepPage v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
   </ContentContainer>
 </template>
