@@ -1,5 +1,5 @@
 export interface cabinetGrid {
-  cellIndex: number;
+  cellIndex: Key;
   isOpened: boolean;
   reader: Record<string, any>;
   readerAnts: number[];

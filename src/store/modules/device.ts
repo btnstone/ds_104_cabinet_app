@@ -49,7 +49,7 @@ export const useDeviceStore = defineStore('device', {
     getCabinetGrids: (state) => {
       const grids: cabinetGrid[] = [];
       state.cabinets.forEach((data) => {
-        grids.push(...filter(data.cabinetGrids, v => v.cellIndex > 0));
+        grids.push(...filter(data.cabinetGrids, v => +v.cellIndex > 0));
       });
       return sortBy(grids, 'index');
     },
@@ -63,8 +63,10 @@ export const useDeviceStore = defineStore('device', {
         return {
           ...cabinet,
           cabinetGrids: map(cabinet.cabinetGrids, (grid) => {
+            const { cellIndex } = grid;
             return {
               ...grid,
+              cellIndex: String(cellIndex),
               enable: false,
             };
           }),
@@ -81,8 +83,8 @@ export const useDeviceStore = defineStore('device', {
     setCabinetGridChange(opened: boolean[]) {
       forEach(this.cabinets, (cabinet) => {
         forEach(cabinet.cabinetGrids, (grid) => {
-          if (grid.cellIndex > 0) {
-            grid.isOpened = opened?.[grid.cellIndex - 1] ?? true;
+          if (+grid.cellIndex > 0) {
+            grid.isOpened = opened?.[+grid.cellIndex - 1] ?? true;
           }
         });
       });

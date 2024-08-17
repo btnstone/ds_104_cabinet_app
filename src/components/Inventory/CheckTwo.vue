@@ -11,6 +11,10 @@ const props = defineProps({
   isShowReceiver: Boolean as PropType<boolean>,
   // 是否显示监交人
   isShowSupervisor: Boolean as PropType<boolean>,
+  disabled: {
+    type: Boolean as PropType<boolean>,
+    default: false,
+  },
 });
 const emits = defineEmits(['next', 'prev', 'error']);
 const model = defineModel<StepPageUserModel>('user', { default: {} });
@@ -40,14 +44,14 @@ function handleYes() {
           <div class="text-20">
             请选择监交人
           </div>
-          <n-select v-model:value="model.supervisor" :options="getUserOptions" class="ml-10 w-220" />
+          <n-select v-model:value="model.supervisor" :options="getUserOptions" class="ml-10 w-220" :disabled="disabled" />
         </div>
         <!--  -->
         <div v-if="isShowReceiver" class="mt-15 flex flex-row items-center">
           <div class="text-20">
             请选择接收人
           </div>
-          <n-select v-model:value="model.receiver" :options="getUserOptions" class="ml-10 w-220" />
+          <n-select v-model:value="model.receiver" :options="getUserOptions" class="ml-10 w-220" :disabled="disabled" />
         </div>
       </div>
     </template>

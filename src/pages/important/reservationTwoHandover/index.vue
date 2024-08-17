@@ -33,6 +33,7 @@ const stepItems: StepItem[] = [
       data.receive = cloneDeep(data.operator);
       data.receive!.goodsList = [];
       data.receive!.epcList = [];
+      data.receive!.gridIndex = [];
       return { gridType: 2, user: data.receive };
     },
   },
