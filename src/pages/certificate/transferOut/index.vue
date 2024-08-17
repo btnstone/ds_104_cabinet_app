@@ -5,7 +5,7 @@ import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
 import { postGoodsAllot } from '@/api';
 import { useDeviceStore } from '@/store';
-import { buildShortUUID } from '@/utils/uuid';
+import { buildUUID } from '@/utils/uuid';
 
 defineOptions({ name: 'CertificateTransferOutPage' });
 
@@ -22,7 +22,7 @@ const serialNum = router.currentRoute.value.query.no;
 const deviceStore = useDeviceStore();
 const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const current = ref(1);
-const data = reactive<StepPageModel>({ operator: { credentialNo: buildShortUUID() }, admin: {} });
+const data = reactive<StepPageModel>({ operator: { credentialNo: buildUUID() }, admin: {} });
 
 const stepItems: StepItem[] = [
   { title: '身份认证', component: 'Auth', params: () => ({ authType: 1, user: data.operator }) },
