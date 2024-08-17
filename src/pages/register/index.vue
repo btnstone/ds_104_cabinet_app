@@ -2,6 +2,7 @@
 // import ContentContainer from '@/components/ContentContainer/index.vue';
 import { onMounted } from 'vue';
 import type { CascaderOption } from 'naive-ui';
+import { useLocalStorage } from '@vueuse/core';
 import type { DeviceCabinetVo } from '@/api/machine/types/DeviceCabinetVo';
 import { getCabinetList } from '@/api/cabinet';
 import { useLoading } from '@/hooks/useLoading';
@@ -38,6 +39,11 @@ const deviceIp = ref('');
 const deviceMAC = ref('');
 const devicePort = ref('');
 const deviceStore = useDeviceStore();
+const storedAxiosBase = useLocalStorage('axiosBase', '');
+const axiosBase = ref(unref(storedAxiosBase));
+
+console.log('123123');
+console.log(axiosBase.value);
 
 const message = window.$message;
 
@@ -161,6 +167,7 @@ async function registerDevice() {
     message.error('请选择机构');
     return;
   }
+
   try {
     const res = await deviceBind({
       deviceName: deviceName.value,
@@ -176,6 +183,12 @@ async function registerDevice() {
   }
   catch (e) {
     console.error(e);
+  }
+}
+
+function handleChange() {
+  if (axiosBase.value) {
+    storedAxiosBase.value = unref(axiosBase);
   }
 }
 </script>
@@ -283,6 +296,12 @@ async function registerDevice() {
             <!--            <div class="right-arrow" /> -->
           </div>
         </div>
+        <div class="cell-container">
+          <div class="cell-title">
+            服务器地址
+          </div>
+          <n-input v-model:value="axiosBase" type="text" placeholder="请输入服务器地址" style="width: 180px;" @change="handleChange" />
+        </div>
       </div>
       <div class="p-f-10 h-full w-58% flex flex-col items-center justify-between bg-#fff p-20" style="border-radius: 20px;">
         <div class="w-full flex flex-row items-center justify-between text-align-center text-size-18">
@@ -316,13 +335,18 @@ async function registerDevice() {
 <style scoped lang="scss">
 .cell-container {
   display: flex;
+  height: 100%;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   padding: 0px 20px;
-  height: 85px;
   border-radius: 20px;
   background-color: #fff;
   font-size: 24px;
+  margin-bottom: 10px;
+  .cell-title {
+    flex-shrink: 0;
+    margin-right: 20px;
+  }
 }
 </style>
