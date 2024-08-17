@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { NButton } from 'naive-ui';
+import pkg from '../../package.json';
 import { useLoading } from '@/hooks/useLoading';
 import { useUserStore } from '@/store';
 import Authentication from '@/components/Authentication/index.vue';
@@ -211,7 +212,7 @@ onUnmounted(() => {
           <img src="@/assets/images/shouye/logo2.png" alt="" class="border-none">
         </div>
         <div class="pb-12 text-20 text-gray:50" style="line-height: normal;">
-          <span>版本号: </span><span class="pl-6">1.0.0</span>
+          <span>版本号: </span><span class="pl-6">{{ pkg.version }}</span>
         </div>
       </div>
       <!--  -->
