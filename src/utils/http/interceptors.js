@@ -1,7 +1,13 @@
+import { useLocalStorage } from '@vueuse/core';
 import { resolveResError } from './helpers';
 
 export function setupInterceptors(axiosInstance) {
   function reqResolve(config) {
+    const storedAxiosBase = useLocalStorage('axiosBase', '');
+    if (storedAxiosBase.value) {
+      config.baseURL = `http://${storedAxiosBase.value}/api`;
+      console.log(`AXIOS_BASE_URL = ${config.baseURL}`);
+    }
     // 处理不需要token的请求
     // if (config.noNeedToken) {
     //   return config;
