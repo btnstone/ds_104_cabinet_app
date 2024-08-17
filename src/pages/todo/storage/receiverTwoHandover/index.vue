@@ -4,7 +4,7 @@ import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
 import type { DsTodoVo } from '@/api/todo/types';
-import { getGlobalSerialNumber, postHandoverGrid } from '@/api';
+import { postHandoverGrid } from '@/api';
 import { useDeviceStore } from '@/store';
 
 defineOptions({ name: 'StorageReceiverTwoHandover' });
@@ -13,6 +13,7 @@ definePage({
   name: 'page-storage-receiver-two-handover',
   meta: {
     title: '保管格接收操作-预约（模式二）',
+    hasSerialNum: true,
   },
 });
 
@@ -20,6 +21,7 @@ const current = ref(1);
 const deviceStore = useDeviceStore();
 const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const router = useRouter();
+const serialNum = router.currentRoute.value.query.no;
 const data = reactive<StepPageModel>({ operator: {}, auth: {}, receive: {} });
 let todoInfo: DsTodoVo;
 
@@ -31,7 +33,7 @@ const stepItems: StepItem[] = [
 // 完成事件
 function onOk() {
   console.log('--onOk--');
-  const { serialNum, receive } = unref(data);
+  const { receive } = unref(data);
   const [receiveCellNo] = receive?.gridIndex || [];
   postHandoverGrid({
     electagNoList: map(data.receive?.gridIndex, cell => ({ cellNo: String(cell), electagNo: map(filter(data.receive?.epcList, v => v.cellIndex === cell), 'epc') })),
@@ -53,10 +55,6 @@ function onError(step: number, data: any) {
 }
 
 onMounted(() => {
-  getGlobalSerialNumber().then((res) => {
-    data.serialNum = res.data;
-  });
-
   todoInfo = JSON.parse(router.currentRoute.value.query.todoInfo as string);
   data.receive = Object.assign(JSON.parse(router.currentRoute.value.query.userInfo as string), {
     goodsList: todoInfo.electagList,
@@ -69,6 +67,6 @@ onMounted(() => {
 
 <template>
   <ContentContainer title="保管格接收操作-预约（模式二）">
-    <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
+    <StepPage v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
   </ContentContainer>
 </template>

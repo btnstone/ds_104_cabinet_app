@@ -4,7 +4,7 @@ import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
 import type { DsTodoVo } from '@/api/todo/types';
-import { getGlobalSerialNumber, postHandOverGoods } from '@/api';
+import { postHandOverGoods } from '@/api';
 import { useDeviceStore } from '@/store';
 
 defineOptions({ name: 'ImportantReceiverOneHandover' });
@@ -13,11 +13,13 @@ definePage({
   name: 'page-important-receiver-one-handover',
   meta: {
     title: '接收重要实物操作-预约（模式一）',
+    hasSerialNum: true,
   },
 });
 
 const current = ref(1);
 const router = useRouter();
+const serialNum = router.currentRoute.value.query.no;
 const deviceStore = useDeviceStore();
 const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const data = reactive<StepPageModel>({ operator: {}, auth: {}, receive: {} });
@@ -43,7 +45,7 @@ const stepItems: StepItem[] = [
 // 完成事件
 function onOk() {
   console.log('--onOk--');
-  const { serialNum, operator, auth, receive } = unref(data);
+  const { operator, auth, receive } = unref(data);
   const [offerCellNo] = operator?.gridIndex || [];
   const [receiveCellNo] = receive?.gridIndex || [];
   // const [handoverCellNo] = auth?.gridIndex || [];
@@ -74,10 +76,6 @@ function onError(step: number, data: any) {
 }
 
 onMounted(() => {
-  getGlobalSerialNumber().then((res) => {
-    data.serialNum = res.data;
-  });
-
   todoInfo = JSON.parse(router.currentRoute.value.query.todoInfo as string);
   data.receive = Object.assign(JSON.parse(router.currentRoute.value.query.userInfo as string), {
     goodsList: todoInfo.electagList,
@@ -90,6 +88,6 @@ onMounted(() => {
 
 <template>
   <ContentContainer title="接收重要实物操作-预约（模式一）">
-    <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
+    <StepPage v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
   </ContentContainer>
 </template>

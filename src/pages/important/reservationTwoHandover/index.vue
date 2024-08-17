@@ -71,6 +71,6 @@ function onError(step: number, data: any) {
 
 <template>
   <ContentContainer title="重要实物预约交接（模式二）">
-    <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
+    <StepPage v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
   </ContentContainer>
 </template>

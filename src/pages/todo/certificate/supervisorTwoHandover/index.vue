@@ -4,7 +4,7 @@ import ContentContainer from '@/components/ContentContainer/index.vue';
 import type { StepItem } from '@/components/StepPage';
 import { StepPage } from '@/components/StepPage';
 import type { DsTodoVo } from '@/api/todo/types';
-import { getGlobalSerialNumber, postVouchersBoxHandover } from '@/api';
+import { postVouchersBoxHandover } from '@/api';
 import { useDeviceStore } from '@/store';
 
 defineOptions({ name: 'CertificateSupervisorTwoHandover' });
@@ -13,6 +13,7 @@ definePage({
   name: 'page-certificate-supervisor-two-handover',
   meta: {
     title: '实物凭证尾箱预约交接（模式二）监交',
+    hasSerialNum: true,
   },
 });
 
@@ -20,6 +21,7 @@ const current = ref(1);
 const deviceStore = useDeviceStore();
 const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const router = useRouter();
+const serialNum = router.currentRoute.value.query.no;
 const data = reactive<StepPageModel>({ operator: {}, auth: {}, receive: {} });
 let todoInfo: DsTodoVo;
 
@@ -31,7 +33,7 @@ const stepItems: StepItem[] = [
 // 完成事件
 function onOk() {
   console.log('--onOk--');
-  const { serialNum, auth } = unref(data);
+  const { auth } = unref(data);
   postVouchersBoxHandover({
     electagNoList: map(data.auth?.gridIndex, cell => ({ cellNo: String(cell), electagNo: map(filter(data.auth?.goodsList, v => v.cellNo === cell), 'electagNo') })),
     createBy: auth?.userId,
@@ -50,10 +52,6 @@ function onError(step: number, data: any) {
 }
 
 onMounted(() => {
-  getGlobalSerialNumber().then((res) => {
-    data.serialNum = res.data;
-  });
-
   todoInfo = JSON.parse(router.currentRoute.value.query.todoInfo as string);
   data.auth = Object.assign(JSON.parse(router.currentRoute.value.query.userInfo as string), {
     goodsList: todoInfo.electagList,
@@ -67,6 +65,6 @@ onMounted(() => {
 
 <template>
   <ContentContainer title="实物凭证尾箱预约交接（模式二）监交">
-    <StepPage v-model:data="data" v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
+    <StepPage v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
   </ContentContainer>
 </template>
