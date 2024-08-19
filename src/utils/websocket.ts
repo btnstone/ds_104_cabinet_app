@@ -2,6 +2,7 @@ import { Client } from '@stomp/stompjs';
 import StompService from '@/stomp/StompService';
 import { useDeviceStore } from '@/store';
 import { useLoading } from '@/hooks/useLoading';
+import { router } from '@/router';
 
 export function setupCabinetClient() {
   const deviceStore = useDeviceStore();
@@ -40,14 +41,21 @@ function getBackendWsClient() {
     onConnect: () => {
       console.log('Backend Server Connected');
       client.subscribe('/user/queue/rfidReader/inventory', (message) => {
-        showLoading('盘点中...');
-        StompService.syncGetEpcData(JSON.parse(message.body)).then((data) => {
-          client.publish({ destination: `/app/stock/${deviceNo}/rfidReader/inventory`, body: JSON.stringify({ code: 200, data, msg: '操作成功' }) });
-        }).catch((err) => {
-          client.publish({ destination: `/app/stock/${deviceNo}/rfidReader/inventory`, body: JSON.stringify({ code: 500, msg: err.message }) });
-        }).finally(() => {
-          hideLoading();
-        });
+        const currentPath = router.currentRoute.value.path;
+        // 只能在首页远程盘点
+        if (currentPath === '/') {
+          showLoading('盘点中...');
+          StompService.syncGetEpcData(JSON.parse(message.body)).then((data) => {
+            client.publish({ destination: `/app/stock/${deviceNo}/rfidReader/inventory`, body: JSON.stringify({ code: 200, data, msg: '操作成功' }) });
+          }).catch((err) => {
+            client.publish({ destination: `/app/stock/${deviceNo}/rfidReader/inventory`, body: JSON.stringify({ code: 500, msg: err.message }) });
+          }).finally(() => {
+            hideLoading();
+          });
+        }
+        else {
+          client.publish({ destination: `/app/stock/${deviceNo}/rfidReader/inventory`, body: JSON.stringify({ code: 500 }) });
+        }
       });
     },
   });
