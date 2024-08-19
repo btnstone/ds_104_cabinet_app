@@ -72,7 +72,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <ContentContainer title="代办事项">
+  <ContentContainer>
     <div class="mb-20 h-650 w-full flex flex-col items-center overflow-y-auto">
       <div v-for="item in todoList" :key="item.id" class="content-container" @click="cellClick(item)">
         <div class="line-clamp-2 text-18">

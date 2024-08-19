@@ -61,7 +61,7 @@ function onError(step: number, data: any) {
 </script>
 
 <template>
-  <ContentContainer title="实物凭证尾箱强制上缴">
+  <ContentContainer>
     <StepPage v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
   </ContentContainer>
 </template>
