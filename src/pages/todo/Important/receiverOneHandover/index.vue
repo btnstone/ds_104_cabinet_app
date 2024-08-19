@@ -87,7 +87,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <ContentContainer title="接收重要实物操作-预约（模式一）">
+  <ContentContainer>
     <StepPage v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
   </ContentContainer>
 </template>

@@ -41,11 +41,16 @@ const paramAttributes = computed(() => {
 });
 
 // 上一步
-function handlePrev() {
+function handlePrev(step: number) {
   if (vCurrent.value <= 1) {
     return;
   }
-  vCurrent.value -= 1;
+  if (step) {
+    vCurrent.value = step;
+  }
+  else {
+    vCurrent.value -= 1;
+  }
 }
 
 // 下一步

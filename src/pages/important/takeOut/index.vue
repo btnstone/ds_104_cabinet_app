@@ -52,7 +52,7 @@ function onError(step: number, data: any) {
 </script>
 
 <template>
-  <ContentContainer title="重要实物取出">
+  <ContentContainer>
     <StepPage v-model:current="current" :step-items="stepItems" @ok="onOk" @error="onError" />
   </ContentContainer>
 </template>
