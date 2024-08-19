@@ -26,7 +26,7 @@ const data = reactive<StepPageModel>({ operator: {}, auth: {}, receive: {} });
 let todoInfo: DsTodoVo;
 
 const stepItems: StepItem[] = [
-  { title: '监交人身份认证', component: 'Auth', params: () => ({ authType: 3, user: data.auth }) },
+  { title: '监交人身份认证', component: 'Auth', params: () => ({ authType: 3, user: data.auth, authUserId: todoInfo.supervisorId }) },
   { title: '监交人授权', component: 'InventoryCheckTwo', params: () => ({ user: data.receive }) },
   { title: '开柜门', component: 'InventoryCheckThree', params: () => ({ gridType: 1, user: data.receive }) },
   { title: '完成', component: 'Success', params: { text: '交接成功' } },
