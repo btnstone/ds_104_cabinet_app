@@ -30,6 +30,7 @@ class StompService {
   private handlers: Map<string, StompMessageHandler> = new Map();
   private topicPrefix: string = '/device';
   private publishPrefix: string = '/app';
+  private connected: Ref<boolean> = ref(false);
 
   constructor(topics: string[]) {
     this.client = new Client({
@@ -37,9 +38,9 @@ class StompService {
       // debug(str) {
       //   console.log(`STOMP: ${str}`);
       // },
-      reconnectDelay: 5000,
-      heartbeatIncoming: 4000,
-      heartbeatOutgoing: 4000,
+      // reconnectDelay: 5000,
+      // heartbeatIncoming: 4000,
+      // heartbeatOutgoing: 4000,
       onConnect: () => {
         console.log('Connected');
         this.subscribeTopics(topics);
@@ -47,11 +48,23 @@ class StompService {
           this.changeMode();
         }, 200);
       },
+      onDisconnect: (frame) => {
+        console.log('Disconnected: ', frame);
+        this.connected.value = false;
+      },
+      onWebSocketClose: () => {
+        console.log('--onWebSocketClose--');
+        this.connected.value = false;
+      },
+      onWebSocketError: () => {
+        console.log('--onWebSocketError--');
+      },
       onStompError: (frame) => {
         console.error(`Broker reported error: ${frame.headers.message}`);
         console.error(`Additional details: ${frame.body}`);
       },
     });
+
     this.client.activate();
   }
 
@@ -107,7 +120,7 @@ class StompService {
       // }
       // stompMessageHandler.isRun = true;
       this.handlers.set(key, stompMessageHandler);
-      this.client.publish({ destination: `${this.publishPrefix}${params.destination}`, body: JSON.stringify(params.data) });
+      this.client.publish({ destination: `${this.publishPrefix}${params.destination}`, body: JSON.stringify(params.data), headers: { 'message-id': `${Math.random()}` } });
     });
   }
 
@@ -124,6 +137,18 @@ class StompService {
     messageHandler.reject = fetchError.trigger;
     this.handlers.set(key, messageHandler);
     return [fetchSucess.on, fetchError.on];
+  }
+
+  setConnected(connected: boolean) {
+    this.connected.value = connected;
+  }
+
+  /**
+   * 获取连接状态
+   * @returns
+   */
+  getConnected() {
+    return this.connected.value;
   }
 
   /**

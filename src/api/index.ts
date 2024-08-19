@@ -196,3 +196,12 @@ export function getVoucherList(orgId: Key) {
 export function postCancelVouchersAllot(data: any) {
   return request.post('/record/cancelVouchersAllot/', data);
 }
+
+/**
+ * 上送操作流水
+ * @param data
+ * @returns
+ */
+export function postLog(data: any) {
+  return request.post('/record/log', data);
+}
