@@ -68,6 +68,10 @@ export interface DsTodoVo {
    * 交易信息
    */
   tradInfo?: string;
+  /**
+   * 监交人ID
+   */
+  supervisorId?: string;
 
   electagList: IElectagInfo[];
 }
