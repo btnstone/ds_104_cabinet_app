@@ -22,6 +22,7 @@ export interface ICheckOneProps {
   credentialShowType?: number;
   tips?: string;
   width?: string;
+  errorHandle?: () => number;
 }
 
 interface orgTreeItem {
@@ -85,7 +86,7 @@ const { showLoading, hideLoading } = useLoading();
 const modalRef = ref<ModalReactive>();
 
 function handleNo() {
-  emits('prev');
+  emits('prev', props?.errorHandle?.());
 }
 
 async function handleYes() {

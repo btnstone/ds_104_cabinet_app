@@ -15,6 +15,10 @@ const props = defineProps({
     type: Boolean as PropType<boolean>,
     default: false,
   },
+  // 异常处理，退回指定步骤
+  errorHandle: {
+    type: Function as PropType<() => number>,
+  },
 });
 const emits = defineEmits(['next', 'prev', 'error']);
 const model = defineModel<StepPageUserModel>('user', { default: {} });
@@ -27,7 +31,7 @@ const getUserOptions = computedAsync(async () => {
 }, []);
 
 function handleNo() {
-  emits('prev');
+  emits('prev', props?.errorHandle?.());
 }
 
 function handleYes() {
