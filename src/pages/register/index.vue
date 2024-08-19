@@ -187,9 +187,7 @@ async function registerDevice() {
 }
 
 function handleChange() {
-  if (axiosBase.value) {
-    storedAxiosBase.value = unref(axiosBase);
-  }
+  storedAxiosBase.value = unref(axiosBase);
 }
 </script>
 
@@ -201,15 +199,9 @@ function handleChange() {
           请选择机构
         </div>
         <n-cascader
-          v-model:value="orgVal"
-          placeholder="未选择机构"
-          :expand-trigger="hoverTrigger ? 'hover' : 'click'"
-          :options="orgOptions"
-          :check-strategy="checkStrategyIsChild ? 'child' : 'all'"
-          :show-path="true"
-          :filterable="false"
-          size="large"
-          @update:value="handleUpdateValue"
+          v-model:value="orgVal" placeholder="未选择机构" :expand-trigger="hoverTrigger ? 'hover' : 'click'"
+          :options="orgOptions" :check-strategy="checkStrategyIsChild ? 'child' : 'all'" :show-path="true"
+          :filterable="false" size="large" @update:value="handleUpdateValue"
         />
         <div class="h-full w-full flex gap-15 py-15">
           <NButton class="h-40 flex-1" type="warning" @click="showSelectOrg = false">
@@ -222,10 +214,16 @@ function handleChange() {
       </div>
     </n-modal>
     <div class="h-88 w-full flex items-center justify-between bg-gray:30 p-20">
-      <n-button color="#ffffff" text-color="#409EFF" round size="large" style="--n-font-size: 26px;font-weight: bold;--n-height: 60px;--n-icon-size: 28px;" @click="gotoHome">
+      <n-button
+        color="#ffffff" text-color="#409EFF" round size="large"
+        style="--n-font-size: 26px;font-weight: bold;--n-height: 60px;--n-icon-size: 28px;" @click="gotoHome"
+      >
         返回
       </n-button>
-      <n-button color="#849dfb" text-color="#ffffff" round size="large" style="--n-font-size: 26px;font-weight: bold;--n-height: 60px;--n-icon-size: 28px;" @click="registerDevice">
+      <n-button
+        color="#849dfb" text-color="#ffffff" round size="large"
+        style="--n-font-size: 26px;font-weight: bold;--n-height: 60px;--n-icon-size: 28px;" @click="registerDevice"
+      >
         提交
       </n-button>
     </div>
@@ -300,10 +298,16 @@ function handleChange() {
           <div class="cell-title">
             服务器地址
           </div>
-          <n-input v-model:value="axiosBase" type="text" placeholder="请输入服务器地址" style="width: 180px;" @change="handleChange" />
+          <n-input
+            v-model:value="axiosBase" type="text" placeholder="请输入服务器地址" style="width: 180px;"
+            @change="handleChange"
+          />
         </div>
       </div>
-      <div class="p-f-10 h-full w-58% flex flex-col items-center justify-between bg-#fff p-20" style="border-radius: 20px;">
+      <div
+        class="p-f-10 h-full w-58% flex flex-col items-center justify-between bg-#fff p-20"
+        style="border-radius: 20px;"
+      >
         <div class="w-full flex flex-row items-center justify-between text-align-center text-size-18">
           <div>
             柜格信息
@@ -344,6 +348,7 @@ function handleChange() {
   background-color: #fff;
   font-size: 24px;
   margin-bottom: 10px;
+
   .cell-title {
     flex-shrink: 0;
     margin-right: 20px;
