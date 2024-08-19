@@ -17,6 +17,10 @@ release
 # vscode
 .vscode
 
+# Generate files
+src/auto-imports.d.ts
+src/typed-router.d.ts
+
 # Editor directories and files
 .vscode/.debug.env
 .idea
