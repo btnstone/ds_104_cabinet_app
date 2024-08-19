@@ -1,6 +1,7 @@
 // StompService.ts
 import { Client } from '@stomp/stompjs';
 import { forEach } from 'lodash-es';
+import { buildShortUUID, buildUUID } from '@/utils';
 
 class StompMessageHandler {
   // isRun: boolean;
@@ -72,7 +73,7 @@ class StompService {
     forEach(topics, (topic) => {
       const key = `${this.topicPrefix}${topic}`;
       this.client.subscribe(key, (message) => {
-        const messageHandler = this.handlers.get(key);
+        const messageHandler = this.handlers.get(message.headers['correlation-data']) || this.handlers.get(key);
         // messageHandler!.isRun = false;
         const response = JSON.parse(message.body);
         const { code, data, msg } = response;
@@ -87,6 +88,7 @@ class StompService {
         catch (e) {
           messageHandler?.reject?.(e);
         }
+        this.handlers.delete(message.headers['correlation-data']);
       });
     });
   }
@@ -98,7 +100,8 @@ class StompService {
    */
   private publish<T>(params: { destination: string; data: any }) {
     return new Promise<T>((resolve, reject) => {
-      const key = `${this.topicPrefix}${params.destination}`;
+      // const key = `${this.topicPrefix}${params.destination}`;
+      const key = buildUUID();
       let stompMessageHandler = this.handlers.get(key);
       if (!stompMessageHandler) {
         stompMessageHandler = new StompMessageHandler();
@@ -120,7 +123,7 @@ class StompService {
       // }
       // stompMessageHandler.isRun = true;
       this.handlers.set(key, stompMessageHandler);
-      this.client.publish({ destination: `${this.publishPrefix}${params.destination}`, body: JSON.stringify(params.data), headers: { 'message-id': `${Math.random()}` } });
+      this.client.publish({ destination: `${this.publishPrefix}${params.destination}`, body: JSON.stringify(params.data), headers: { 'correlation-data': key } });
     });
   }
 
