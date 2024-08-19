@@ -58,7 +58,7 @@ onMounted(() => {
   todoInfo = JSON.parse(router.currentRoute.value.query.todoInfo as string);
   data.receive = Object.assign(JSON.parse(router.currentRoute.value.query.userInfo as string), {
     goodsList: todoInfo.electagList,
-    gridIndex: [todoInfo.recvCellNo],
+    gridIndex: [...todoInfo.recvCellNo!.split(',')],
     bindCell: [...todoInfo.recvCellNo!.split(',')],
   });
   console.log(data.receive);
