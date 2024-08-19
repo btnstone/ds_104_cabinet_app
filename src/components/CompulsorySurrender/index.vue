@@ -13,6 +13,7 @@ export interface IPropsType {
   showCancel?: boolean;
   tips?: string;
   isConfirm?: boolean;
+  errorHandle?: () => number;
 }
 
 defineOptions({ name: 'CompulsorySurrender' });
@@ -53,7 +54,7 @@ function handleOk() {
 }
 
 function handleCancel() {
-  emits('prev');
+  emits('prev', props?.errorHandle?.());
 }
 </script>
 

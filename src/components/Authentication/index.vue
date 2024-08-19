@@ -17,6 +17,8 @@ const props = defineProps({
   authType: Number as PropType<number>,
   // 登录用户id
   authUserId: [Number, String] as PropType<Key>,
+  // 登录后检查权限
+  afterAuthCheck: Function as PropType<(...args: any) => void>,
 });
 
 const emits = defineEmits(['next', 'prev', 'error']);
@@ -103,9 +105,6 @@ function handleLogin(data: any) {
   return promiseTimeout(500).then(() => {
     return goLogin(data).then((res) => {
       const userinfo = res.data;
-      userId.value = userinfo.userId;
-      userName.value = userinfo.nickName;
-      userCode.value = userinfo.userCode;
       if (props.authType === 1) {
         //
       }
@@ -122,6 +121,7 @@ function handleLogin(data: any) {
       if (props.authUserId && props.authUserId !== unref(userId)) {
         throw new Error('当前登录身份不正确，请重新登录');
       }
+      props.afterAuthCheck?.(userinfo);
       return getEnableCabinetGrid({ deviceNo: unref(getDeviceNo), userId: unref(userId) }).then((res) => {
         const { bindCell, handOverCell, turnOverCell } = res.data;
         return {
@@ -132,6 +132,9 @@ function handleLogin(data: any) {
         };
       });
     }).then((data) => {
+      userId.value = data.userId;
+      userName.value = data.nickName;
+      userCode.value = data.userCode;
       Object.assign(model.value, {
         ...data,
       });
