@@ -22,8 +22,17 @@ const deviceStore = useDeviceStore();
 const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const router = useRouter();
 const serialNum = router.currentRoute.value.query.no;
-const data = reactive<StepPageModel>({ operator: {}, auth: {}, receive: {} });
-let todoInfo: DsTodoVo;
+const todoInfo: DsTodoVo = JSON.parse(router.currentRoute.value.query.todoInfo as string);
+const data = reactive<StepPageModel>({
+  operator: {},
+  auth: {
+    ...JSON.parse(router.currentRoute.value.query.userInfo as string),
+    goodsList: todoInfo.electagList,
+    gridIndex: [...todoInfo.recvCellNo!.split(',')],
+    handOverCell: [...todoInfo.recvCellNo!.split(',')],
+  },
+  receive: {},
+});
 
 const stepItems: StepItem[] = [
   { title: '监交人开柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 2, user: data.auth }) },
@@ -51,16 +60,16 @@ function onError(step: number, data: any) {
   console.log(step, data);
 }
 
-onMounted(() => {
-  todoInfo = JSON.parse(router.currentRoute.value.query.todoInfo as string);
-  data.auth = Object.assign(JSON.parse(router.currentRoute.value.query.userInfo as string), {
-    goodsList: todoInfo.electagList,
-    gridIndex: [...todoInfo.recvCellNo!.split(',')],
-    handOverCell: [...todoInfo.recvCellNo!.split(',')],
-  });
-  console.log('data.auth');
-  console.log(data.auth);
-});
+// onMounted(() => {
+//   todoInfo = JSON.parse(router.currentRoute.value.query.todoInfo as string);
+//   data.auth = Object.assign(JSON.parse(router.currentRoute.value.query.userInfo as string), {
+//     goodsList: todoInfo.electagList,
+//     gridIndex: [...todoInfo.recvCellNo!.split(',')],
+//     handOverCell: [...todoInfo.recvCellNo!.split(',')],
+//   });
+//   console.log('data.auth');
+//   console.log(data.auth);
+// });
 </script>
 
 <template>

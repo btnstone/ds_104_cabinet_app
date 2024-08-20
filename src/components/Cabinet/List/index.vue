@@ -44,7 +44,7 @@ onMounted(() => {
   // 重置model属性
   Object.assign(user.value, {
     gridIndex: [],
-    goodsList: [],
+    // goodsList: [],
     epcList: [],
   });
 });
