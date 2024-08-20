@@ -21,7 +21,7 @@ const serialNum = router.currentRoute.value.query.no;
 const deviceStore = useDeviceStore();
 const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const current = ref(1);
-const data = reactive<StepPageModel>({ serialNum: '', operator: {}, auth: {}, receive: {} });
+const data = reactive<StepPageModel>({ operator: {}, auth: {}, receive: {} });
 const stepItems: StepItem[] = [
   { title: '身份认证', component: 'Auth', params: () => ({ authType: 1, user: data.operator }) },
   { title: '开柜门', component: 'CabinetList', params: () => ({ gridType: 1, user: data.operator }) },

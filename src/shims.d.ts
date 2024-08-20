@@ -52,11 +52,11 @@ interface StepPageUserModel {
   credentialNo?: string;
   // 领用流程
   applyItem?: Recordable;
-  // 全局流水号
-  serialNum?: string;
 }
 
 interface StepPageModel {
+  // 全局流水号
+  serialNum?: string;
   // 设备编码
   deviceNo?: string;
   // 柜员

@@ -48,7 +48,7 @@ async function createWindow() {
   const isProd = app.isPackaged;
   win = new BrowserWindow({
     title: '智能重控柜',
-    icon: path.join(process.env.VITE_PUBLIC, 'favicon.ico'),
+    icon: path.join(process.env.VITE_PUBLIC, 'icon.ico'),
     width: 1280,
     height: 800,
     center: true,

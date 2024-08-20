@@ -1,15 +1,17 @@
 // @see https://www.electron.build/configuration/configuration
 {
   "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
-  "appId": "ds_ic_app",
+  "appId": "com.dascom.cabinet",
   "asar": true,
-  "productName": "ds_ic_app",
+  "productName": "Dascom-ImportantCabinet-App",
   "directories": {
+    "buildResources": "public",
     "output": "release/${version}"
   },
   "files": [
     "dist",
-    "dist-electron"
+    "dist-electron",
+    "public"
   ],
   "mac": {
     "target": [
@@ -18,6 +20,7 @@
     "artifactName": "${productName}-Mac-${version}-Installer.${ext}"
   },
   "win": {
+    "icon": "./public/icon.ico",
     "target": [
       {
         "target": "nsis",
@@ -39,6 +42,7 @@
       "deb"
     ],
     "maintainer": "dascom.com",
-    "artifactName": "${productName}-Linux-${version}.${ext}"
+    "artifactName": "${productName}-Linux-${version}.${ext}",
+    "icon": "./public/512x512.png"
   }
 }
