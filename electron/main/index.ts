@@ -47,7 +47,7 @@ const indexHtml = path.join(RENDERER_DIST, 'index.html');
 async function createWindow() {
   const isProd = app.isPackaged;
   win = new BrowserWindow({
-    title: '智能重控柜',
+    title: '智识宝柜',
     icon: path.join(process.env.VITE_PUBLIC, 'icon.ico'),
     width: 1280,
     height: 800,
