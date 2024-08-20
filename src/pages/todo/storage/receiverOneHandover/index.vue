@@ -26,11 +26,12 @@ const todoInfo: DsTodoVo = JSON.parse(router.currentRoute.value.query.todoInfo a
 const data = reactive<StepPageModel>({
   operator: {},
   auth: {},
-  receive: Object.assign(JSON.parse(router.currentRoute.value.query.userInfo as string), {
+  receive: {
+    ...JSON.parse(router.currentRoute.value.query.userInfo as string),
     goodsList: todoInfo.electagList,
     gridIndex: [...todoInfo.recvCellNo!.split(',')],
     bindCell: [...todoInfo.recvCellNo!.split(',')],
-  }),
+  },
 });
 
 const stepItems: StepItem[] = [

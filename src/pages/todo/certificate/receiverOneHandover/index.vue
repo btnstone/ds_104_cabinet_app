@@ -25,11 +25,12 @@ const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const todoInfo: DsTodoVo = JSON.parse(router.currentRoute.value.query.todoInfo as string);
 const data = reactive<StepPageModel>({
   auth: {},
-  receive: Object.assign(JSON.parse(router.currentRoute.value.query.userInfo as string), {
+  receive: {
+    ...JSON.parse(router.currentRoute.value.query.userInfo as string),
     goodsList: todoInfo.electagList,
     // gridIndex: [...todoInfo.recvCellNo!.split(',')],
     handOverCell: [...todoInfo.recvCellNo!.split(',')],
-  }),
+  },
 });
 
 const stepItems: StepItem[] = [
