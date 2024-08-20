@@ -109,7 +109,7 @@ createStepPageProviderContext({ no: route.query.no as string });
     </div>
     <!--  -->
     <div class="h-0 w-full flex-1 flex-shrink-0">
-      <component :is="componentMaps.get(vCurrent)" v-if="componentMaps.get(vCurrent)" v-bind="omit(paramAttributes, ['data'])" @next="handleNext" @prev="handlePrev" @error="handleError" />
+      <component :is="componentMaps.get(vCurrent)" :key="vCurrent" v-bind="omit(paramAttributes, ['data'])" @next="handleNext" @prev="handlePrev" @error="handleError" />
     </div>
   </div>
 </template>

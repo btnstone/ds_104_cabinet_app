@@ -134,10 +134,11 @@ function handleNext() {
 }
 
 onMounted(() => {
+  console.log('--InventoryCheckOne: onMounted--');
 });
 
 onUnmounted(() => {
-  console.log('--onUnmounted--');
+  console.log('--InventoryCheckOne: onUnmounted--');
 });
 
 watch(deviceStore.getCabinetGrids, () => {

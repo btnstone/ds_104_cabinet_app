@@ -32,9 +32,6 @@ const stepItems: StepItem[] = [
     component: 'InventoryCheckThree',
     params: () => {
       data.receive = cloneDeep(data.operator);
-      data.receive!.goodsList = [];
-      data.receive!.epcList = [];
-      data.receive!.gridIndex = [];
       return {
         gridType: 2,
         checkType: 1,

@@ -12,7 +12,7 @@ defineProps({
 
 const router = useRouter();
 
-const time = ref(10);
+const time = ref(5);
 
 let timer: NodeJS.Timeout;
 
