@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { NButton } from 'naive-ui';
-import pkg from '../../package.json';
+// import pkg from '../../package.json';
 import { useLoading } from '@/hooks/useLoading';
 import { useUserStore } from '@/store';
 import Authentication from '@/components/Authentication/index.vue';
@@ -28,6 +28,7 @@ definePage({
 const userStore = useUserStore();
 const loading = useLoading();
 const currentType = ref(1);
+const version = import.meta.env.VITE_VERSION;
 
 const contentMap = computed<Array<ContentItem>>(() => {
   // type 1.弹窗 2.直接跳转路由 3.自定义弹窗
@@ -212,7 +213,7 @@ onUnmounted(() => {
           <img src="@/assets/images/shouye/logo2.png" alt="" class="border-none">
         </div>
         <div class="pb-12 text-20 text-gray:50" style="line-height: normal;">
-          <span>版本号: </span><span class="pl-6">{{ pkg.version }}</span>
+          <span>版本号: </span><span class="pl-6">{{ version }}</span>
         </div>
       </div>
       <!--  -->
