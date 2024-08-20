@@ -3,6 +3,7 @@ import { omit } from 'lodash-es';
 import type { PropType } from 'vue';
 import type { StepItem } from './types';
 import { componentMap } from './componentMap';
+import { createStepPageProviderContext } from './useStepPageContext';
 import { isFunction } from '@/utils';
 import { buildShortUUID } from '@/utils/uuid';
 
@@ -14,24 +15,20 @@ const props = defineProps({
     default: () => [],
   },
 });
-
 // ok--完成事件，error--异常事件
 const emits = defineEmits(['ok', 'error', 'update:current']);
-
+const route = useRoute();
 const stepItems = computed(() => props.stepItems.map(v => ({ key: buildShortUUID('step-item'), title: v.title })));
 // const vData = useVModel(props, 'data', emits);
 // const vCurrent = useVModel(props, 'current', emits);
 // const vData = defineModel<StepPageModel>('data', { default: {} });
 const vCurrent = defineModel<number>('current', { default: 1 });
-
 const componentMaps = computed(() => {
   return new Map(props.stepItems.map((v, i) => ([i + 1, componentMap.get(v.component)])));
 });
-
 const componentParams = computed(() => {
   return new Map(props.stepItems.map((v, i) => ([i + 1, v.params])));
 });
-
 const paramAttributes = computed(() => {
   const params = componentParams.value.get(vCurrent.value) as any;
   if (isFunction(params)) {
@@ -66,6 +63,8 @@ function handleNext() {
 function handleError(...args: any) {
   emits('error', unref(vCurrent), ...args);
 }
+
+createStepPageProviderContext({ no: route.query.no as string });
 </script>
 
 <template>
@@ -110,7 +109,7 @@ function handleError(...args: any) {
     </div>
     <!--  -->
     <div class="h-0 w-full flex-1 flex-shrink-0">
-      <component :is="componentMaps.get(vCurrent)" v-bind="omit(paramAttributes, ['data'])" @next="handleNext" @prev="handlePrev" @error="handleError" />
+      <component :is="componentMaps.get(vCurrent)" v-if="componentMaps.get(vCurrent)" v-bind="omit(paramAttributes, ['data'])" @next="handleNext" @prev="handlePrev" @error="handleError" />
     </div>
   </div>
 </template>

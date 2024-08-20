@@ -40,6 +40,15 @@ function onGridClick(item: any) {
   emits('next');
 }
 
+onMounted(() => {
+  // 重置model属性
+  Object.assign(user.value, {
+    gridIndex: [],
+    goodsList: [],
+    epcList: [],
+  });
+});
+
 // watch(() => props.gridType, () => {
 //   gridSet.clear();
 // }, { flush: 'post' });

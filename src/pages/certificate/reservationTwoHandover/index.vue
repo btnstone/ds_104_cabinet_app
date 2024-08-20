@@ -23,7 +23,7 @@ const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const current = ref(1);
 const data = reactive<StepPageModel>({ operator: {}, receive: {} });
 const stepItems: StepItem[] = [
-  { title: '身份认证', component: 'Auth', params: () => ({ authType: 1, user: data.operator }) },
+  // { title: '身份认证', component: 'Auth', params: () => ({ authType: 1, user: data.operator }) },
   { title: '开柜门盘点选择接收人', component: 'InventoryCheckThree', params: () => ({ gridType: 1, checkType: 2, user: data.operator, isShowReceiver: true, isShowSupervisor: true }) },
   {
     title: '开交接格盘点',

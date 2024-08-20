@@ -22,8 +22,15 @@ const deviceStore = useDeviceStore();
 const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const router = useRouter();
 const serialNum = router.currentRoute.value.query.no;
-const data = reactive<StepPageModel>({ receive: {} });
-let todoInfo: DsTodoVo;
+const todoInfo: DsTodoVo = JSON.parse(router.currentRoute.value.query.todoInfo as string);
+const data = reactive<StepPageModel>({
+  receive: {
+    ...JSON.parse(router.currentRoute.value.query.userInfo as string),
+    goodsList: todoInfo.electagList,
+    gridIndex: [todoInfo.recvCellNo],
+    handOverCell: [todoInfo.recvCellNo],
+  },
+});
 
 const stepItems: StepItem[] = [
   { title: '接收人开交接格', component: 'CabinetList', params: () => ({ gridType: 2, user: data.receive }) },
@@ -57,15 +64,15 @@ function onError(step: number, data: any) {
   console.log(step, data);
 }
 
-onMounted(() => {
-  todoInfo = JSON.parse(router.currentRoute.value.query.todoInfo as string);
-  data.receive = Object.assign(JSON.parse(router.currentRoute.value.query.userInfo as string), {
-    goodsList: todoInfo.electagList,
-    gridIndex: [todoInfo.recvCellNo],
-    handOverCell: [todoInfo.recvCellNo],
-  });
-  console.log(data.receive);
-});
+// onMounted(() => {
+//   todoInfo = JSON.parse(router.currentRoute.value.query.todoInfo as string);
+//   data.receive = Object.assign(JSON.parse(router.currentRoute.value.query.userInfo as string), {
+//     goodsList: todoInfo.electagList,
+//     gridIndex: [todoInfo.recvCellNo],
+//     handOverCell: [todoInfo.recvCellNo],
+//   });
+//   console.log(data.receive);
+// });
 </script>
 
 <template>

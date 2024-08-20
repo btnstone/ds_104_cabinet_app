@@ -22,8 +22,19 @@ const router = useRouter();
 const serialNum = router.currentRoute.value.query.no;
 const deviceStore = useDeviceStore();
 const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
-const data = reactive<StepPageModel>({ operator: {}, auth: {}, receive: {} });
-let todoInfo: DsTodoVo;
+const todoInfo: DsTodoVo = JSON.parse(router.currentRoute.value.query.todoInfo as string);
+const data = reactive<StepPageModel>(
+  {
+    operator: {},
+    auth: {},
+    receive: {
+      ...JSON.parse(router.currentRoute.value.query.userInfo as string),
+      goodsList: todoInfo.electagList,
+      gridIndex: [todoInfo.recvCellNo],
+      handOverCell: [todoInfo.recvCellNo],
+    },
+  },
+);
 
 const stepItems: StepItem[] = [
   { title: '监交人身份认证', component: 'Auth', params: () => ({ authType: 3, user: data.auth, authUserId: todoInfo?.supervisorId }) },
@@ -37,7 +48,15 @@ const stepItems: StepItem[] = [
     },
   },
   { title: '关柜盘点', component: 'InventoryCheckOne', params: () => ({ checkType: 2, user: data.auth }) },
-  { title: '开柜门', component: 'CabinetList', params: () => ({ gridType: 1, user: data.receive }) },
+  {
+    title: '开柜门',
+    component: 'CabinetList',
+    params: () => {
+      data.receive!.gridIndex = [];
+      data.receive!.goodsList = [];
+      return { gridType: 1, user: data.receive };
+    },
+  },
   { title: '关柜盘点', component: 'InventoryCheckOne', params: () => ({ checkType: 1, user: data.receive }) },
   { title: '完成', component: 'Success', params: { text: '交接成功' } },
 ];
@@ -75,15 +94,15 @@ function onError(step: number, data: any) {
   console.log(step, data);
 }
 
-onMounted(() => {
-  todoInfo = JSON.parse(router.currentRoute.value.query.todoInfo as string);
-  data.receive = Object.assign(JSON.parse(router.currentRoute.value.query.userInfo as string), {
-    goodsList: todoInfo.electagList,
-    gridIndex: [todoInfo.recvCellNo],
-    handOverCell: [todoInfo.recvCellNo],
-  });
-  console.log(data.receive);
-});
+// onMounted(() => {
+//   todoInfo = JSON.parse(router.currentRoute.value.query.todoInfo as string);
+//   data.receive = Object.assign(JSON.parse(router.currentRoute.value.query.userInfo as string), {
+//     goodsList: todoInfo.electagList,
+//     gridIndex: [todoInfo.recvCellNo],
+//     handOverCell: [todoInfo.recvCellNo],
+//   });
+//   console.log(data.receive);
+// });
 </script>
 
 <template>

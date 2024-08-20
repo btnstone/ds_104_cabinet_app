@@ -5,8 +5,9 @@ import { storeToRefs } from 'pinia';
 import { useRequest } from 'vue-request';
 import { promiseTimeout } from '@vueuse/core';
 import type { PropType } from 'vue';
+import { useStepPageProviderContext } from '../StepPage/src/useStepPageContext';
 import StompService from '@/stomp/StompService';
-import { getEnableCabinetGrid, goLogin } from '@/api/index';
+import { getEnableCabinetGrid, goLogin, postLog } from '@/api/index';
 import { PopoverInput } from '@/components/Keyboard';
 import { useDeviceStore, useUserStore } from '@/store';
 
@@ -26,7 +27,7 @@ const emits = defineEmits(['next', 'prev', 'error']);
 enum AuthModalType {
   FINGERPRINT, PASSWORD,
 }
-
+const { no: serialNum } = useStepPageProviderContext();
 const deviceStore = useDeviceStore();
 const userStore = useUserStore();
 const { userId, userName, userCode } = storeToRefs(userStore);
@@ -118,11 +119,11 @@ function handleLogin(data: any) {
           throw new Error('当前登录身份不是监交人，请重新登录');
         }
       }
-      if (props.authUserId && props.authUserId !== unref(userId)) {
+      if (props.authUserId && props.authUserId !== unref(userinfo.userId)) {
         throw new Error('当前登录身份不正确，请重新登录');
       }
-      props.afterAuthCheck?.(userinfo);
-      return getEnableCabinetGrid({ deviceNo: unref(getDeviceNo), userId: unref(userId) }).then((res) => {
+      props?.afterAuthCheck?.(userinfo);
+      return getEnableCabinetGrid({ deviceNo: unref(getDeviceNo), userId: userinfo.userId }).then((res) => {
         const { bindCell, handOverCell, turnOverCell } = res.data;
         return {
           ...userinfo,
@@ -138,6 +139,7 @@ function handleLogin(data: any) {
       Object.assign(model.value, {
         ...data,
       });
+      serialNum && postLog({ orgId: data.orgId, deviceNo: unref(getDeviceNo), type: '03', operateUserId: data.userId, serialNum });
       emits('next');
     }).catch((err) => {
       window.$message.error(err.message);

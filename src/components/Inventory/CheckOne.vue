@@ -22,7 +22,7 @@ export interface ICheckOneProps {
   credentialShowType?: number;
   tips?: string;
   width?: string;
-  errorHandle?: () => number;
+  disabled?: boolean;
 }
 
 interface orgTreeItem {
@@ -36,7 +36,7 @@ interface orgTreeItem {
 
 defineOptions({ name: 'InventoryCheckOne' });
 
-const props = withDefaults(defineProps<ICheckOneProps>(), { width: '900px' });
+const props = withDefaults(defineProps<ICheckOneProps>(), { width: '900px', disabled: false });
 
 const emits = defineEmits(['next', 'prev', 'error']);
 
@@ -48,13 +48,12 @@ const isShowCredential = computed(() => {
 
 // 获取用户列表
 const getUserOptions = computedAsync(async () => {
-  if (isShowCredential.value && props.isShowReceiver) {
-    const orgId = unref(model).callOrgId! || unref(model).orgId!;
-    const res = await getUserListByOrg(orgId);
-    return map(res.data, v => ({ label: v.nickName, value: v.userId }));
+  const orgId = unref(model).callOrgId || unref(model).orgId;
+  if (!orgId) {
+    return [];
   }
-  else if (props.isShowReceiver || props.isShowSupervisor) {
-    const res = await getUserListByOrg(unref(model).orgId!);
+  if ((isShowCredential.value && props.isShowReceiver) || props.isShowReceiver || props.isShowSupervisor) {
+    const res = await getUserListByOrg(orgId);
     return map(res.data, v => ({ label: v.nickName, value: v.userId }));
   }
 }, []);
@@ -86,7 +85,11 @@ const { showLoading, hideLoading } = useLoading();
 const modalRef = ref<ModalReactive>();
 
 function handleNo() {
-  emits('prev', props?.errorHandle?.());
+  // const { gridIndex: cells = [] } = unref(model);
+  // if (cells.length > 0) {
+  //   StompService.openDoor({ cells });
+  // }
+  emits('prev');
 }
 
 async function handleYes() {
@@ -197,7 +200,7 @@ watch(deviceStore.getCabinetGrids, () => {
           </div>
           <n-select
             v-model:value="model.supervisor" :options="getUserOptions" class="ml-10 w-220"
-            placeholder="请选择监交人"
+            placeholder="请选择监交人" :disabled="disabled"
           />
         </div>
         <!--  -->
@@ -207,7 +210,7 @@ watch(deviceStore.getCabinetGrids, () => {
           </div>
           <n-select
             v-model:value="model.receiver" :options="getUserOptions" class="ml-10 w-220" placeholder="请选择接收人"
-            :disabled="credentialShowType === 4 ? true : false"
+            :disabled="credentialShowType === 4 ? true : disabled"
           />
         </div>
       </div>

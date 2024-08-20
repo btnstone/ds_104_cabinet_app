@@ -31,13 +31,10 @@ const stepItems: StepItem[] = [
     component: 'CabinetList',
     params: () => {
       data.receive = cloneDeep(data.operator);
-      data.receive!.goodsList = [];
-      data.receive!.epcList = [];
-      data.receive!.gridIndex = [];
       return { gridType: 2, user: data.receive };
     },
   },
-  { title: '关柜盘点', component: 'InventoryCheckOne', params: () => ({ checkType: 1, user: data.receive, isShowReceiver: true, isShowSupervisor: true }) },
+  { title: '关柜盘点', component: 'InventoryCheckOne', params: () => ({ checkType: 1, user: data.receive, isShowReceiver: true, isShowSupervisor: true, disabled: true }) },
   { title: '完成', component: 'Success', params: () => ({ text: '提交预约交接成功' }) },
 ];
 
