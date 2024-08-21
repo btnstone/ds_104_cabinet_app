@@ -314,7 +314,7 @@ function handleChange() {
             柜格信息
           </div>
           <div class="flex flex-row items-center justify-between">
-            <div class="mr-20 flex flex-row items-center justify-center">
+            <!-- <div class="mr-20 flex flex-row items-center justify-center">
               <div class="mr-10 h-30 w-30 flex flex-row items-center justify-center bg-#26e7ed">
                 <img src="@/assets/images/components/lightning.png" alt="" class="h-22 h-full w-16">
               </div>
@@ -323,7 +323,7 @@ function handleChange() {
             <div class="flex flex-row items-center justify-center">
               <div class="mr-10 h-30 w-30 bg-#e9e9e9" />
               <div>不带电</div>
-            </div>
+            </div> -->
           </div>
         </div>
         <div class="mt-15 flex flex-1 gap-10">
