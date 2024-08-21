@@ -27,7 +27,7 @@ const stepItems: StepItem[] = [
   { title: '开柜门', component: 'CabinetList', params: () => ({ gridType: 1, user: data.operator }) },
   { title: '关柜盘点选择接收人', component: 'InventoryCheckOne', params: () => ({ checkType: 2, user: data.operator, isShowReceiver: true }) },
   { title: '监交人身份认证', component: 'Auth', params: () => ({ authType: 3, user: data.auth }) },
-  { title: '监交人授权', component: 'InventoryCheckTwo', params: () => ({ user: data.operator, isShowReceiver: true, disabled: true }) },
+  { title: '监交人授权', component: 'InventoryCheckTwo', params: () => ({ user: data.operator, isShowReceiver: true, disabled: true, errorHandle: () => 1 }) },
   { title: '开交接格', component: 'CabinetList', params: () => ({ gridType: 2, user: data.auth }) },
   { title: '关柜盘点', component: 'InventoryCheckOne', params: () => ({ checkType: 1, user: data.auth }) },
   { title: '完成', component: 'Success', params: () => ({ text: '预约交接成功' }) },

@@ -26,7 +26,7 @@ const stepItems: StepItem[] = [
   { title: '身份认证', component: 'Auth', params: () => ({ authType: 1, user: data.operator }) },
   { title: '开柜门盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 1, user: data.operator }) },
   { title: '监交人身份认证', component: 'Auth', params: () => ({ authType: 3, user: data.auth }) },
-  { title: '监交人授权', component: 'InventoryCheckTwo', params: () => ({ user: data.operator }) },
+  { title: '监交人授权', component: 'InventoryCheckTwo', params: () => ({ user: data.operator, errorHandle: () => 1 }) },
   { title: '接收人身份认证', component: 'Auth', params: () => ({ authType: 1, user: data.receive }) },
   { title: '接收人确认', component: 'InventoryCheckThree', params: () => ({ gridType: 1, user: data.operator }) },
   { title: '完成', component: 'Success', params: { text: '交接成功' } },

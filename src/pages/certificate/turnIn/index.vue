@@ -45,7 +45,7 @@ const stepItems: StepItem[] = [
       },
     }),
   },
-  { title: '另一位主管授权', component: 'CompulsorySurrender', params: () => ({ user: data.receive, tips: '选择被强制上缴尾箱柜员', okText: '授权通过', cancelText: '授权不通过', isConfirm: true, errorHandle: () => 2 }) },
+  { title: '另一位主管授权', component: 'CompulsorySurrender', params: () => ({ user: data.receive, tips: '选择被强制上缴尾箱柜员', okText: '授权通过', cancelText: '授权不通过', isConfirm: true, errorHandle: () => 1 }) },
   { title: '开柜门关柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 1, checkType: 2, user: data.receive }) },
   { title: '开上缴格门关柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 3, checkType: 1, user: data.operator }) },
   { title: '完成', component: 'Success', params: { text: '强制上缴成功' } },

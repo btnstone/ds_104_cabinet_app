@@ -28,7 +28,7 @@ const stepItems: StepItem[] = [
   { title: '开柜门', component: 'CabinetList', params: () => ({ gridType: 1, user: data.operator }) },
   { title: '关柜盘点', component: 'InventoryCheckOne', params: () => ({ checkType: 2, user: data.operator }) },
   { title: '主管身份认证', component: 'Auth', params: () => ({ authType: 2, user: data.admin }) },
-  { title: '主管授权', component: 'InventoryCheckTwo', params: () => ({ user: data.operator }) },
+  { title: '主管授权', component: 'InventoryCheckTwo', params: () => ({ user: data.operator, errorHandle: () => 1 }) },
   { title: '完成', component: 'Success', params: { text: '出库成功' } },
 ];
 
