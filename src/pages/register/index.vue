@@ -3,6 +3,7 @@
 import { onMounted } from 'vue';
 import type { CascaderOption } from 'naive-ui';
 import { useLocalStorage } from '@vueuse/core';
+import pkg from '../../../package.json';
 import type { DeviceCabinetVo } from '@/api/machine/types/DeviceCabinetVo';
 import { getCabinetList } from '@/api/cabinet';
 import { useLoading } from '@/hooks/useLoading';
@@ -328,8 +329,8 @@ function handleChange() {
         <div class="mt-15 flex flex-1 gap-10">
           <CabinetGrid :enable-grid-index="enabledGridIndex" />
         </div>
-        <div class="w-full flex flex-row items-center justify-center text-align-center text-size-18">
-          请点击对应规格切换带电状态
+        <div class="w-full flex flex-row items-center justify-center text-align-center text-size-18 color-gray:20">
+          内部版本号{{ pkg.version }}
         </div>
       </div>
     </div>
