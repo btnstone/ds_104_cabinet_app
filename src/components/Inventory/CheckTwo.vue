@@ -48,14 +48,14 @@ function handleYes() {
           <div class="text-20">
             请选择监交人
           </div>
-          <n-select v-model:value="model.supervisor" :options="getUserOptions" class="ml-10 w-220" :disabled="disabled" />
+          <n-select v-model:value="model.supervisor" :options="getUserOptions" class="ml-10 w-220" :disabled="disabled" size="large" />
         </div>
         <!--  -->
         <div v-if="isShowReceiver" class="mt-15 flex flex-row items-center">
           <div class="text-20">
             请选择接收人
           </div>
-          <n-select v-model:value="model.receiver" :options="getUserOptions" class="ml-10 w-220" :disabled="disabled" />
+          <n-select v-model:value="model.receiver" :options="getUserOptions" class="ml-10 w-220" :disabled="disabled" size="large" />
         </div>
       </div>
     </template>

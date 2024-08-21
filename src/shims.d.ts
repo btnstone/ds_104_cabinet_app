@@ -34,7 +34,7 @@ interface StepPageUserModel {
   userId?: Key;
   nickName?: string;
   orgId?: number;
-  userCode?: number;
+  userCode?: string;
   roleList?: string[];
   bindCell?: Key[];
   handOverCell?: Key[];

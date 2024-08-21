@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ModalReactive } from 'naive-ui';
+import type { FormInst, ModalReactive } from 'naive-ui';
 import { filter, map } from 'lodash-es';
 import CredentialInfo from '../CredentialInfo/index.vue';
 import ComInventoryLayout from './src/components/ComInventoryLayout.vue';
@@ -83,6 +83,7 @@ const deviceStore = useDeviceStore();
 const getDeviceNo = computed(() => deviceStore.getCabinetInfo?.deviceCode);
 const { showLoading, hideLoading } = useLoading();
 const modalRef = ref<ModalReactive>();
+const extraFormRef = ref<FormInst>();
 
 function handleNo() {
   // const { gridIndex: cells = [] } = unref(model);
@@ -130,7 +131,12 @@ function handleNext() {
     }
     return;
   }
-  emits('next');
+  if (unref(extraFormRef)) {
+    unref(extraFormRef)?.validate().then(() => emits('next'));
+  }
+  else {
+    emits('next');
+  }
 }
 
 onMounted(() => {
@@ -183,37 +189,18 @@ watch(deviceStore.getCabinetGrids, () => {
       请核对物品是否一致
     </template>
     <template #beforeContent>
-      <div v-if="isShowSupervisor || isShowReceiver || isShowCredential" class="flex flex-row gap-15">
-        <!--  -->
-        <div v-if="isShowCredential" class="flex flex-row items-center">
-          <div class="text-20">
-            调入机构
-          </div>
-          <n-tree-select
-            v-model:value="model.callOrgId" :options="getOrgTreeOptions" class="ml-10 w-220"
-            placeholder="请选择调入机构" :disabled="credentialShowType === 4 || credentialShowType === 2 ? true : false"
-          />
-        </div>
-        <!--  -->
-        <div v-if="isShowSupervisor" class="flex flex-row items-center">
-          <div class="text-20">
-            监交人
-          </div>
-          <n-select
-            v-model:value="model.supervisor" :options="getUserOptions" class="ml-10 w-220"
-            placeholder="请选择监交人" :disabled="disabled"
-          />
-        </div>
-        <!--  -->
-        <div v-if="isShowReceiver" class="flex flex-row items-center">
-          <div class="text-20">
-            接收人
-          </div>
-          <n-select
-            v-model:value="model.receiver" :options="getUserOptions" class="ml-10 w-220" placeholder="请选择接收人"
-            :disabled="credentialShowType === 4 ? true : disabled"
-          />
-        </div>
+      <div v-if="isShowSupervisor || isShowReceiver || isShowCredential" class="flex pt-10">
+        <n-form ref="extraFormRef" :model="model" inline label-align="right" label-placement="left" :show-require-mark="false" size="large">
+          <n-form-item v-if="isShowCredential" label="调入机构" path="callOrgId" :rule="[{ required: true, message: '请选择调入机构', trigger: ['blur'] }]">
+            <n-tree-select v-model:value="model.callOrgId" :options="getOrgTreeOptions" class="w-200" placeholder="请选择调入机构" :disabled="(credentialShowType === 4 || credentialShowType === 2) ? true : disabled" />
+          </n-form-item>
+          <n-form-item v-if="isShowSupervisor" label="监交人" path="supervisor" :rule="[{ required: true, message: '请选择监交人', trigger: ['blur'] }]">
+            <n-select v-model:value="model.supervisor" class="w-200" :options="getUserOptions" placeholder="请选择监交人" :disabled="disabled" />
+          </n-form-item>
+          <n-form-item v-if="isShowReceiver" label="接收人" path="receiver" :rule="[{ required: true, message: '请选择接收人', trigger: ['blur'] }]">
+            <n-select v-model:value="model.receiver" :options="getUserOptions" class="w-200" placeholder="请选择接收人" :disabled="credentialShowType === 4 ? true : disabled" />
+          </n-form-item>
+        </n-form>
       </div>
     </template>
     <template #content>
