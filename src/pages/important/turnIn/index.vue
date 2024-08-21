@@ -46,7 +46,7 @@ const stepItems: StepItem[] = [
       },
     }),
   },
-  { title: '主管授权', component: 'InventoryCheckTwo', params: () => ({ user: data.receive }) },
+  { title: '主管授权', component: 'InventoryCheckTwo', params: () => ({ user: data.receive, errorHandle: () => 1 }) },
   { title: '开上缴格门关柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 1, checkType: 2, user: data.receive }) },
   { title: '开柜门关柜盘点', component: 'InventoryCheckThree', params: () => ({ gridType: 1, checkType: 1, user: data.operator }) },
   { title: '完成', component: 'Success', params: { text: '强制上缴成功' } },

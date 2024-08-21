@@ -35,7 +35,7 @@ const stepItems: StepItem[] = [
     },
   },
   { title: '主管身份认证', component: 'Auth', params: () => ({ authType: 2, user: data.admin }) },
-  { title: '主管授权', component: 'InventoryCheckTwo', params: () => ({ user: data.operator }) },
+  { title: '主管授权', component: 'InventoryCheckTwo', params: () => ({ user: data.operator, errorHandle: () => 1 }) },
   { title: '完成', component: 'Success', params: () => ({ text: '重要物品调拨入库成功' }) },
 ];
 
