@@ -127,7 +127,7 @@ function handleNext() {
       window.$message.warning('请放入物品');
     }
     else if (props.checkType === 2) {
-      window.$message.warning('请放入物品');
+      window.$message.warning('请取出物品');
     }
     return;
   }
