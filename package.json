@@ -33,7 +33,8 @@
     "build:win": "npm run build && electron-builder --win",
     "build:mac": "electron-vite build && electron-builder --mac",
     "build:linux": "electron-vite build && electron-builder --linux",
-    "up": "taze major -I"
+    "up": "taze major -I",
+    "electron:generate-icons": "electron-icon-builder --input=./public/icon.png --output=build --flatten"
   },
   "dependencies": {
     "@stomp/stompjs": "^7.0.0",
@@ -56,6 +57,7 @@
     "@vueuse/head": "^2.0.0",
     "electron": "^29.1.1",
     "electron-builder": "^24.13.3",
+    "electron-icon-builder": "^2.0.1",
     "eslint": "^9.7.0",
     "eslint-plugin-format": "^0.1.2",
     "lint-staged": "^15.2.7",
