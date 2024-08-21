@@ -55,7 +55,7 @@
     "@vitejs/plugin-vue": "^5.0.4",
     "@vueuse/core": "^10.11.0",
     "@vueuse/head": "^2.0.0",
-    "electron": "^29.1.1",
+    "electron": "^32.0.0",
     "electron-builder": "^24.13.3",
     "electron-icon-builder": "^2.0.1",
     "eslint": "^9.7.0",
