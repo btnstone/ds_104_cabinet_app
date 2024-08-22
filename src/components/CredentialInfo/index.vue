@@ -87,10 +87,10 @@ function showDetail(index1: number, index2: number) {
       </div>
       <n-list clickable hoverable class="mt-20 flex-1">
         <n-list-item v-for="(item, index) in certificateList" :key="index" style="border-top: 1px solid #000000;">
-          <div v-for="(item2, index2) in item.list" :key="index2">
+          <div v-for="(item2, index2) in item.list" :key="index2" @click="selectClick(index)">
             <div class="w-full flex flex-col items-center justify-between">
               <div class="h-50 w-full flex items-center justify-between">
-                <div class="flex items-center" @click="selectClick(index2)">
+                <div class="flex items-center">
                   <img
                     v-if="curIndex === index" class="mr-10 h-40 w-40 border-none"
                     src="@/assets/images/components/success.png" alt=""
@@ -101,7 +101,7 @@ function showDetail(index1: number, index2: number) {
                   </div>
                 </div>
 
-                <div class="h-full w-100 flex items-center justify-end" @click="showDetail(index, index2)">
+                <div class="h-full w-100 flex items-center justify-end" @click.stop="showDetail(index, index2)">
                   <div :class="item.isShowDetail ? 'up-arrow' : 'down-arrow'" />
                 </div>
               </div>
@@ -134,7 +134,8 @@ function showDetail(index1: number, index2: number) {
                     <td>{{ item.vouchersApplyNo }}</td>
                     <td>{{ item2.name }}</td>
                     <template v-if="item2.goodsType === '1' || item2.goodsType === '4'">
-                      <td>{{ item2.importgoodsStartno }}</td>
+                      <td>{{ item2.voucherBatchnumber }}</td>
+                      <td>{{ item2.voucherStartno }}</td>
                       <td>{{ item2.voucherEndno }}</td>
                       <td>{{ item2.voucherNumber }}</td>
                     </template>
